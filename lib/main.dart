@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:self_service/page/reservation_page.dart';
+import 'package:self_service/page/splash_screen.dart';
+
+void main() {
+  runApp(const SelfService());
+}
+
+class SelfService extends StatelessWidget {
+  const SelfService({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: '/splash',
+      routes: {
+        '/splash': (context) => SplashPage(),
+        '/reservation': (context) => ReservationPage()
+      },
+    );
+  }
+}
