@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class ReservationPage extends StatelessWidget {
   const ReservationPage({super.key});
@@ -22,7 +20,9 @@ class ReservationPage extends StatelessWidget {
             label: Text('Sudah Reservasi'),
           ),
           ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed('/room-category');
+              },
               icon: Icon(Icons.arrow_circle_right_rounded),
               label: Text('Belum Reservasi'))
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/page/reservation_page.dart';
+import 'package:self_service/page/room_category_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 
 void main() {
@@ -15,7 +16,8 @@ class SelfService extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => SplashPage(),
-        '/reservation': (context) => ReservationPage()
+        '/reservation': (context) => ReservationPage(),
+        '/room-category': (context) => RoomCategoryPage()
       },
     );
   }
