@@ -7,7 +7,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: GestureDetector(
+        child: InkWell(
           onTap: () {
             Navigator.of(context).pushNamed('/reservation');
           },

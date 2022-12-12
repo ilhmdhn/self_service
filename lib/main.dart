@@ -15,9 +15,9 @@ class SelfService extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/splash',
       routes: {
-        '/splash': (context) => SplashPage(),
-        '/reservation': (context) => ReservationPage(),
-        '/room-category': (context) => RoomCategoryPage()
+        '/splash': (context) => const SplashPage(),
+        '/reservation': (context) => const ReservationPage(),
+        '/room-category': (context) => const RoomCategoryPage()
       },
     );
   }

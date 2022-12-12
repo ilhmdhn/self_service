@@ -1,7 +1,7 @@
 class RoomCategoryResult {
-  bool? state;
-  String? message;
-  List<RoomCategory>? category;
+  bool state = false;
+  String message = '';
+  List<RoomCategory> category = List.empty();
 
   RoomCategoryResult({
     required this.state,
