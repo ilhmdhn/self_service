@@ -34,7 +34,11 @@ class _RoomCategoryPageState extends State<RoomCategoryPage> {
                     mainAxisSpacing: 5,
                     children: List.generate(state.category.length, (index) {
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pushNamed('/room-list',
+                              arguments:
+                                  state.category[index].roomCategoryCode);
+                        },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -64,7 +68,6 @@ class _RoomCategoryPageState extends State<RoomCategoryPage> {
                       '/splash', (Route<dynamic> route) => false);
                 },
                 child: const Text('Batal')),
-            ElevatedButton(onPressed: () {}, child: const Text('Lanjut'))
           ],
         )
       ]),
