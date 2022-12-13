@@ -18,8 +18,8 @@ class SelfService extends StatelessWidget {
       routes: {
         '/splash': (context) => const SplashPage(),
         '/reservation': (context) => const ReservationPage(),
-        '/room-category': (context) => const RoomCategoryPage(),
-        '/room-list': (context) => const RoomListPage(),
+        '/room-category': (context) => RoomCategoryPage(),
+        '/room-list': (context) =>  RoomListPage(),
       },
     );
   }

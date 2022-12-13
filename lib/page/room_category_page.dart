@@ -3,24 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import '../bloc/room_category_bloc.dart';
 
-class RoomCategoryPage extends StatefulWidget {
-  const RoomCategoryPage({super.key});
+class RoomCategoryPage extends StatelessWidget {
+  RoomCategoryPage({super.key});
 
-  @override
-  State<RoomCategoryPage> createState() => _RoomCategoryPageState();
-}
-
-class _RoomCategoryPageState extends State<RoomCategoryPage> {
-  RoomCategoryCubit roomCategoryCubit = RoomCategoryCubit();
-
-  @override
-  void initState() {
-    super.initState();
-    getCategoryRoom();
-  }
+  final RoomCategoryCubit roomCategoryCubit = RoomCategoryCubit();
 
   @override
   Widget build(BuildContext context) {
+    roomCategoryCubit.getData();
     return Scaffold(
       body:
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -72,9 +62,5 @@ class _RoomCategoryPageState extends State<RoomCategoryPage> {
         )
       ]),
     );
-  }
-
-  void getCategoryRoom() {
-    roomCategoryCubit.getData();
   }
 }

@@ -17,15 +17,17 @@ class RoomList {
   String? roomName;
   String? roomCode;
   String? roomType;
-  String? roomCapacity;
-  String? roomPrice;
-  String? roomIsReady;
+  num? roomCapacity;
+  String? roomImage;
+  num? roomPrice;
+  num? roomIsReady;
 
   RoomList(
       {required this.roomName,
       required this.roomCode,
       required this.roomType,
       required this.roomCapacity,
+      required this.roomImage,
       required this.roomPrice,
       required this.roomIsReady});
 
@@ -34,6 +36,7 @@ class RoomList {
       roomCode: json['room_code'],
       roomType: json['type_room'],
       roomCapacity: json['capacity'],
+      roomImage: json['room_image'],
       roomPrice: json['price'],
       roomIsReady: json['room_ready']);
 }

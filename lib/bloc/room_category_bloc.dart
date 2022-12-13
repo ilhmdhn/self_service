@@ -10,3 +10,11 @@ class RoomCategoryCubit extends Cubit<RoomCategoryResult> {
     emit(response);
   }
 }
+
+class RoomCategoryArgsCubit extends Cubit<String> {
+  RoomCategoryArgsCubit(): super('');
+
+  void getData(data) async{
+    emit(data);
+  }
+}
