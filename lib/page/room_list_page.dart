@@ -24,20 +24,20 @@ class RoomListPage extends StatelessWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: 3,
                         mainAxisSpacing: 5,
-                        children: List.generate(state.room.length, (index) {
-                          print(
-                              'get img http://192.168.1.248:3001/image-room?name_file=${state.room[index].roomImage.toString()}');
+                        children: List.generate(state.room!.length, (index) {
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).pushNamed('/room-detail');
+                            },
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.network(
-                                    'http://192.168.1.248:3001/image-room?name_file=${state.room[index].roomImage.toString()}',
+                                    'http://192.168.1.248:3001/image-room?name_file=${state.room![index].roomImage.toString()}',
                                     width: 230,
                                     height: 230,
                                   ),
-                                  Text(state.room[index].roomName.toString())
+                                  Text(state.room![index].roomName.toString())
                                 ]),
                           );
                         })));

@@ -1,12 +1,12 @@
 class RoomCategoryResult {
-  bool state = false;
-  String message = '';
-  List<RoomCategory> category = List.empty();
+  bool? state = false;
+  String? message = '';
+  List<RoomCategory>? category = List.empty();
 
   RoomCategoryResult({
-    required this.state,
-    required this.message,
-    required this.category,
+    this.state,
+    this.message,
+    this.category,
   });
 
   factory RoomCategoryResult.fromJson(Map<String, dynamic> json) =>
@@ -24,10 +24,10 @@ class RoomCategory {
   String? roomCategoryImage;
 
   RoomCategory({
-    required this.roomCategoryName,
-    required this.roomCategoryCode,
-    required this.roomCategoryCapacity,
-    required this.roomCategoryImage,
+    this.roomCategoryName,
+    this.roomCategoryCode,
+    this.roomCategoryCapacity,
+    this.roomCategoryImage,
   });
 
   factory RoomCategory.fromJson(Map<String, dynamic> json) => RoomCategory(

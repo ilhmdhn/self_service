@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/room_category_model.dart';
+import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 
 class ApiService {
@@ -23,6 +24,19 @@ class ApiService {
       return RoomListResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
       return RoomListResult(state: false, message: e.toString(), room: []);
+    }
+  }
+
+  Future<RoomDetailResult> getRoomDetail(roomCode) async {
+    try {
+      Uri url = Uri.parse(
+          'http://192.168.1.248:3001/room-detail?room_code=$roomCode');
+      final apiResponse = await http.get(url);
+      return RoomDetailResult.fromJson(json.decode(apiResponse.body));
+    } catch (e) {
+      return RoomDetailResult(
+          state: false,
+          message: e.toString());
     }
   }
 }

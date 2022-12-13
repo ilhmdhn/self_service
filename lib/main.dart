@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/page/reservation_page.dart';
 import 'package:self_service/page/room_category_page.dart';
+import 'package:self_service/page/room_detail_page.dart';
 import 'package:self_service/page/room_list_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 
@@ -20,6 +21,7 @@ class SelfService extends StatelessWidget {
         '/reservation': (context) => const ReservationPage(),
         '/room-category': (context) => RoomCategoryPage(),
         '/room-list': (context) =>  RoomListPage(),
+        '/room-detail': (context) =>  RoomDetailPage(),
       },
     );
   }

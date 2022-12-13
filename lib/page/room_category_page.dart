@@ -22,22 +22,22 @@ class RoomCategoryPage extends StatelessWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 3,
                     mainAxisSpacing: 5,
-                    children: List.generate(state.category.length, (index) {
+                    children: List.generate(state.category!.length, (index) {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).pushNamed('/room-list',
                               arguments:
-                                  state.category[index].roomCategoryCode);
+                                  state.category![index].roomCategoryCode);
                         },
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.network(
-                                'http://192.168.1.248:3001/image-room-category?name_file=${state.category[index].roomCategoryImage}',
+                                'http://192.168.1.248:3001/image-room-category?name_file=${state.category![index].roomCategoryImage}',
                                 width: 230,
                                 height: 230),
                             Text(
-                                'Nama Kategory: ${state.category[index].roomCategoryName}')
+                                'Nama Kategory: ${state.category![index].roomCategoryName}')
                           ],
                         ),
                       );
