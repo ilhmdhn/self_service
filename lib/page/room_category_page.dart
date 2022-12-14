@@ -27,6 +27,7 @@ class RoomCategoryPage extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
                   child: GridView.count(
                       crossAxisCount: 2,
+                      physics: const ScrollPhysics(),
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 5,
                       childAspectRatio: 4 / 3,
