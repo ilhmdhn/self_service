@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/bloc/room_detail_bloc.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../util/currency.dart';
 
 class RoomDetailPage extends StatelessWidget {
   RoomDetailPage({super.key});
@@ -11,70 +12,101 @@ class RoomDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    roomDetailCubit.getData('R05');
+    final roomCodeArgs = ModalRoute.of(context)!.settings.arguments;
+    print('args ${roomCodeArgs}');
+    roomDetailCubit.getData(roomCodeArgs);
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          BlocBuilder<RoomDetailCubit, RoomDetailResult>(
-              bloc: roomDetailCubit,
-              builder: (context, state) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CarouselSlider.builder(
-                      options: CarouselOptions(
-                          height: 400,
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 0.8,
-                          initialPage: 0,
-                          enableInfiniteScroll: true,
-                          reverse: false,
-                          autoPlay: true,
-                          autoPlayInterval: const Duration(seconds: 3),
-                          autoPlayAnimationDuration:
-                              const Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          enlargeFactor: 0.3,
-                          scrollDirection: Axis.horizontal),
-                      itemCount: state.data?.roomGallery?.length ?? 0,
-                      itemBuilder: ((context, index, realIndex) => ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              'http://192.168.1.248:3001/image-room?name_file=${state.data?.roomGallery?[index].imageUrl.toString()}',
-                            ),
-                          )),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            BlocBuilder<RoomDetailCubit, RoomDetailResult>(
+                bloc: roomDetailCubit,
+                builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CarouselSlider.builder(
+                        options: CarouselOptions(
+                            height: 250,
+                            aspectRatio: 16 / 9,
+                            viewportFraction: 0.8,
+                            initialPage: 0,
+                            enableInfiniteScroll: true,
+                            reverse: false,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 3),
+                            autoPlayAnimationDuration:
+                                const Duration(milliseconds: 800),
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
+                            enlargeFactor: 0.3,
+                            scrollDirection: Axis.horizontal),
+                        itemCount: state.data?.roomGallery?.length ?? 0,
+                        itemBuilder: ((context, index, realIndex) => Container(
+                              height: 250,
+                              child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    'http://192.168.1.248:3001/image-room?name_file=${state.data?.roomGallery?[index].imageUrl.toString()}',
+                                    height: 250,
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Kapasitas: ${state.data?.roomDetail?.roomCapacity}'),
+                          Text(
+                              'Room Price: ${Currency.toRupiah(state.data?.roomDetail?.roomPrice ?? 0)}'),
+                        ],
+                      )
+                    ],
+                  );
+                }),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(Colors.red),
                     ),
-                    Text('${state.data?.roomGallery?[0].imageUrl}'),
-                  ],
-                );
-              }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                  style: const ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.red),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/splash', (Route<dynamic> route) => false);
-                  },
-                  child: const Text('Batal')),
-              ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.lime.shade800),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Kembali')),
-            ],
-          )
-        ],
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/splash', (Route<dynamic> route) => false);
+                    },
+                    child: const Text('Batal')),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(Colors.lime.shade800),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Kembali')),
+                ElevatedButton(
+                    style: const ButtonStyle(
+                        backgroundColor:
+                            MaterialStatePropertyAll<Color>(Colors.green)),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/fnb-category');
+                    },
+                    child: const Text('Lanjut'))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

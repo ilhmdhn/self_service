@@ -30,7 +30,8 @@ class RoomListPage extends StatelessWidget {
                         children: List.generate(state.room!.length, (index) {
                           return InkWell(
                             onTap: () {
-                              Navigator.of(context).pushNamed('/room-detail');
+                              Navigator.of(context).pushNamed('/room-detail',
+                                  arguments: state.room?[index].roomCode);
                             },
                             child: Container(
                               margin: const EdgeInsets.fromLTRB(15, 10, 15, 0),
