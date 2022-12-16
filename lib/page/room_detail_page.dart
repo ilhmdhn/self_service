@@ -16,13 +16,13 @@ class RoomDetailPage extends StatelessWidget {
     roomDetailCubit.getData(roomCodeArgs);
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            BlocBuilder<RoomDetailCubit, RoomDetailResult>(
-                bloc: roomDetailCubit,
-                builder: (context, state) {
-                  return Column(
+        child: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
+            bloc: roomDetailCubit,
+            builder: (context, state) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -121,61 +121,70 @@ class RoomDetailPage extends StatelessWidget {
                         ),
                       )
                     ],
-                  );
-                }),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            const MaterialStatePropertyAll<Color>(Colors.red),
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.fromLTRB(30, 20, 30, 20)),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/splash', (Route<dynamic> route) => false);
-                      },
-                      child: const Text(
-                        'Batal',
-                        style: TextStyle(fontSize: 18),
-                      )),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.fromLTRB(30, 20, 30, 20)),
-                        backgroundColor: MaterialStatePropertyAll<Color>(
-                            Colors.lime.shade800),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'Kembali',
-                        style: TextStyle(fontSize: 18),
-                      )),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              const EdgeInsets.fromLTRB(30, 20, 30, 20)),
-                          backgroundColor:
-                              const MaterialStatePropertyAll<Color>(
-                                  Colors.green)),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/fnb-category');
-                      },
-                      child: const Text(
-                        'Lanjut',
-                        style: TextStyle(fontSize: 18),
-                      ))
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  const MaterialStatePropertyAll<Color>(
+                                      Colors.red),
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/splash', (Route<dynamic> route) => false);
+                            },
+                            child: const Text(
+                              'Batal',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all<EdgeInsets>(
+                                  const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                              backgroundColor: MaterialStatePropertyAll<Color>(
+                                  Colors.lime.shade800),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Kembali',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                                backgroundColor:
+                                    const MaterialStatePropertyAll<Color>(
+                                        Colors.green)),
+                            onPressed: () {
+                              if (state.data?.roomDetail?.roomIsReady == 0) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Room Sedang Digunakan"),
+                                ));
+                              } else {
+                                Navigator.of(context)
+                                    .pushNamed('/fnb-category');
+                              }
+                            },
+                            child: const Text(
+                              'Lanjut',
+                              style: TextStyle(fontSize: 18),
+                            ))
+                      ],
+                    ),
+                  )
                 ],
-              ),
-            )
-          ],
-        ),
+              );
+            }),
       ),
     );
   }

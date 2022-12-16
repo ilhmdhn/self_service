@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:self_service/page/fnb_category_page.dart';
+import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/reservation_page.dart';
 import 'package:self_service/page/room_category_page.dart';
 import 'package:self_service/page/room_detail_page.dart';

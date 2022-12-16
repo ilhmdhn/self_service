@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
@@ -34,9 +35,17 @@ class ApiService {
       final apiResponse = await http.get(url);
       return RoomDetailResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
-      return RoomDetailResult(
-          state: false,
-          message: e.toString());
+      return RoomDetailResult(state: false, message: e.toString());
+    }
+  }
+
+  Future<FnBCategoryResult> getFnBCategory() async {
+    try {
+      Uri url = Uri.parse('localhost:3001/fnb-category');
+      final apiResponse = await http.get(url);
+      return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return FnBCategoryResult(state: false, message: err.toString());
     }
   }
 }
