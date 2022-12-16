@@ -42,76 +42,96 @@ class RoomListPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(
+                                    top: 8.0, left: 8.0, right: 8.0),
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      AspectRatio(
-                                        aspectRatio: 16 / 9,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: Image.network(
-                                            'http://192.168.1.248:3001/image-room?name_file=${state.room![index].roomImage.toString()}',
-                                          ),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          'http://192.168.1.248:3001/image-room?name_file=${state.room![index].roomImage.toString()}',
                                         ),
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Room Name: '),
-                                          Text(state.room![index].roomName
-                                              .toString())
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text('Room Capacity: '),
+                                          const Text(
+                                            'Room Name: ',
+                                            style: TextStyle(
+                                                fontSize: 28,
+                                                color: Colors.black),
+                                          ),
                                           Text(
-                                              '${state.room![index].roomCapacity.toString()} PAX')
+                                              state.room![index].roomName
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  fontSize: 28,
+                                                  color: Colors.black))
                                         ],
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Room Ready: '),
-                                          Text(state.room![index].roomIsReady
-                                              .toString())
+                                          const Text('Room Capacity: ',
+                                              style: const TextStyle(
+                                                  fontSize: 28,
+                                                  color: Colors.black)),
+                                          Text(
+                                              '${state.room![index].roomCapacity.toString()} PAX',
+                                              style: const TextStyle(
+                                                  fontSize: 28,
+                                                  color: Colors.black))
                                         ],
-                                      )
+                                      ),
                                     ]),
                               ),
                             ),
                           );
                         })));
               }),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                  style: const ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.red),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/splash', (Route<dynamic> route) => false);
-                  },
-                  child: const Text('Batal')),
-              ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll<Color>(Colors.lime.shade800),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Kembali')),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          const MaterialStatePropertyAll<Color>(Colors.red),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/splash', (Route<dynamic> route) => false);
+                    },
+                    child: const Text(
+                      'Batal',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    )),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(Colors.lime.shade800),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Kembali',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
+                    )),
+              ],
+            ),
           )
         ],
       ),

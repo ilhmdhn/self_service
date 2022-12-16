@@ -27,10 +27,13 @@ class RoomCategoryPage extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
                   child: GridView.count(
                       crossAxisCount: 2,
-                      physics: const ScrollPhysics(),
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 5,
                       childAspectRatio: 4 / 3,
+                      //ssss
+                      // shrinkWrap: true,
+                      // scrollDirection: Axis.vertical,
+                      // physics: const ScrollPhysics(),
                       children: List.generate(state.category!.length, (index) {
                         return InkWell(
                           onTap: () {
@@ -51,20 +54,21 @@ class RoomCategoryPage extends StatelessWidget {
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(10),
-                                  child: AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.network(
-                                        'http://192.168.1.248:3001/image-room-category?name_file=${state.category![index].roomCategoryImage}',
-                                      ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      'http://192.168.1.248:3001/image-room-category?name_file=${state.category![index].roomCategoryImage}',
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  '${state.category![index].roomCategoryName}',
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 15),
+                                Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: Text(
+                                    '${state.category![index].roomCategoryName}',
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 28),
+                                  ),
                                 )
                               ],
                             ),
@@ -74,28 +78,46 @@ class RoomCategoryPage extends StatelessWidget {
                 );
               }),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(Colors.red),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/splash', (Route<dynamic> route) => false);
-                },
-                child: const Text('Batal')),
-            ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll<Color>(Colors.lime.shade800),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Kembali')),
-          ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        const MaterialStatePropertyAll<Color>(Colors.red),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/splash', (Route<dynamic> route) => false);
+                  },
+                  child: const Text(
+                    'Batal',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  )),
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll<Color>(Colors.lime.shade800),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Kembali',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  )),
+            ],
+          ),
         )
       ]),
     );

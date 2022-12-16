@@ -13,7 +13,6 @@ class RoomDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final roomCodeArgs = ModalRoute.of(context)!.settings.arguments;
-    print('args ${roomCodeArgs}');
     roomDetailCubit.getData(roomCodeArgs);
     return Scaffold(
       body: SafeArea(
@@ -29,7 +28,7 @@ class RoomDetailPage extends StatelessWidget {
                     children: [
                       CarouselSlider.builder(
                         options: CarouselOptions(
-                            height: 250,
+                            height: 600,
                             aspectRatio: 16 / 9,
                             viewportFraction: 0.8,
                             initialPage: 0,
@@ -44,66 +43,136 @@ class RoomDetailPage extends StatelessWidget {
                             enlargeFactor: 0.3,
                             scrollDirection: Axis.horizontal),
                         itemCount: state.data?.roomGallery?.length ?? 0,
-                        itemBuilder: ((context, index, realIndex) => Container(
-                              height: 250,
-                              child: AspectRatio(
-                                aspectRatio: 16 / 9,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    'http://192.168.1.248:3001/image-room?name_file=${state.data?.roomGallery?[index].imageUrl.toString()}',
-                                    height: 250,
-                                  ),
-                                ),
+                        itemBuilder: ((context, index, realIndex) => ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                'http://192.168.1.248:3001/image-room?name_file=${state.data?.roomGallery?[index].imageUrl.toString()}',
+                                // height: 250,
+                                // width: 1000,
                               ),
                             )),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                              'Kapasitas: ${state.data?.roomDetail?.roomCapacity}'),
-                          Text(
-                              'Room Price: ${Currency.toRupiah(state.data?.roomDetail?.roomPrice ?? 0)}'),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: const [
+                                    Icon(
+                                      Icons.groups,
+                                      color: Colors.blue,
+                                      size: 76,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Capacity ',
+                                      style: TextStyle(fontSize: 56),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '${state.data?.roomDetail?.roomCapacity} pax',
+                                  style: const TextStyle(fontSize: 56),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: const [
+                                    Icon(
+                                      Icons.money_rounded,
+                                      color: Colors.green,
+                                      size: 76,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Price',
+                                      style: TextStyle(fontSize: 56),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  Currency.toRupiah(
+                                          state.data?.roomDetail?.roomPrice ??
+                                              0)
+                                      .toString(),
+                                  style: const TextStyle(fontSize: 56),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   );
                 }),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.red),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/splash', (Route<dynamic> route) => false);
-                    },
-                    child: const Text('Batal')),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.lime.shade800),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Kembali')),
-                ElevatedButton(
-                    style: const ButtonStyle(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
                         backgroundColor:
-                            MaterialStatePropertyAll<Color>(Colors.green)),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/fnb-category');
-                    },
-                    child: const Text('Lanjut'))
-              ],
+                            const MaterialStatePropertyAll<Color>(Colors.red),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/splash', (Route<dynamic> route) => false);
+                      },
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(fontSize: 18),
+                      )),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            Colors.lime.shade800),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'Kembali',
+                        style: TextStyle(fontSize: 18),
+                      )),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                          backgroundColor:
+                              const MaterialStatePropertyAll<Color>(
+                                  Colors.green)),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/fnb-category');
+                      },
+                      child: const Text(
+                        'Lanjut',
+                        style: TextStyle(fontSize: 18),
+                      ))
+                ],
+              ),
             )
           ],
         ),
