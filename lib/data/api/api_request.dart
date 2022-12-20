@@ -4,10 +4,16 @@ import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
+import '../shared_pref/preferences_data.dart';
 
 class ApiService {
+  Future<String> baseUrl() async {
+    return await PreferencesData.getBaseUrl();
+  }
+
   Future<RoomCategoryResult> getRoomCategory() async {
     try {
+      final serverUrl = await baseUrl();
       Uri url = Uri.parse('http://192.168.1.248:3001/room-category');
       final apiResponse = await http.get(url);
       return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
@@ -19,6 +25,7 @@ class ApiService {
 
   Future<RoomListResult> getRoomList(String roomCategory) async {
     try {
+      final serverUrl = await baseUrl();
       Uri url =
           Uri.parse('http://192.168.1.248:3001/room?category=$roomCategory');
       final apiResponse = await http.get(url);
@@ -30,6 +37,7 @@ class ApiService {
 
   Future<RoomDetailResult> getRoomDetail(roomCode) async {
     try {
+      final serverUrl = await baseUrl();
       Uri url = Uri.parse(
           'http://192.168.1.248:3001/room-detail?room_code=$roomCode');
       final apiResponse = await http.get(url);
@@ -41,6 +49,7 @@ class ApiService {
 
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
+      final serverUrl = await baseUrl();
       Uri url = Uri.parse('http://192.168.1.248:3001/fnb-category');
       final apiResponse = await http.get(url);
       return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
