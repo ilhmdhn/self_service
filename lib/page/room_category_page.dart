@@ -30,10 +30,6 @@ class RoomCategoryPage extends StatelessWidget {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 5,
                       childAspectRatio: 4 / 3,
-                      //ssss
-                      // shrinkWrap: true,
-                      // scrollDirection: Axis.vertical,
-                      // physics: const ScrollPhysics(),
                       children: List.generate(state.category!.length, (index) {
                         return InkWell(
                           onTap: () {
@@ -63,7 +59,7 @@ class RoomCategoryPage extends StatelessWidget {
                                 ),
                                 Container(
                                   decoration:
-                                      BoxDecoration(color: Colors.white),
+                                      const BoxDecoration(color: Colors.white),
                                   child: Text(
                                     '${state.category![index].roomCategoryName}',
                                     style: const TextStyle(

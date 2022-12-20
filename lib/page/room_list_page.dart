@@ -34,6 +34,8 @@ class RoomListPage extends StatelessWidget {
                                   arguments: state.room?[index].roomCode);
                             },
                             child: Container(
+                              height: 200,
+                              width: 200,
                               margin: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -60,14 +62,14 @@ class RoomListPage extends StatelessWidget {
                                           const Text(
                                             'Room Name: ',
                                             style: TextStyle(
-                                                fontSize: 28,
+                                                fontSize: 18,
                                                 color: Colors.black),
                                           ),
                                           Text(
                                               state.room![index].roomName
                                                   .toString(),
                                               style: const TextStyle(
-                                                  fontSize: 28,
+                                                  fontSize: 18,
                                                   color: Colors.black))
                                         ],
                                       ),
@@ -76,13 +78,13 @@ class RoomListPage extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           const Text('Room Capacity: ',
-                                              style: const TextStyle(
-                                                  fontSize: 28,
+                                              style: TextStyle(
+                                                  fontSize: 18,
                                                   color: Colors.black)),
                                           Text(
                                               '${state.room![index].roomCapacity.toString()} PAX',
                                               style: const TextStyle(
-                                                  fontSize: 28,
+                                                  fontSize: 18,
                                                   color: Colors.black))
                                         ],
                                       ),

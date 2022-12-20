@@ -41,7 +41,7 @@ class ApiService {
 
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
-      Uri url = Uri.parse('localhost:3001/fnb-category');
+      Uri url = Uri.parse('http://192.168.1.248:3001/fnb-category');
       final apiResponse = await http.get(url);
       return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {

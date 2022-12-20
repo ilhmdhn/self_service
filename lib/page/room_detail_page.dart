@@ -28,7 +28,7 @@ class RoomDetailPage extends StatelessWidget {
                     children: [
                       CarouselSlider.builder(
                         options: CarouselOptions(
-                            height: 600,
+                            // height: 600,
                             aspectRatio: 16 / 9,
                             viewportFraction: 0.8,
                             initialPage: 0,
@@ -56,7 +56,7 @@ class RoomDetailPage extends StatelessWidget {
                         height: 10,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 50, right: 50),
+                        padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,20 +71,20 @@ class RoomDetailPage extends StatelessWidget {
                                     Icon(
                                       Icons.groups,
                                       color: Colors.blue,
-                                      size: 76,
+                                      size: 36,
                                     ),
                                     SizedBox(
                                       width: 10,
                                     ),
                                     Text(
                                       'Capacity ',
-                                      style: TextStyle(fontSize: 56),
+                                      style: TextStyle(fontSize: 26),
                                     ),
                                   ],
                                 ),
                                 Text(
                                   '${state.data?.roomDetail?.roomCapacity} pax',
-                                  style: const TextStyle(fontSize: 56),
+                                  style: const TextStyle(fontSize: 26),
                                 ),
                               ],
                             ),
@@ -97,14 +97,14 @@ class RoomDetailPage extends StatelessWidget {
                                     Icon(
                                       Icons.money_rounded,
                                       color: Colors.green,
-                                      size: 76,
+                                      size: 36,
                                     ),
                                     SizedBox(
                                       width: 10,
                                     ),
                                     Text(
                                       'Price',
-                                      style: TextStyle(fontSize: 56),
+                                      style: TextStyle(fontSize: 26),
                                     ),
                                   ],
                                 ),
@@ -113,7 +113,7 @@ class RoomDetailPage extends StatelessWidget {
                                           state.data?.roomDetail?.roomPrice ??
                                               0)
                                       .toString(),
-                                  style: const TextStyle(fontSize: 56),
+                                  style: const TextStyle(fontSize: 26),
                                 ),
                               ],
                             ),
@@ -133,7 +133,7 @@ class RoomDetailPage extends StatelessWidget {
                                   const MaterialStatePropertyAll<Color>(
                                       Colors.red),
                               padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 10)),
                             ),
                             onPressed: () {
                               Navigator.of(context).pushNamedAndRemoveUntil(
@@ -146,7 +146,7 @@ class RoomDetailPage extends StatelessWidget {
                         ElevatedButton(
                             style: ButtonStyle(
                               padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 10)),
                               backgroundColor: MaterialStatePropertyAll<Color>(
                                   Colors.lime.shade800),
                             ),
@@ -160,7 +160,7 @@ class RoomDetailPage extends StatelessWidget {
                         ElevatedButton(
                             style: ButtonStyle(
                                 padding: MaterialStateProperty.all<EdgeInsets>(
-                                    const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                                    const EdgeInsets.fromLTRB(20, 10, 20, 10)),
                                 backgroundColor:
                                     const MaterialStatePropertyAll<Color>(
                                         Colors.green)),
@@ -171,8 +171,7 @@ class RoomDetailPage extends StatelessWidget {
                                   content: Text("Room Sedang Digunakan"),
                                 ));
                               } else {
-                                Navigator.of(context)
-                                    .pushNamed('/fnb-category');
+                                Navigator.of(context).pushNamed('/fnb-page');
                               }
                             },
                             child: const Text(
