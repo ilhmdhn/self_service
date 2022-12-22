@@ -40,7 +40,7 @@ class CheckinInfo {
 }
 
 class FnBInfo {
-  bool state = false;
+  bool state;
   List<DataOrder>? dataOrder;
 
   FnBInfo({this.state = false, this.dataOrder});
@@ -55,7 +55,7 @@ class DataOrder {
 }
 
 class PromoInfo {
-  bool state = false;
+  bool state;
   PromoRoom? promoRoom;
   PromoFnB? promoFnB;
 
@@ -63,21 +63,21 @@ class PromoInfo {
 }
 
 class PromoRoom {
-  bool state = false;
+  bool state;
   String? promoName;
 
   PromoRoom({this.state = false, this.promoName});
 }
 
 class PromoFnB {
-  bool state = false;
+  bool state;
   String? promoName;
 
   PromoFnB({this.state = false, this.promoName});
 }
 
 class VoucherInfo {
-  bool state = false;
+  bool state;
   String? voucherCode;
 
   VoucherInfo({this.state = false, this.voucherCode});

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/fnb_category_model.dart';
+import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
@@ -55,6 +56,19 @@ class ApiService {
       return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
       return FnBCategoryResult(state: false, message: err.toString());
+    }
+  }
+
+  Future<InventoryResult> getInventory(
+      int page, int size, String category, String search) async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse(
+          'http://192.168.1.248:3001/fnb?page=$page&size=$size&category=$category&search=$search');
+      final apiResponse = await http.get(url);
+      return InventoryResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return InventoryResult(state: false, message:err.toString());
     }
   }
 }

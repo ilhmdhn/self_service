@@ -1,7 +1,7 @@
 class FnBCategoryResult {
-  bool? state = false;
-  String? message = '';
-  List<FnBCategory>? category = List.empty();
+  bool? state;
+  String? message;
+  List<FnBCategory>? category;
 
   FnBCategoryResult({this.state, this.message, this.category});
 
@@ -14,7 +14,7 @@ class FnBCategoryResult {
 }
 
 class FnBCategory {
-  num? fnbCategoryCode;
+  int? fnbCategoryCode;
   String? fnbCategoryName;
   String? fnbCategoryImage;
 
