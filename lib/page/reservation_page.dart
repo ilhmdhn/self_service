@@ -34,6 +34,9 @@ class ReservationPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed('/room-category');
                 },
+                onLongPress: () {
+                  Navigator.of(context).pushNamed('/setting');
+                },
                 style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.blueAccent),
