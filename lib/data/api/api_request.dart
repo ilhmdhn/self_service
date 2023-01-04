@@ -21,7 +21,10 @@ class ApiService {
       return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
       return RoomCategoryResult(
-          isLoading: false,state: false, message: e.toString(), category: List.empty());
+          isLoading: false,
+          state: false,
+          message: e.toString(),
+          category: List.empty());
     }
   }
 
@@ -32,7 +35,8 @@ class ApiService {
       final apiResponse = await http.get(url);
       return RoomListResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
-      return RoomListResult(state: false, message: e.toString(), room: []);
+      return RoomListResult(
+          isLoading: false, state: false, message: e.toString(), room: []);
     }
   }
 
@@ -43,7 +47,8 @@ class ApiService {
       final apiResponse = await http.get(url);
       return RoomDetailResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
-      return RoomDetailResult(state: false, message: e.toString());
+      return RoomDetailResult(
+          isLoading: false, state: false, message: e.toString());
     }
   }
 

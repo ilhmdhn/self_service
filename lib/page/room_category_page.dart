@@ -30,6 +30,12 @@ class RoomCategoryPage extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   );
                 }
+
+                if (roomCategoryState.state == false) {
+                  return Center(
+                    child: Text(roomCategoryState.message ?? 'Error'),
+                  );
+                }
                 return Container(
                   margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
                   child: GridView.count(
