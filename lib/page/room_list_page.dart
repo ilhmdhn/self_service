@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_list_bloc.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 
@@ -7,6 +8,7 @@ class RoomListPage extends StatelessWidget {
   RoomListPage({super.key});
 
   final RoomListCubit roomListCubit = RoomListCubit();
+  final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +20,38 @@ class RoomListPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          BlocBuilder<RoomListCubit, RoomListResult>(
-              bloc: roomListCubit,
-              builder: (context, state) {
-                return Expanded(
+          Expanded(
+            child: BlocBuilder<RoomListCubit, RoomListResult>(
+                bloc: roomListCubit,
+                builder: (context, roomListState) {
+                  if (roomListState.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (roomListState.state == false) {
+                    return Center(
+                      child: Text(roomListState.message.toString()),
+                    );
+                  }
+                  imageUrlCubit.getImageRoom();
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
                     child: GridView.count(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 10,
+                        crossAxisSpacing: 15,
                         mainAxisSpacing: 5,
                         childAspectRatio: 4 / 3,
-                        children: List.generate(state.room!.length, (index) {
+                        children: List.generate(roomListState.room?.length ?? 0,
+                            (index) {
                           return InkWell(
                             onTap: () {
                               Navigator.of(context).pushNamed('/room-detail',
-                                  arguments: state.room?[index].roomCode);
+                                  arguments:
+                                      roomListState.room?[index].roomCode);
                             },
                             child: Container(
-                              height: 200,
-                              width: 200,
-                              margin: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(
@@ -49,27 +64,43 @@ class RoomListPage extends StatelessWidget {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          'http://192.168.1.248:3001/image-room?name_file=${state.room![index].roomImage.toString()}',
-                                        ),
-                                      ),
+                                      BlocBuilder<ImageUrlCubit, String>(
+                                          bloc: imageUrlCubit,
+                                          builder: (context, stateImageUrl) {
+                                            if (stateImageUrl == '') {
+                                              return const CircularProgressIndicator();
+                                            }
+                                            return AspectRatio(
+                                              aspectRatio: 16 / 9,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Image.network(
+                                                  stateImageUrl +
+                                                      roomListState.room![index]
+                                                          .roomImage
+                                                          .toString(),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          }),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           const Text(
-                                            'Room Name: ',
+                                            'Name: ',
                                             style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 14,
                                                 color: Colors.black),
                                           ),
                                           Text(
-                                              state.room![index].roomName
+                                              roomListState
+                                                  .room![index].roomName
                                                   .toString(),
                                               style: const TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 14,
                                                   color: Colors.black))
                                         ],
                                       ),
@@ -77,14 +108,14 @@ class RoomListPage extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Text('Room Capacity: ',
+                                          const Text('Capacity: ',
                                               style: TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 14,
                                                   color: Colors.black)),
                                           Text(
-                                              '${state.room![index].roomCapacity.toString()} PAX',
+                                              '${roomListState.room![index].roomCapacity.toString()} PAX',
                                               style: const TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 14,
                                                   color: Colors.black))
                                         ],
                                       ),
@@ -92,8 +123,10 @@ class RoomListPage extends StatelessWidget {
                               ),
                             ),
                           );
-                        })));
-              }),
+                        })),
+                  );
+                }),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

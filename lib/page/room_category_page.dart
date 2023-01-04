@@ -44,7 +44,7 @@ class RoomCategoryPage extends StatelessWidget {
                       mainAxisSpacing: 5,
                       childAspectRatio: 4 / 3,
                       children: List.generate(
-                          roomCategoryState.category!.length, (index) {
+                          roomCategoryState.category?.length ?? 0, (index) {
                         imageUrlCubit.getImageRoomCategory();
                         return InkWell(
                           onTap: () {
@@ -73,10 +73,18 @@ class RoomCategoryPage extends StatelessWidget {
                                               .roomCategoryImage
                                               .toString();
                                       if (stateImage != '') {
-                                        return ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.network(imageUrl),
+                                        return AspectRatio(
+                                          aspectRatio: 16 / 9,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Expanded(
+                                              child: Image.network(
+                                                imageUrl,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
                                         );
                                       } else {
                                         return const CircularProgressIndicator();

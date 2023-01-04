@@ -14,9 +14,9 @@ class ImageUrlCubit extends Cubit<String> {
     emit('$serverUrl/image-fnb-category?name_file=');
   }
 
-  void getImageFnB(fileName) async {
+  void getImageFnB() async {
     final serverUrl = await baseUrl();
-    emit('$serverUrl/image-fnb?name_file=$fileName');
+    emit('$serverUrl/image-fnb?name_file=');
   }
 
   void getImageRoomCategory() async {
@@ -24,8 +24,8 @@ class ImageUrlCubit extends Cubit<String> {
     emit('$serverUrl/image-room-category?name_file=');
   }
 
-  void getImageRoom(fileName) async {
+  void getImageRoom() async {
     final serverUrl = await baseUrl();
-    emit('$serverUrl/image-room?name_file=$fileName');
+    emit('$serverUrl/image-room?name_file=');
   }
 }
