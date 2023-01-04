@@ -9,7 +9,7 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final BaseUrlCubit baseUrlCubit = BaseUrlCubit();
     TextEditingController url = TextEditingController();
-    String? insertUrl;
+    baseUrlCubit.getData();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setting Page'),
@@ -24,15 +24,28 @@ class SettingPage extends StatelessWidget {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
-                    controller: url,
-                    onChanged: (String value) {
-                      insertUrl = value;
-                    },
-                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          const Text(
+                            'Base Url',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 5, right: 5),
+                              child: TextField(
+                                  controller: url,
+                                  keyboardType: TextInputType.number),
+                            ),
+                          ),
+                        ],
+                      )),
                   ElevatedButton(
                       onPressed: () {
-                        baseUrlCubit.setData(insertUrl);
+                        baseUrlCubit.setData(url.text);
                       },
                       child: const Text('Submit'))
                 ],

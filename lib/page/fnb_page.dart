@@ -66,6 +66,7 @@ class FnBPage extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.network(
+                                    //  await ImageRequest().getFnBCategoryImage(state.category?[index].fnbCategoryImage)
                                     'http://192.168.1.248:3001/image-fnb-category?name_file=${state.category?[index].fnbCategoryImage}',
                                   ),
                                 ),

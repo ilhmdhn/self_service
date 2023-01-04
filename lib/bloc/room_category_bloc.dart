@@ -3,7 +3,7 @@ import '../data/model/room_category_model.dart';
 import '../data/api/api_request.dart';
 
 class RoomCategoryCubit extends Cubit<RoomCategoryResult> {
-  RoomCategoryCubit(): super(RoomCategoryResult(state: false, message: '', category: List.empty()));
+  RoomCategoryCubit(): super(RoomCategoryResult());
 
   void getData() async{
     final response = await ApiService().getRoomCategory();

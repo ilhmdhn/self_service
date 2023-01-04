@@ -1,9 +1,11 @@
 class RoomCategoryResult {
-  bool? state = false;
-  String? message = '';
+  bool isLoading;
+  bool? state;
+  String? message;
   List<RoomCategory>? category = List.empty();
 
   RoomCategoryResult({
+    this.isLoading = true,
     this.state,
     this.message,
     this.category,
@@ -11,6 +13,7 @@ class RoomCategoryResult {
 
   factory RoomCategoryResult.fromJson(Map<String, dynamic> json) =>
       RoomCategoryResult(
+        isLoading: false,
           state: json['state'],
           message: json['message'],
           category: List<RoomCategory>.from(

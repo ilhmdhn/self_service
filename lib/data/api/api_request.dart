@@ -9,26 +9,26 @@ import '../shared_pref/preferences_data.dart';
 
 class ApiService {
   Future<String> baseUrl() async {
-    return await PreferencesData.getBaseUrl();
+    final url = await PreferencesData.getBaseUrl();
+    return 'http://$url:3099/';
   }
 
   Future<RoomCategoryResult> getRoomCategory() async {
     try {
       final serverUrl = await baseUrl();
-      Uri url = Uri.parse('http://192.168.1.248:3001/room-category');
+      Uri url = Uri.parse('${serverUrl}room-category');
       final apiResponse = await http.get(url);
       return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
       return RoomCategoryResult(
-          state: false, message: e.toString(), category: List.empty());
+          isLoading: false,state: false, message: e.toString(), category: List.empty());
     }
   }
 
   Future<RoomListResult> getRoomList(String roomCategory) async {
     try {
       final serverUrl = await baseUrl();
-      Uri url =
-          Uri.parse('http://192.168.1.248:3001/room?category=$roomCategory');
+      Uri url = Uri.parse('${serverUrl}room?category=$roomCategory');
       final apiResponse = await http.get(url);
       return RoomListResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
@@ -39,8 +39,7 @@ class ApiService {
   Future<RoomDetailResult> getRoomDetail(roomCode) async {
     try {
       final serverUrl = await baseUrl();
-      Uri url = Uri.parse(
-          'http://192.168.1.248:3001/room-detail?room_code=$roomCode');
+      Uri url = Uri.parse('${serverUrl}room-detail?room_code=$roomCode');
       final apiResponse = await http.get(url);
       return RoomDetailResult.fromJson(json.decode(apiResponse.body));
     } catch (e) {
@@ -51,7 +50,7 @@ class ApiService {
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
       final serverUrl = await baseUrl();
-      Uri url = Uri.parse('http://192.168.1.248:3001/fnb-category');
+      Uri url = Uri.parse('${serverUrl}fnb-category');
       final apiResponse = await http.get(url);
       return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
@@ -64,11 +63,11 @@ class ApiService {
     try {
       final serverUrl = await baseUrl();
       Uri url = Uri.parse(
-          'http://192.168.1.248:3001/fnb?page=$page&size=$size&category=$category&search=$search');
+          '${serverUrl}fnb?page=$page&size=$size&category=$category&search=$search');
       final apiResponse = await http.get(url);
       return InventoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
-      return InventoryResult(state: false, message:err.toString());
+      return InventoryResult(state: false, message: err.toString());
     }
   }
 }

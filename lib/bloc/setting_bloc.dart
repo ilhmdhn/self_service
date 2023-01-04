@@ -5,10 +5,10 @@ class BaseUrlCubit extends Cubit<String> {
   BaseUrlCubit() : super('');
 
   void setData(url) async {
-    PreferencesData.setBaseUrl(url);
+    await PreferencesData.setBaseUrl(url);
   }
 
-  Future<String> getData() async {
-    return await PreferencesData.getBaseUrl();
+  void getData() async {
+    emit(await PreferencesData.getBaseUrl());
   }
 }

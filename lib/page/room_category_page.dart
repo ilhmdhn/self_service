@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import '../bloc/room_category_bloc.dart';
 
@@ -7,6 +8,7 @@ class RoomCategoryPage extends StatelessWidget {
   RoomCategoryPage({super.key});
 
   final RoomCategoryCubit roomCategoryCubit = RoomCategoryCubit();
+  final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,12 @@ class RoomCategoryPage extends StatelessWidget {
         Expanded(
           child: BlocBuilder<RoomCategoryCubit, RoomCategoryResult>(
               bloc: roomCategoryCubit,
-              builder: (context, state) {
+              builder: (context, roomCategoryState) {
+                if (roomCategoryState.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 return Container(
                   margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
                   child: GridView.count(
@@ -30,12 +37,14 @@ class RoomCategoryPage extends StatelessWidget {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 5,
                       childAspectRatio: 4 / 3,
-                      children: List.generate(state.category!.length, (index) {
+                      children: List.generate(
+                          roomCategoryState.category!.length, (index) {
+                        imageUrlCubit.getImageRoomCategory();
                         return InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed('/room-list',
-                                arguments:
-                                    state.category![index].roomCategoryCode);
+                                arguments: roomCategoryState
+                                    .category![index].roomCategoryCode);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -49,21 +58,33 @@ class RoomCategoryPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      'http://192.168.1.248:3001/image-room-category?name_file=${state.category![index].roomCategoryImage}',
-                                    ),
+                                  padding: const EdgeInsets.all(7),
+                                  child: BlocBuilder<ImageUrlCubit, String>(
+                                    bloc: imageUrlCubit,
+                                    builder: (context, stateImage) {
+                                      String imageUrl = stateImage +
+                                          roomCategoryState.category![index]
+                                              .roomCategoryImage
+                                              .toString();
+                                      if (stateImage != '') {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(imageUrl),
+                                        );
+                                      } else {
+                                        return const CircularProgressIndicator();
+                                      }
+                                    },
                                   ),
                                 ),
                                 Container(
                                   decoration:
                                       const BoxDecoration(color: Colors.white),
                                   child: Text(
-                                    '${state.category![index].roomCategoryName}',
+                                    '${roomCategoryState.category![index].roomCategoryName}',
                                     style: const TextStyle(
-                                        color: Colors.black, fontSize: 28),
+                                        color: Colors.black, fontSize: 19),
                                   ),
                                 )
                               ],
@@ -84,7 +105,7 @@ class RoomCategoryPage extends StatelessWidget {
                     backgroundColor:
                         const MaterialStatePropertyAll<Color>(Colors.red),
                     padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                        const EdgeInsets.fromLTRB(15, 10, 15, 10)),
                   ),
                   onPressed: () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
@@ -101,7 +122,7 @@ class RoomCategoryPage extends StatelessWidget {
                     backgroundColor:
                         MaterialStatePropertyAll<Color>(Colors.lime.shade800),
                     padding: MaterialStateProperty.all<EdgeInsets>(
-                        const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                        const EdgeInsets.fromLTRB(15, 10, 15, 10)),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
