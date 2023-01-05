@@ -59,7 +59,8 @@ class ApiService {
       final apiResponse = await http.get(url);
       return FnBCategoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
-      return FnBCategoryResult(state: false, message: err.toString());
+      return FnBCategoryResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 
@@ -72,7 +73,8 @@ class ApiService {
       final apiResponse = await http.get(url);
       return InventoryResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
-      return InventoryResult(state: false, message: err.toString());
+      return InventoryResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 }

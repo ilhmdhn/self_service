@@ -11,13 +11,17 @@ class RoomCategoryResult {
     this.category,
   });
 
-  factory RoomCategoryResult.fromJson(Map<String, dynamic> json) =>
-      RoomCategoryResult(
+  factory RoomCategoryResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
+    return RoomCategoryResult(
         isLoading: false,
-          state: json['state'],
-          message: json['message'],
-          category: List<RoomCategory>.from(
-              (json['data'] as List).map((x) => RoomCategory.fromJson(x))));
+        state: json['state'],
+        message: json['message'],
+        category: List<RoomCategory>.from(
+            (json['data'] as List).map((x) => RoomCategory.fromJson(x))));
+  }
 }
 
 class RoomCategory {

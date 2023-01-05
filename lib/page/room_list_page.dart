@@ -137,7 +137,7 @@ class RoomListPage extends StatelessWidget {
                       backgroundColor:
                           const MaterialStatePropertyAll<Color>(Colors.red),
                       padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                          const EdgeInsets.fromLTRB(15, 10, 15, 10)),
                     ),
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -154,7 +154,7 @@ class RoomListPage extends StatelessWidget {
                       backgroundColor:
                           MaterialStatePropertyAll<Color>(Colors.lime.shade800),
                       padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.fromLTRB(30, 20, 30, 20)),
+                          const EdgeInsets.fromLTRB(15, 10, 15, 10)),
                     ),
                     onPressed: () {
                       Navigator.pop(context);

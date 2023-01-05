@@ -11,12 +11,16 @@ class RoomDetailResult {
     this.data,
   });
 
-  factory RoomDetailResult.fromJson(Map<String, dynamic> json) =>
-      RoomDetailResult(
-          isLoading: false,
-          state: json['state'],
-          message: json['message'],
-          data: RoomData.fromJson(json['data']));
+  factory RoomDetailResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
+    return RoomDetailResult(
+        isLoading: false,
+        state: json['state'],
+        message: json['message'],
+        data: RoomData.fromJson(json['data']));
+  }
 }
 
 class RoomData {

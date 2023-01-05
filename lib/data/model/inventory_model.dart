@@ -1,16 +1,22 @@
 class InventoryResult {
+  bool isLoading;
   bool? state;
   String? message = '';
   List<Inventory>? inventory = List.empty();
 
   InventoryResult({
+    this.isLoading = true,
     this.state,
     this.message,
     this.inventory,
   });
 
   factory InventoryResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
     return InventoryResult(
+        isLoading: false,
         state: json['state'],
         message: json['message'],
         inventory: List<Inventory>.from(

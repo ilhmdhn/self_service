@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_detail_bloc.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,11 +10,13 @@ class RoomDetailPage extends StatelessWidget {
   RoomDetailPage({super.key});
 
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();
+  final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
 
   @override
   Widget build(BuildContext context) {
     final roomCodeArgs = ModalRoute.of(context)!.settings.arguments;
     roomDetailCubit.getData(roomCodeArgs);
+    imageUrlCubit.getImageRoom();
     return Scaffold(
       body: SafeArea(
         child: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
@@ -28,8 +31,7 @@ class RoomDetailPage extends StatelessWidget {
                     children: [
                       CarouselSlider.builder(
                         options: CarouselOptions(
-                            // height: 600,
-                            aspectRatio: 16 / 9,
+                            // aspectRatio: 16 / 9,
                             viewportFraction: 0.8,
                             initialPage: 0,
                             enableInfiniteScroll: true,
@@ -43,13 +45,33 @@ class RoomDetailPage extends StatelessWidget {
                             enlargeFactor: 0.3,
                             scrollDirection: Axis.horizontal),
                         itemCount: state.data?.roomGallery?.length ?? 0,
-                        itemBuilder: ((context, index, realIndex) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                'http://192.168.1.248:3001/image-room?name_file=${state.data?.roomGallery?[index].imageUrl.toString()}',
-                                // height: 250,
-                                // width: 1000,
-                              ),
+                        itemBuilder: ((context, index, realIndex) =>
+                            BlocBuilder<ImageUrlCubit, String>(
+                              bloc: imageUrlCubit,
+                              builder: (context, stateImageUrl) {
+                                String imageUrl = stateImageUrl +
+                                    (state.data?.roomGallery?[index].imageUrl
+                                            .toString() ??
+                                        '');
+                                if (stateImageUrl == '') {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                                return Container(
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ));
+                              },
                             )),
                       ),
                       const SizedBox(

@@ -1,16 +1,23 @@
 class FnBCategoryResult {
+  bool isLoading;
   bool? state;
   String? message;
   List<FnBCategory>? category;
 
-  FnBCategoryResult({this.state, this.message, this.category});
+  FnBCategoryResult(
+      {this.isLoading = true, this.state, this.message, this.category});
 
-  factory FnBCategoryResult.fromJson(Map<String, dynamic> json) =>
-      FnBCategoryResult(
-          state: json['state'],
-          message: json['message'],
-          category: List<FnBCategory>.from(
-              (json['data'] as List).map((x) => FnBCategory.fromJson(x))));
+  factory FnBCategoryResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
+    return FnBCategoryResult(
+        isLoading: false,
+        state: json['state'],
+        message: json['message'],
+        category: List<FnBCategory>.from(
+            (json['data'] as List).map((x) => FnBCategory.fromJson(x))));
+  }
 }
 
 class FnBCategory {

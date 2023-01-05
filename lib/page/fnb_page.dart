@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
+import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
 import '../bloc/fnb_bloc.dart';
@@ -13,6 +14,8 @@ class FnBPage extends StatelessWidget {
   final CategoryInventoryNameCubit categoryNameCubit =
       CategoryInventoryNameCubit();
   final CounterCubit pageCubit = CounterCubit();
+  final ImageUrlCubit imageFnBCategoryCubit = ImageUrlCubit();
+  final ImageUrlCubit imageFnBCubit = ImageUrlCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,10 @@ class FnBPage extends StatelessWidget {
     fnbCategoryCubit.getData();
     categoryNameCubit.getData(categoryName);
     inventoryCubit.getData(page, 10, category, search);
+    imageFnBCubit.getImageFnB();
+    imageFnBCategoryCubit.getFnBCategoryImage();
     return Scaffold(
+      appBar: AppBar(title: const Text('Order Food and Beverage')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -36,50 +42,78 @@ class FnBPage extends StatelessWidget {
             child: BlocBuilder<FnBCategoryCubit, FnBCategoryResult>(
               bloc: fnbCategoryCubit,
               builder: (context, state) {
-                return ListView.builder(
-                  itemCount: state.category?.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      width: 130,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.black54, width: 0.3),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          category = state.category?[index].fnbCategoryCode
-                                  .toString() ??
-                              '';
-                          categoryNameCubit
-                              .getData(state.category?[index].fnbCategoryName);
-                          inventoryCubit.getData(1, 10, category, search);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    //  await ImageRequest().getFnBCategoryImage(state.category?[index].fnbCategoryImage)
-                                    'http://192.168.1.248:3001/image-fnb-category?name_file=${state.category?[index].fnbCategoryImage}',
+                if (state.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state.state == false) {
+                  return Center(
+                    child: Text(state.message ?? 'Error'),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: ListView.builder(
+                    itemCount: state.category?.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        width: 130,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black54, width: 0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: BlocBuilder<ImageUrlCubit, String>(
+                            bloc: imageFnBCategoryCubit,
+                            builder: (context, stateImageFnBCategory) {
+                              if (stateImageFnBCategory == '') {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              String imageFnBCategoryUrl =
+                                  stateImageFnBCategory +
+                                      (state.category![index].fnbCategoryImage
+                                          .toString());
+                              return InkWell(
+                                onTap: () {
+                                  category = state
+                                          .category?[index].fnbCategoryCode
+                                          .toString() ??
+                                      '';
+                                  categoryNameCubit.getData(
+                                      state.category?[index].fnbCategoryName);
+                                  inventoryCubit.getData(
+                                      1, 10, category, search);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Expanded(
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.network(
+                                              imageFnBCategoryUrl),
+                                        ),
+                                      ),
+                                      Text(state
+                                              .category?[index].fnbCategoryName
+                                              .toString() ??
+                                          ""),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Text(state.category?[index].fnbCategoryName
-                                      .toString() ??
-                                  ""),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                              );
+                            }),
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -100,17 +134,37 @@ class FnBPage extends StatelessWidget {
                         style: const TextStyle(fontSize: 23),
                       ),
                     ),
-                    TextField(
-                      onChanged: (String value) {
-                        categoryNameCubit.getData('ALL');
-                        pageCubit.reset();
-                        inventoryCubit.getData(1, 10, '', value);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5, right: 5, top: 3),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                          hintText: 'Cari FnB',
+                        ),
+                        onChanged: (String value) {
+                          categoryNameCubit.getData('ALL');
+                          pageCubit.reset();
+                          inventoryCubit.getData(1, 10, '', value);
+                        },
+                      ),
                     ),
                     Expanded(
                       child: BlocBuilder<InventoryCubit, InventoryResult>(
                           bloc: inventoryCubit,
                           builder: (context, state) {
+                            if (state.isLoading) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            if (state.state == false) {
+                              return Center(
+                                child: Text(state.message.toString()),
+                              );
+                            }
+
                             return ListView.builder(
                               itemCount: state.inventory?.length ?? 0,
                               scrollDirection: Axis.vertical,
@@ -128,80 +182,94 @@ class FnBPage extends StatelessWidget {
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
-                                      child: Row(
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          SizedBox(
-                                            width: 100,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.network(
-                                                'http://192.168.1.248:3001/image-fnb?name_file=${state.inventory?[index].image}',
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  Text(state.inventory?[index]
-                                                          .name
-                                                          .toString() ??
-                                                      ''),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            counterCubit
-                                                                .decrement();
-                                                          },
-                                                          icon: const Icon(
-                                                            Icons
-                                                                .remove_circle_outline_outlined,
-                                                            size: 23,
-                                                            color: Colors.red,
-                                                          )),
-                                                      BlocBuilder<CounterCubit,
-                                                          int>(
-                                                        bloc: counterCubit,
-                                                        builder:
-                                                            (context, state) {
-                                                          return Text(
-                                                            state.toString(),
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        18),
+                                          Text(state.inventory?[index].name
+                                                  .toString() ??
+                                              ''),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 5.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                Expanded(
+                                                  child: BlocBuilder<
+                                                          ImageUrlCubit,
+                                                          String>(
+                                                      bloc: imageFnBCubit,
+                                                      builder: (context,
+                                                          stateImageFnB) {
+                                                        if (stateImageFnB ==
+                                                            '') {
+                                                          return const Center(
+                                                            child:
+                                                                CircularProgressIndicator(),
                                                           );
+                                                        }
+                                                        String imageFnBUrl =
+                                                            stateImageFnB +
+                                                                state
+                                                                    .inventory![
+                                                                        index]
+                                                                    .image
+                                                                    .toString();
+                                                        return ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: Image.network(
+                                                              imageFnBUrl),
+                                                        );
+                                                      }),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          counterCubit
+                                                              .decrement();
                                                         },
-                                                      ),
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            counterCubit
-                                                                .increment();
-                                                          },
-                                                          icon: const Icon(
-                                                            Icons
-                                                                .add_circle_outline_outlined,
-                                                            size: 23,
-                                                            color: Colors.green,
-                                                          ))
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .remove_circle_outline_outlined,
+                                                          size: 23,
+                                                          color: Colors.red,
+                                                        )),
+                                                    BlocBuilder<CounterCubit,
+                                                        int>(
+                                                      bloc: counterCubit,
+                                                      builder:
+                                                          (context, state) {
+                                                        return Text(
+                                                          state.toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 18),
+                                                        );
+                                                      },
+                                                    ),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          counterCubit
+                                                              .increment();
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .add_circle_outline_outlined,
+                                                          size: 23,
+                                                          color: Colors.green,
+                                                        ))
+                                                  ],
+                                                )
+                                              ],
                                             ),
                                           )
                                         ],
@@ -249,7 +317,16 @@ class FnBPage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Column(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text('Pesanan Saya', style: TextStyle(fontSize: 23)),
+                    Expanded(
+                        child: Container(
+                      color: Colors.blue,
+                    ))
+                  ],
+                ),
               )
             ],
           )),

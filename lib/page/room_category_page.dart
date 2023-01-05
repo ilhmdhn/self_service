@@ -78,11 +78,9 @@ class RoomCategoryPage extends StatelessWidget {
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            child: Expanded(
-                                              child: Image.network(
-                                                imageUrl,
-                                                fit: BoxFit.fill,
-                                              ),
+                                            child: Image.network(
+                                              imageUrl,
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                         );

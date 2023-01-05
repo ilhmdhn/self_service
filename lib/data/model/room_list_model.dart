@@ -6,12 +6,17 @@ class RoomListResult {
 
   RoomListResult({this.isLoading = true, this.state, this.message, this.room});
 
-  factory RoomListResult.fromJson(Map<String, dynamic> json) => RoomListResult(
-      isLoading: false,
-      state: json['state'],
-      message: json['message'],
-      room: List<RoomList>.from(
-          (json['data'] as List).map((x) => RoomList.fromJson(x))));
+  factory RoomListResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
+    return RoomListResult(
+        isLoading: false,
+        state: json['state'],
+        message: json['message'],
+        room: List<RoomList>.from(
+            (json['data'] as List).map((x) => RoomList.fromJson(x))));
+  }
 }
 
 class RoomList {
