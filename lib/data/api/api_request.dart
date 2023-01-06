@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
+import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
@@ -75,6 +76,18 @@ class ApiService {
     } catch (err) {
       return InventoryResult(
           isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<MemberResult> getMember(String memberCode) async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}member?member_code=$memberCode');
+      final apiResponse = await http.get(url);
+      return MemberResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return MemberResult(
+          isLoading: false, state: false, data: null, message: err.toString());
     }
   }
 }

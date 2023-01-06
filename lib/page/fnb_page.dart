@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:self_service/bloc/checkin_data_bloc.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
+import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
 import '../bloc/fnb_bloc.dart';
@@ -16,6 +18,7 @@ class FnBPage extends StatelessWidget {
   final CounterCubit pageCubit = CounterCubit();
   final ImageUrlCubit imageFnBCategoryCubit = ImageUrlCubit();
   final ImageUrlCubit imageFnBCubit = ImageUrlCubit();
+  final CheckinDataCubit chekinDataCubit = CheckinDataCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -322,8 +325,29 @@ class FnBPage extends StatelessWidget {
                   children: [
                     const Text('Pesanan Saya', style: TextStyle(fontSize: 23)),
                     Expanded(
-                        child: Container(
-                      color: Colors.blue,
+                        child: BlocBuilder<CheckinDataCubit, CheckinData>(
+                      bloc: chekinDataCubit,
+                      builder: (context, stateCheckinData) {
+                        if (stateCheckinData.fnbInfo!.state == false &&
+                            stateCheckinData.fnbInfo!.dataOrder!.isEmpty) {
+                          return const Text(
+                            'Empty Order',
+                            style: TextStyle(fontSize: 23),
+                          );
+                        }
+                        return ListView.builder(
+                            itemCount:
+                                stateCheckinData.fnbInfo!.dataOrder!.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(''),
+                                ],
+                              );
+                            });
+                      },
                     ))
                   ],
                 ),

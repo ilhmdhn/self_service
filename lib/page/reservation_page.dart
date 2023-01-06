@@ -32,7 +32,7 @@ class ReservationPage extends StatelessWidget {
             const SizedBox(height: 5),
             ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/room-category');
+                  Navigator.of(context).pushNamed('/login');
                 },
                 onLongPress: () {
                   Navigator.of(context).pushNamed('/setting');

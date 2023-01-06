@@ -11,7 +11,7 @@ class RoomDetailPage extends StatelessWidget {
 
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();
   final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
-
+  
   @override
   Widget build(BuildContext context) {
     final roomCodeArgs = ModalRoute.of(context)!.settings.arguments;
