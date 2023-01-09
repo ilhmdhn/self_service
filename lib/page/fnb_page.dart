@@ -328,8 +328,8 @@ class FnBPage extends StatelessWidget {
                         child: BlocBuilder<CheckinDataCubit, CheckinData>(
                       bloc: chekinDataCubit,
                       builder: (context, stateCheckinData) {
-                        if (stateCheckinData.fnbInfo!.state == false &&
-                            stateCheckinData.fnbInfo!.dataOrder!.isEmpty) {
+                        if (stateCheckinData.fnbInfo.state == false &&
+                            stateCheckinData.fnbInfo.dataOrder!.isEmpty) {
                           return const Text(
                             'Empty Order',
                             style: TextStyle(fontSize: 23),
@@ -337,13 +337,13 @@ class FnBPage extends StatelessWidget {
                         }
                         return ListView.builder(
                             itemCount:
-                                stateCheckinData.fnbInfo!.dataOrder!.length,
+                                stateCheckinData.fnbInfo.dataOrder!.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(''),
+                                  Text(index.toString()),
                                 ],
                               );
                             });

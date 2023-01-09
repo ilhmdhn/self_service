@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
+import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import '../bloc/room_category_bloc.dart';
 
@@ -13,6 +14,8 @@ class RoomCategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     roomCategoryCubit.getData();
+    final checkinDataArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinData;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 250, 250, 250),
       appBar: AppBar(
@@ -48,9 +51,13 @@ class RoomCategoryPage extends StatelessWidget {
                         imageUrlCubit.getImageRoomCategory();
                         return InkWell(
                           onTap: () {
+                            checkinDataArgs.checkinInfo.roomType =
+                                roomCategoryState
+                                    .category![index].roomCategoryCode;
+                            print(
+                                'room kategory ${roomCategoryState.category![index].roomCategoryCode}');
                             Navigator.of(context).pushNamed('/room-list',
-                                arguments: roomCategoryState
-                                    .category![index].roomCategoryCode);
+                                arguments: checkinDataArgs);
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -58,7 +65,6 @@ class RoomCategoryPage extends StatelessWidget {
                               border:
                                   Border.all(color: Colors.black54, width: 0.3),
                               borderRadius: BorderRadius.circular(10),
-                              // color: Colors.grey
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

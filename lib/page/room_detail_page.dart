@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_detail_bloc.dart';
+import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../util/currency.dart';
@@ -14,8 +15,8 @@ class RoomDetailPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    final roomCodeArgs = ModalRoute.of(context)!.settings.arguments;
-    roomDetailCubit.getData(roomCodeArgs);
+    final checkinDataArgs = ModalRoute.of(context)!.settings.arguments as CheckinData;
+    roomDetailCubit.getData(checkinDataArgs.checkinInfo.roomCode);
     imageUrlCubit.getImageRoom();
     return Scaffold(
       body: SafeArea(

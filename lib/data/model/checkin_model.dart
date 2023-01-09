@@ -1,7 +1,12 @@
 class CheckinData {
-  CheckinInfo? checkinInfo;
-  FnBInfo? fnbInfo;
-  PromoInfo? promoInfo;
+  CheckinInfo checkinInfo;
+  FnBInfo fnbInfo;
+  PromoInfo promoInfo;
+  CheckinData(
+      {
+      required this.checkinInfo,
+      required this.fnbInfo,
+      required this.promoInfo});
 }
 
 class CheckinInfo {

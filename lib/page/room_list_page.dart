@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_list_bloc.dart';
+import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 
 class RoomListPage extends StatelessWidget {
@@ -9,14 +11,18 @@ class RoomListPage extends StatelessWidget {
 
   final RoomListCubit roomListCubit = RoomListCubit();
   final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
+  final CounterCubit durationCubit = CounterCubit();
+  final CounterCubit guestCubit = CounterCubit();
 
   @override
   Widget build(BuildContext context) {
-    final roomCategoryArgs = ModalRoute.of(context)!.settings.arguments;
-    roomListCubit.getData(roomCategoryArgs);
+    final checkinDataArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinData;
+    roomListCubit.getData(checkinDataArgs.checkinInfo.roomType);
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false, title: Text('$roomCategoryArgs')),
+          automaticallyImplyLeading: false,
+          title: Text('${checkinDataArgs.checkinInfo.roomType}')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -47,9 +53,10 @@ class RoomListPage extends StatelessWidget {
                             (index) {
                           return InkWell(
                             onTap: () {
+                              checkinDataArgs.checkinInfo.roomCode =
+                                  roomListState.room![index].roomCode;
                               Navigator.of(context).pushNamed('/room-detail',
-                                  arguments:
-                                      roomListState.room?[index].roomCode);
+                                  arguments: checkinDataArgs);
                             },
                             child: Container(
                               decoration: BoxDecoration(

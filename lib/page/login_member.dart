@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/bloc/member_bloc.dart';
+import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/member_model.dart';
 
 class LoginPage extends StatelessWidget {
@@ -12,38 +13,43 @@ class LoginPage extends StatelessWidget {
   final InputCubit inputCubit = InputCubit();
   final inputCode = TextEditingController();
   final MemberCubit memberCubit = MemberCubit();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final CheckinData checkinData = CheckinData(
+      checkinInfo: CheckinInfo(), fnbInfo: FnBInfo(), promoInfo: PromoInfo());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        BlocBuilder<MemberCubit, MemberResult>(
+          bloc: memberCubit,
+          builder: (context, memberState) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (memberState.isLoading == false) {
+                if (memberState.state == true) {
+                  checkinData.checkinInfo.memberCode =
+                      memberState.data?.memberCode;
+                  checkinData.checkinInfo.memberName =
+                      memberState.data?.memberName;
+                  Navigator.pushNamed(context, '/room-category',
+                      arguments: checkinData);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(memberState.message.toString()),
+                  ));
+                }
+              } // Add Your Code here.
+            });
+
+            return const SizedBox();
+          },
+        ),
+        const Expanded(
+            child: Text('Sudah terdaftar sebagai member Puppy Club?',
+                style: TextStyle(fontSize: 23))),
         Expanded(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            BlocBuilder<MemberCubit, MemberResult>(
-                bloc: memberCubit,
-                builder: (context, memberState) {
-                  print('response' + memberState.message.toString());
-                  if (memberState.isLoading == false) {
-                    if (memberState.state == false) {
-                      return SnackBar(
-                          content: Text(memberState.message.toString()));
-                    }
-                    print('response' + memberState.message.toString());
-                    SnackBar(content: Text(memberState.message.toString()));
-                  }
-                  return const SizedBox();
-                }),
-            const Text('Sudah terdaftar sebagai member Puppy Club?',
-                style: TextStyle(fontSize: 23)),
-            const Expanded(
-              child: Text('azz'),
-            )
-          ],
-        )),
-        Expanded(
-            child: Column(
           children: [
             Expanded(
                 child: InkWell(
@@ -85,13 +91,17 @@ class LoginPage extends StatelessWidget {
                             ElevatedButton(
                                 onPressed: () {
                                   if (inputCode.text.isNotEmpty) {
-                                    memberCubit.getData(inputCode.text);
-                                    Navigator.pop(context);
+                                    Navigator.of(context).pop(inputCode.text);
+                                    // Navigator.pop(context, inputCode.text);
                                   }
                                 },
                                 child: const Text('OK')),
                           ],
-                        ));
+                        )).then((value) {
+                  if (value != null) {
+                    memberCubit.getData(value);
+                  }
+                });
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -127,6 +137,47 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             )),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            const MaterialStatePropertyAll<Color>(Colors.red),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.fromLTRB(15, 10, 15, 10)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/splash', (Route<dynamic> route) => false);
+                      },
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      )),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll<Color>(
+                            Colors.lime.shade800),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.fromLTRB(15, 10, 15, 10)),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'Kembali',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      )),
+                ],
+              ),
+            )
           ],
         ))
       ]),
