@@ -175,22 +175,26 @@ class RoomDetailPage extends StatelessWidget {
                                             MainAxisAlignment.spaceEvenly,
                                         children: [
                                           IconButton(
-                                              onPressed: () {
-                                                guestCubit.increment();
-                                              },
-                                              icon: const Icon(
-                                                  Icons.add_box_outlined)),
+                                            onPressed: () {
+                                              guestCubit.increment();
+                                            },
+                                            icon: const Icon(
+                                                Icons.add_box_outlined),
+                                            color: Colors.green,
+                                          ),
                                           Text(
                                             stateGuest.toString(),
                                             style:
                                                 const TextStyle(fontSize: 32),
                                           ),
                                           IconButton(
-                                              onPressed: () {
-                                                guestCubit.decrement();
-                                              },
-                                              icon: const Icon(Icons
-                                                  .indeterminate_check_box_outlined))
+                                            onPressed: () {
+                                              guestCubit.decrement();
+                                            },
+                                            icon: const Icon(Icons
+                                                .indeterminate_check_box_outlined),
+                                            color: Colors.red,
+                                          )
                                         ],
                                       );
                                     }),
@@ -229,7 +233,9 @@ class RoomDetailPage extends StatelessWidget {
                                                 durationCubit.increment();
                                               },
                                               icon: const Icon(
-                                                  Icons.add_box_outlined)),
+                                                Icons.add_box_outlined,
+                                                color: Colors.green,
+                                              )),
                                           Text(
                                             stateDuration.toString(),
                                             style:
@@ -240,7 +246,8 @@ class RoomDetailPage extends StatelessWidget {
                                                 durationCubit.decrement();
                                               },
                                               icon: const Icon(Icons
-                                                  .indeterminate_check_box_outlined))
+                                                  .indeterminate_check_box_outlined),
+                                              color: Colors.red)
                                         ],
                                       );
                                     }),
@@ -280,7 +287,7 @@ class RoomDetailPage extends StatelessWidget {
                                   Colors.lime.shade800),
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pop(context, checkinDataArgs);
                             },
                             child: const Text(
                               'Kembali',

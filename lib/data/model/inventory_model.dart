@@ -24,6 +24,27 @@ class InventoryResult {
   }
 }
 
+class InventorySingleResult {
+  bool isLoading;
+  bool? state;
+  String? message;
+  Inventory? inventory;
+
+  InventorySingleResult(
+      {this.isLoading = true, this.state, this.message, this.inventory});
+
+  factory InventorySingleResult.fromJson(Map<String, dynamic> json) {
+    if (json['state'] == false) {
+      throw json['message'];
+    }
+    return InventorySingleResult(
+        isLoading: false,
+        state: json['state'],
+        message: json['message'],
+        inventory: Inventory.fromJson(json['data']));
+  }
+}
+
 class Inventory {
   String? inventoryCode;
   String? inventoryIdGlobal;

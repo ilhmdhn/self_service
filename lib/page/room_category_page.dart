@@ -54,8 +54,6 @@ class RoomCategoryPage extends StatelessWidget {
                             checkinDataArgs.checkinInfo.roomType =
                                 roomCategoryState
                                     .category![index].roomCategoryCode;
-                            print(
-                                'room kategory ${roomCategoryState.category![index].roomCategoryCode}');
                             Navigator.of(context).pushNamed('/room-list',
                                 arguments: checkinDataArgs);
                           },
