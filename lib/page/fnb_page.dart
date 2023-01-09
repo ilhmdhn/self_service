@@ -22,6 +22,8 @@ class FnBPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkinDataArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinData;
     String category = '';
     String search = '';
     String categoryName = '';
@@ -29,6 +31,7 @@ class FnBPage extends StatelessWidget {
     if (category == '') {
       categoryName = 'ALL';
     }
+    chekinDataCubit.dataCheckin(checkinDataArgs);
     pageCubit.increment();
     fnbCategoryCubit.getData();
     categoryNameCubit.getData(categoryName);
@@ -328,20 +331,23 @@ class FnBPage extends StatelessWidget {
                         child: BlocBuilder<CheckinDataCubit, CheckinData>(
                       bloc: chekinDataCubit,
                       builder: (context, stateCheckinData) {
-                        if (stateCheckinData.fnbInfo.state == false &&
-                            stateCheckinData.fnbInfo.dataOrder!.isEmpty) {
-                          return const Text(
-                            'Empty Order',
-                            style: TextStyle(fontSize: 23),
+                        if (stateCheckinData.fnbInfo.state == false ||
+                            stateCheckinData.fnbInfo.dataOrder == null) {
+                          return const Center(
+                            child: Text(
+                              'Empty Order',
+                              style: TextStyle(fontSize: 23),
+                            ),
                           );
                         }
                         return ListView.builder(
                             itemCount:
-                                stateCheckinData.fnbInfo.dataOrder!.length,
+                                stateCheckinData.fnbInfo.dataOrder?.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(index.toString()),
                                 ],

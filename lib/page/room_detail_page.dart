@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_detail_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
@@ -12,10 +13,15 @@ class RoomDetailPage extends StatelessWidget {
 
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();
   final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
-  
+  final CounterCubit guestCubit = CounterCubit();
+  final CounterCubit durationCubit = CounterCubit();
+
   @override
   Widget build(BuildContext context) {
-    final checkinDataArgs = ModalRoute.of(context)!.settings.arguments as CheckinData;
+    int? guestTotal = 0;
+    int? durationTotal = 0;
+    final checkinDataArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinData;
     roomDetailCubit.getData(checkinDataArgs.checkinInfo.roomCode);
     imageUrlCubit.getImageRoom();
     return Scaffold(
@@ -140,6 +146,106 @@ class RoomDetailPage extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: const [
+                                    Icon(
+                                      Icons.person_add,
+                                      color: Colors.blue,
+                                      size: 36,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Jumlah Tamu',
+                                      style: TextStyle(fontSize: 26),
+                                    ),
+                                  ],
+                                ),
+                                BlocBuilder<CounterCubit, int>(
+                                    bloc: guestCubit,
+                                    builder: (context, stateGuest) {
+                                      guestTotal = stateGuest;
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                guestCubit.increment();
+                                              },
+                                              icon: const Icon(
+                                                  Icons.add_box_outlined)),
+                                          Text(
+                                            stateGuest.toString(),
+                                            style:
+                                                const TextStyle(fontSize: 32),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                guestCubit.decrement();
+                                              },
+                                              icon: const Icon(Icons
+                                                  .indeterminate_check_box_outlined))
+                                        ],
+                                      );
+                                    }),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: const [
+                                    Icon(
+                                      Icons.access_time_outlined,
+                                      color: Colors.blue,
+                                      size: 36,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Durasi (jam)',
+                                      style: TextStyle(fontSize: 26),
+                                    ),
+                                  ],
+                                ),
+                                BlocBuilder<CounterCubit, int>(
+                                    bloc: durationCubit,
+                                    builder: (context, stateDuration) {
+                                      durationTotal = stateDuration;
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                durationCubit.increment();
+                                              },
+                                              icon: const Icon(
+                                                  Icons.add_box_outlined)),
+                                          Text(
+                                            stateDuration.toString(),
+                                            style:
+                                                const TextStyle(fontSize: 32),
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                durationCubit.decrement();
+                                              },
+                                              icon: const Icon(Icons
+                                                  .indeterminate_check_box_outlined))
+                                        ],
+                                      );
+                                    }),
+                              ],
+                            ),
                           ],
                         ),
                       )
@@ -193,8 +299,23 @@ class RoomDetailPage extends StatelessWidget {
                                     .showSnackBar(const SnackBar(
                                   content: Text("Room Sedang Digunakan"),
                                 ));
+                              } else if (durationTotal == 0) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Durasi masih belum diisi"),
+                                ));
+                              } else if (guestTotal == 0) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Text("Jumlah tamu belum diisi"),
+                                ));
                               } else {
-                                Navigator.of(context).pushNamed('/fnb-page');
+                                checkinDataArgs.checkinInfo.roomDuration =
+                                    durationTotal.toString();
+                                checkinDataArgs.checkinInfo.pax =
+                                    guestTotal.toString();
+                                Navigator.of(context).pushNamed('/fnb-page',
+                                    arguments: checkinDataArgs);
                               }
                             },
                             child: const Text(
