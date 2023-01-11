@@ -3,9 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/data/model/member_model.dart';
+import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
+import 'package:self_service/data/model/voucher_model.dart';
 import '../shared_pref/preferences_data.dart';
 
 class ApiService {
@@ -103,6 +105,47 @@ class ApiService {
           state: false,
           inventory: null,
           message: err.toString());
+    }
+  }
+
+  Future<PromoDataResult> getPromoRoom() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo/room');
+      final apiResponse = await http.get(url);
+      return PromoDataResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return PromoDataResult(
+          isLoading: false, state: false, message: err.toString(), promo: []);
+    }
+  }
+
+  Future<PromoDataResult> getPromoFnB() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo/fnb');
+      final apiResponse = await http.get(url);
+      return PromoDataResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return PromoDataResult(
+          isLoading: false, state: false, message: err.toString(), promo: []);
+    }
+  }
+
+  Future<VoucherDataResult> getVoucherMembership(memberCode) async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url =
+          Uri.parse('${serverUrl}voucher-membership?kode_member=$memberCode');
+      final apiResponse = await http.get(url);
+      return VoucherDataResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return VoucherDataResult(
+        isLoading: false,
+        state: false,
+        message: err.toString(),
+        voucherData: []
+      );
     }
   }
 }
