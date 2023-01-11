@@ -25,21 +25,21 @@ class VoucherDataResult {
 class VoucherData {
   String? voucherCode;
   String? voucherName;
-  String? voucherHour;
-  String? voucherRoomPrice;
-  String? voucherRoomDiscount;
+  num? voucherHour;
+  num? voucherRoomPrice;
+  num? voucherRoomDiscount;
   String? conditionRoomType;
-  String? conditionHour;
-  String? conditionRoomPrice;
-  String? conditionItemQty;
-  String? conditionItemPrice;
-  String? voucherFnbPrice;
-  String? voucherFnbDiscount;
-  String? conditionFnbDiscount;
-  String? voucherPrice;
-  String? conditionPrice;
-  String? voucherDiscount;
-  String? conditionDiscount;
+  num? conditionHour;
+  num? conditionRoomPrice;
+  num? conditionItemQty;
+  num? conditionItemPrice;
+  num? voucherFnbPrice;
+  num? voucherFnbDiscount;
+  num? conditionFnbDiscount;
+  num? voucherPrice;
+  num? conditionPrice;
+  num? voucherDiscount;
+  num? conditionDiscount;
 
   VoucherData(
       {this.voucherCode,

@@ -621,7 +621,9 @@ class FnBPage extends StatelessWidget {
                             const EdgeInsets.fromLTRB(20, 10, 20, 10)),
                         backgroundColor: const MaterialStatePropertyAll<Color>(
                             Colors.green)),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/voucher', arguments: checkinDataArgs);
+                    },
                     child: const Text(
                       'Lanjut',
                       style: TextStyle(fontSize: 18),

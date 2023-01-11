@@ -18,7 +18,7 @@ class PromoDataResult {
         state: json['state'],
         message: json['message'],
         promo: List<PromoData>.from(
-            (json['data'] as List).map((x) => VoucherData.fromJson(x))));
+            (json['data'] as List).map((x) => PromoData.fromJson(x))));
   }
 }
 

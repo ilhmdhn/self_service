@@ -7,6 +7,7 @@ import 'package:self_service/page/room_detail_page.dart';
 import 'package:self_service/page/room_list_page.dart';
 import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/voucher_page.dart';
 
 void main() async {
   runApp(const SelfService());
@@ -30,6 +31,7 @@ class SelfService extends StatelessWidget {
         '/room-detail': (context) => RoomDetailPage(),
         '/fnb-page': (context) => FnBPage(),
         '/setting': (context) => const SettingPage(),
+        '/voucher': (context) => VoucherPage()
       },
     );
   }
