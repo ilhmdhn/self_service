@@ -14,5 +14,6 @@ class CounterCubit extends Cubit<int> {
     }
   }
 
+  void setValue(value) => emit(value);
   void reset() => emit(1);
 }

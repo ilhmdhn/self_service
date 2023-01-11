@@ -45,10 +45,8 @@ class CheckinInfo {
 }
 
 class FnBInfo {
-  bool state;
   List<DataOrder>? dataOrder;
-
-  FnBInfo({this.state = false, this.dataOrder});
+  FnBInfo({this.dataOrder});
 }
 
 class DataOrder {

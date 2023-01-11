@@ -90,4 +90,19 @@ class ApiService {
           isLoading: false, state: false, data: null, message: err.toString());
     }
   }
+
+  Future<InventorySingleResult> getFnBSingle(String inventoryCode) async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}fnb-id?kode_inventory=$inventoryCode');
+      final apiResponse = await http.get(url);
+      return InventorySingleResult.fromJson(json.decode(apiResponse.body));
+    } catch (err) {
+      return InventorySingleResult(
+          isLoading: false,
+          state: false,
+          inventory: null,
+          message: err.toString());
+    }
+  }
 }
