@@ -57,6 +57,22 @@ class LoginPage extends StatelessWidget {
             children: [
               Expanded(
                   child: InkWell(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                            content: SingleChildScrollView(
+                          child:Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Text('QR Code IOS'),
+                              Text('QR Code Android'),
+                            ],
+                          ),
+                        ));
+                      });
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
 import 'package:self_service/page/reservation_page.dart';
+import 'package:self_service/page/review_bill_page.dart';
 import 'package:self_service/page/room_category_page.dart';
 import 'package:self_service/page/room_detail_page.dart';
 import 'package:self_service/page/room_list_page.dart';
@@ -31,7 +32,8 @@ class SelfService extends StatelessWidget {
         '/room-detail': (context) => RoomDetailPage(),
         '/fnb-page': (context) => FnBPage(),
         '/setting': (context) => const SettingPage(),
-        '/voucher': (context) => VoucherPage()
+        '/voucher': (context) => VoucherPage(),
+        '/review-bill': (context) => ReviewBillPage()
       },
     );
   }

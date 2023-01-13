@@ -176,11 +176,11 @@ class RoomDetailPage extends StatelessWidget {
                                         children: [
                                           IconButton(
                                             onPressed: () {
-                                              guestCubit.increment();
+                                              guestCubit.decrement();
                                             },
-                                            icon: const Icon(
-                                                Icons.add_box_outlined),
-                                            color: Colors.green,
+                                            icon: const Icon(Icons
+                                                .indeterminate_check_box_outlined),
+                                            color: Colors.red,
                                           ),
                                           Text(
                                             stateGuest.toString(),
@@ -189,12 +189,12 @@ class RoomDetailPage extends StatelessWidget {
                                           ),
                                           IconButton(
                                             onPressed: () {
-                                              guestCubit.decrement();
+                                              guestCubit.increment();
                                             },
-                                            icon: const Icon(Icons
-                                                .indeterminate_check_box_outlined),
-                                            color: Colors.red,
-                                          )
+                                            icon: const Icon(
+                                                Icons.add_box_outlined),
+                                            color: Colors.green,
+                                          ),
                                         ],
                                       );
                                     }),
@@ -230,12 +230,11 @@ class RoomDetailPage extends StatelessWidget {
                                         children: [
                                           IconButton(
                                               onPressed: () {
-                                                durationCubit.increment();
+                                                durationCubit.decrement();
                                               },
-                                              icon: const Icon(
-                                                Icons.add_box_outlined,
-                                                color: Colors.green,
-                                              )),
+                                              icon: const Icon(Icons
+                                                  .indeterminate_check_box_outlined),
+                                              color: Colors.red),
                                           Text(
                                             stateDuration.toString(),
                                             style:
@@ -243,11 +242,12 @@ class RoomDetailPage extends StatelessWidget {
                                           ),
                                           IconButton(
                                               onPressed: () {
-                                                durationCubit.decrement();
+                                                durationCubit.increment();
                                               },
-                                              icon: const Icon(Icons
-                                                  .indeterminate_check_box_outlined),
-                                              color: Colors.red)
+                                              icon: const Icon(
+                                                Icons.add_box_outlined,
+                                                color: Colors.green,
+                                              )),
                                         ],
                                       );
                                     }),

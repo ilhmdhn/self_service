@@ -44,7 +44,9 @@ class FnBPage extends StatelessWidget {
     imageFnBCubit.getImageFnB();
     imageFnBCategoryCubit.getFnBCategoryImage();
     return Scaffold(
-      appBar: AppBar(title: const Text('Order Food and Beverage')),
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Order Food and Beverage')),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -567,8 +569,7 @@ class FnBPage extends StatelessWidget {
                                                   top: 5,
                                                   bottom: 5),
                                               child: Text(
-                                                'Catatan: ${stateOrderData[index].notes ?? ''}'
-                                              ),
+                                                  'Catatan: ${stateOrderData[index].notes ?? ''}'),
                                             )
                                           ],
                                         ));
@@ -622,7 +623,8 @@ class FnBPage extends StatelessWidget {
                         backgroundColor: const MaterialStatePropertyAll<Color>(
                             Colors.green)),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/voucher', arguments: checkinDataArgs);
+                      Navigator.pushNamed(context, '/voucher',
+                          arguments: checkinDataArgs);
                     },
                     child: const Text(
                       'Lanjut',
