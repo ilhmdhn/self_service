@@ -29,9 +29,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  auto_size_text: ^3.0.0
+  cached_network_image: ^3.2.3
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
-  dropdown_search: ^5.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
@@ -44,7 +45,6 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  msix: ^3.7.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

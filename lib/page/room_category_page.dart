@@ -4,6 +4,7 @@ import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import '../bloc/room_category_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RoomCategoryPage extends StatelessWidget {
   RoomCategoryPage({super.key});
@@ -82,10 +83,27 @@ class RoomCategoryPage extends StatelessWidget {
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                            child: Image.network(
-                                              imageUrl,
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        value: downloadProgress
+                                                            .progress),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Center(child: Icon(Icons.error)),
                                               fit: BoxFit.fill,
                                             ),
+
+                                            // Image.network(
+                                            //   imageUrl,
+                                            //   fit: BoxFit.fill,
+                                            // ),
                                           ),
                                         );
                                       } else {

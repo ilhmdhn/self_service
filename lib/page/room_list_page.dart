@@ -4,6 +4,7 @@ import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/bloc/room_list_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 
 class RoomListPage extends StatelessWidget {
@@ -74,6 +75,7 @@ class RoomListPage extends StatelessWidget {
                                       BlocBuilder<ImageUrlCubit, String>(
                                           bloc: imageUrlCubit,
                                           builder: (context, stateImageUrl) {
+                                            String imageUrl = stateImageUrl + (roomListState.room?[index].roomImage ?? "");
                                             if (stateImageUrl == '') {
                                               return const CircularProgressIndicator();
                                             }
@@ -82,13 +84,33 @@ class RoomListPage extends StatelessWidget {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.network(
+                                                child: CachedNetworkImage(
+                                                  imageUrl: imageUrl,
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            value:
+                                                                downloadProgress
+                                                                    .progress),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          const Center(
+                                                              child: Icon(
+                                                                  Icons.error)),
+                                                  fit: BoxFit.fill,
+                                                ),
+
+                                                /*Image.network(
                                                   stateImageUrl +
                                                       roomListState.room![index]
                                                           .roomImage
                                                           .toString(),
                                                   fit: BoxFit.cover,
-                                                ),
+                                                ),*/
                                               ),
                                             );
                                           }),

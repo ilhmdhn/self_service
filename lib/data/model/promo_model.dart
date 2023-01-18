@@ -1,5 +1,3 @@
-import 'package:self_service/data/model/voucher_model.dart';
-
 class PromoDataResult {
   bool isLoading;
   bool? state;

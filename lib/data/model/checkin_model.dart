@@ -1,11 +1,12 @@
 class CheckinData {
   CheckinInfo checkinInfo;
   FnBInfo fnbInfo;
+  VoucherInfo voucherInfo;
   PromoInfo promoInfo;
   CheckinData(
-      {
-      required this.checkinInfo,
+      {required this.checkinInfo,
       required this.fnbInfo,
+      required this.voucherInfo,
       required this.promoInfo});
 }
 
@@ -58,30 +59,14 @@ class DataOrder {
 }
 
 class PromoInfo {
-  bool state;
-  PromoRoom? promoRoom;
-  PromoFnB? promoFnB;
+  dynamic promoRoom;
+  dynamic promoFnB;
 
-  PromoInfo({this.state = false, this.promoRoom, this.promoFnB});
-}
-
-class PromoRoom {
-  bool state;
-  String? promoName;
-
-  PromoRoom({this.state = false, this.promoName});
-}
-
-class PromoFnB {
-  bool state;
-  String? promoName;
-
-  PromoFnB({this.state = false, this.promoName});
+  PromoInfo({this.promoRoom = false, this.promoFnB = false});
 }
 
 class VoucherInfo {
-  bool state;
-  String? voucherCode;
+  dynamic voucherCode;
 
-  VoucherInfo({this.state = false, this.voucherCode});
+  VoucherInfo({this.voucherCode = false});
 }

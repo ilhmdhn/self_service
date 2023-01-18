@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
   final MemberCubit memberCubit = MemberCubit();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final CheckinData checkinData = CheckinData(
-      checkinInfo: CheckinInfo(), fnbInfo: FnBInfo(), promoInfo: PromoInfo());
+      checkinInfo: CheckinInfo(), fnbInfo: FnBInfo(), promoInfo: PromoInfo(), voucherInfo: VoucherInfo());
   @override
   Widget build(BuildContext context) {
     return Scaffold(

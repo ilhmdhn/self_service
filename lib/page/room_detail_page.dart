@@ -7,6 +7,7 @@ import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../util/currency.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class RoomDetailPage extends StatelessWidget {
   RoomDetailPage({super.key});
@@ -72,10 +73,27 @@ class RoomDetailPage extends StatelessWidget {
                                       aspectRatio: 16 / 9,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
+                                        child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        value: downloadProgress
+                                                            .progress),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Center(child: Icon(Icons.error)),
+                                              fit: BoxFit.fill,
+                                            ),                                        
+                                        
+                                        /*Image.network(
                                           imageUrl,
                                           fit: BoxFit.fill,
-                                        ),
+                                        ),*/
                                       ),
                                     ));
                               },

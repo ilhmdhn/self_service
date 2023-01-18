@@ -8,6 +8,7 @@ import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/util/currency.dart';
 import '../bloc/fnb_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FnBPage extends StatelessWidget {
   FnBPage({super.key});
@@ -111,8 +112,21 @@ class FnBPage extends StatelessWidget {
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: Image.network(
-                                              imageFnBCategoryUrl),
+                                          child: CachedNetworkImage(
+                                            imageUrl: imageFnBCategoryUrl,
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
+                                                Center(
+                                              child: CircularProgressIndicator(
+                                                  value: downloadProgress
+                                                      .progress),
+                                            ),
+                                            errorWidget: (context, url,
+                                                    error) =>
+                                                const Center(
+                                                    child: Icon(Icons.error)),
+                                            // fit: BoxFit.fill,
+                                          ),
                                         ),
                                       ),
                                       Text(state
@@ -238,8 +252,31 @@ class FnBPage extends StatelessWidget {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(5),
-                                                          child: Image.network(
-                                                              imageFnBUrl),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                imageFnBUrl,
+                                                            progressIndicatorBuilder:
+                                                                (context, url,
+                                                                        downloadProgress) =>
+                                                                    Center(
+                                                              child: CircularProgressIndicator(
+                                                                  value: downloadProgress
+                                                                      .progress),
+                                                            ),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Center(
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .error)),
+                                                            fit: BoxFit.fill,
+                                                          ),
+
+                                                          /*Image.network(
+                                                            imageFnBUrl,
+                                                          ),*/
                                                         );
                                                       }),
                                                 ),
@@ -361,6 +398,7 @@ class FnBPage extends StatelessWidget {
                                         CounterCubit();
                                     counterFnb.setValue(
                                         stateOrderData[index].quantity);
+
                                     if (stateSingleFnB.isLoading == true) {
                                       return const Center(
                                         child: CircularProgressIndicator(),
@@ -413,16 +451,45 @@ class FnBPage extends StatelessWidget {
                                                       bloc: imageFnBCubit,
                                                       builder: (context,
                                                           imageUrlState) {
+                                                        String fnBImageUrl =
+                                                            imageUrlState +
+                                                                (stateSingleFnB
+                                                                        .inventory
+                                                                        ?.image ??
+                                                                    "");
                                                         return ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(10),
-                                                          child: Image.network(
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                fnBImageUrl,
+                                                            progressIndicatorBuilder:
+                                                                (context, url,
+                                                                        downloadProgress) =>
+                                                                    Center(
+                                                              child: CircularProgressIndicator(
+                                                                  value: downloadProgress
+                                                                      .progress),
+                                                            ),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Center(
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .error)),
+                                                            fit: BoxFit.fill,
+                                                          ),
+
+                                                          /*Image.network(
                                                               imageUrlState +
                                                                   stateSingleFnB
                                                                       .inventory!
                                                                       .image
-                                                                      .toString()),
+                                                                      .toString(),
+                                                                      ),*/
                                                         );
                                                       },
                                                     ),
