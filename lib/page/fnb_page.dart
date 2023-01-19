@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class FnBPage extends StatelessWidget {
   FnBPage({super.key});
+  static const nameRoute = '/fnb-page';
 
   final FnBCategoryCubit fnbCategoryCubit = FnBCategoryCubit();
   final InventoryCubit inventoryCubit = InventoryCubit();
@@ -23,7 +24,8 @@ class FnBPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final checkinDataArgs = ModalRoute.of(context)!.settings.arguments as CheckinData;
+    final checkinDataArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinData;
     if (checkinDataArgs.fnbInfo.dataOrder != null) {
       // orderFnBCubit.insertData();
     }

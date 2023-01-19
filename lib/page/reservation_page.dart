@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:self_service/page/login_member.dart';
+import 'package:self_service/page/setting_page.dart';
 
 class ReservationPage extends StatelessWidget {
   const ReservationPage({super.key});
+  static const nameRoute = '/reservation';
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +35,10 @@ class ReservationPage extends StatelessWidget {
             const SizedBox(height: 5),
             ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pushNamed('/login');
+                  Navigator.of(context).pushNamed(LoginPage.nameRoute);
                 },
                 onLongPress: () {
-                  Navigator.of(context).pushNamed('/setting');
+                  Navigator.of(context).pushNamed(SettingPage.nameRoute);
                 },
                 style: ButtonStyle(
                   backgroundColor:

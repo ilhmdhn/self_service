@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ReviewBillPage extends StatelessWidget {
   const ReviewBillPage({super.key});
+  static const nameRoute = '/review-bill';
 
   @override
   Widget build(BuildContext context) {

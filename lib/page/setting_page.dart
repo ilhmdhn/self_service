@@ -4,6 +4,7 @@ import 'package:self_service/bloc/setting_bloc.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
+  static const nameRoute = '/setting';
 
   @override
   Widget build(BuildContext context) {

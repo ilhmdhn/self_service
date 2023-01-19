@@ -6,11 +6,14 @@ import 'package:self_service/bloc/room_detail_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:self_service/page/fnb_page.dart';
+import 'package:self_service/page/splash_screen.dart';
 import '../util/currency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class RoomDetailPage extends StatelessWidget {
   RoomDetailPage({super.key});
+  static const nameRoute = '/room-detail';
 
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();
   final ImageUrlCubit imageUrlCubit = ImageUrlCubit();
@@ -26,6 +29,42 @@ class RoomDetailPage extends StatelessWidget {
     roomDetailCubit.getData(checkinDataArgs.checkinInfo.roomCode);
     imageUrlCubit.getImageRoom();
     return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text('Informasi Ruangan'),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Center(child: Text('Batalkan Transaksi?')),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Tidak')),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        SplashPage.nameRoute, (route) => false);
+                                  },
+                                  child: const Text('Iya'))
+                            ],
+                          ),
+                        ],
+                      );
+                    });
+              },
+              icon: const Icon(Icons.home_outlined))
+        ],
+      ),
       body: SafeArea(
         child: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
             bloc: roomDetailCubit,
@@ -74,22 +113,20 @@ class RoomDetailPage extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: CachedNetworkImage(
-                                              imageUrl: imageUrl,
-                                              progressIndicatorBuilder:
-                                                  (context, url,
-                                                          downloadProgress) =>
-                                                      Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                        value: downloadProgress
-                                                            .progress),
-                                              ),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      const Center(child: Icon(Icons.error)),
-                                              fit: BoxFit.fill,
-                                            ),                                        
-                                        
+                                          imageUrl: imageUrl,
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              Center(
+                                            child: CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Center(
+                                                  child: Icon(Icons.error)),
+                                          fit: BoxFit.fill,
+                                        ),
+
                                         /*Image.network(
                                           imageUrl,
                                           fit: BoxFit.fill,
@@ -276,83 +313,21 @@ class RoomDetailPage extends StatelessWidget {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor:
-                                  const MaterialStatePropertyAll<Color>(
-                                      Colors.red),
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/splash', (Route<dynamic> route) => false);
-                            },
-                            child: const Text(
-                              'Batal',
-                              style: TextStyle(fontSize: 18),
-                            )),
-                        ElevatedButton(
-                            style: ButtonStyle(
-                              padding: MaterialStateProperty.all<EdgeInsets>(
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                              backgroundColor: MaterialStatePropertyAll<Color>(
-                                  Colors.lime.shade800),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context, checkinDataArgs);
-                            },
-                            child: const Text(
-                              'Kembali',
-                              style: TextStyle(fontSize: 18),
-                            )),
-                        ElevatedButton(
-                            style: ButtonStyle(
-                                padding: MaterialStateProperty.all<EdgeInsets>(
-                                    const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                                backgroundColor:
-                                    const MaterialStatePropertyAll<Color>(
-                                        Colors.green)),
-                            onPressed: () {
-                              if (state.data?.roomDetail?.roomIsReady == 0) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Room Sedang Digunakan"),
-                                ));
-                              } else if (durationTotal == 0) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Durasi masih belum diisi"),
-                                ));
-                              } else if (guestTotal == 0) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Jumlah tamu belum diisi"),
-                                ));
-                              } else {
-                                checkinDataArgs.checkinInfo.roomDuration =
-                                    durationTotal.toString();
-                                checkinDataArgs.checkinInfo.pax =
-                                    guestTotal.toString();
-                                Navigator.of(context).pushNamed('/fnb-page',
-                                    arguments: checkinDataArgs);
-                              }
-                            },
-                            child: const Text(
-                              'Lanjut',
-                              style: TextStyle(fontSize: 18),
-                            ))
-                      ],
-                    ),
-                  )
                 ],
               );
             }),
+      ),
+      floatingActionButton: ElevatedButton(
+        style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(
+                const EdgeInsets.fromLTRB(20, 10, 20, 10)),
+            backgroundColor:
+                const MaterialStatePropertyAll<Color>(Colors.green)),
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed(FnBPage.nameRoute, arguments: checkinDataArgs);
+        },
+        child: const Text('Lanjut'),
       ),
     );
   }

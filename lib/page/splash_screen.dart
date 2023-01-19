@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:self_service/page/reservation_page.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
+
+  static const nameRoute = '/splash';
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +12,7 @@ class SplashPage extends StatelessWidget {
       body: SafeArea(
         child: InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed('/reservation');
+            Navigator.of(context).pushNamed(ReservationPage.nameRoute);
           },
           child: Container(
             decoration: const BoxDecoration(

@@ -18,22 +18,19 @@ class SelfService extends StatelessWidget {
   const SelfService({super.key});
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return MaterialApp(
-      initialRoute: '/splash',
+      initialRoute: SplashPage.nameRoute,
       routes: {
-        '/splash': (context) => const SplashPage(),
-        '/reservation': (context) => const ReservationPage(),
-        '/login': (context) => LoginPage(),
-        '/room-category': (context) => RoomCategoryPage(),
-        '/room-list': (context) => RoomListPage(),
-        '/room-detail': (context) => RoomDetailPage(),
-        '/fnb-page': (context) => FnBPage(),
-        '/setting': (context) => const SettingPage(),
-        '/voucher': (context) => VoucherPage(),
-        '/review-bill': (context) => ReviewBillPage()
+        SplashPage.nameRoute: (context) => const SplashPage(),
+        ReservationPage.nameRoute: (context) => const ReservationPage(),
+        LoginPage.nameRoute: (context) => LoginPage(),
+        RoomCategoryPage.nameRoute: (context) => RoomCategoryPage(),
+        RoomListPage.nameRoute: (context) => RoomListPage(),
+        RoomDetailPage.nameRoute: (context) => RoomDetailPage(),
+        FnBPage.nameRoute: (context) => FnBPage(),
+        SettingPage.nameRoute: (context) => const SettingPage(),
+        VoucherPage.nameRoute: (context) => VoucherPage(),
+        ReviewBillPage.nameRoute: (context) => const ReviewBillPage()
       },
     );
   }

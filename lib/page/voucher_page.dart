@@ -10,6 +10,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 
 class VoucherPage extends StatelessWidget {
   VoucherPage({super.key});
+    static const nameRoute = '/voucher';
 
   final PromoRoomCubit promoRoomCubit = PromoRoomCubit();
   final PromoFnBCubit promoFnBCubit = PromoFnBCubit();

@@ -6,19 +6,59 @@ import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/bloc/member_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/member_model.dart';
+import 'package:self_service/page/room_category_page.dart';
+import 'package:self_service/page/splash_screen.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
+  static const nameRoute = '/login';
 
   final InputCubit inputCubit = InputCubit();
   final inputCode = TextEditingController();
   final MemberCubit memberCubit = MemberCubit();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final CheckinData checkinData = CheckinData(
-      checkinInfo: CheckinInfo(), fnbInfo: FnBInfo(), promoInfo: PromoInfo(), voucherInfo: VoucherInfo());
+      checkinInfo: CheckinInfo(),
+      fnbInfo: FnBInfo(),
+      promoInfo: PromoInfo(),
+      voucherInfo: VoucherInfo());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text('Login Page')),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Center(child: Text('Batalkan Transaksi?')),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Tidak')),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        SplashPage.nameRoute, (route) => false);
+                                  },
+                                  child: const Text('Iya'))
+                            ],
+                          ),
+                        ],
+                      );
+                    });
+              },
+              icon: const Icon(Icons.home_outlined))
+        ],
+      ),
       key: _scaffoldKey,
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
         BlocBuilder<MemberCubit, MemberResult>(
@@ -31,7 +71,7 @@ class LoginPage extends StatelessWidget {
                       memberState.data?.memberCode;
                   checkinData.checkinInfo.memberName =
                       memberState.data?.memberName;
-                  Navigator.pushNamed(context, '/room-category',
+                  Navigator.pushNamed(context, RoomCategoryPage.nameRoute,
                       arguments: checkinData);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -63,7 +103,7 @@ class LoginPage extends StatelessWidget {
                       builder: (BuildContext context) {
                         return AlertDialog(
                             content: SingleChildScrollView(
-                          child:Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: const [
                               Text('QR Code IOS'),
@@ -115,7 +155,6 @@ class LoginPage extends StatelessWidget {
                                   onPressed: () {
                                     if (inputCode.text.isNotEmpty) {
                                       Navigator.of(context).pop(inputCode.text);
-                                      // Navigator.pop(context, inputCode.text);
                                     }
                                   },
                                   child: const Text('OK')),
@@ -166,47 +205,6 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               )),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor:
-                              const MaterialStatePropertyAll<Color>(Colors.red),
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              const EdgeInsets.fromLTRB(15, 10, 15, 10)),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/splash', (Route<dynamic> route) => false);
-                        },
-                        child: const Text(
-                          'Batal',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        )),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll<Color>(
-                              Colors.lime.shade800),
-                          padding: MaterialStateProperty.all<EdgeInsets>(
-                              const EdgeInsets.fromLTRB(15, 10, 15, 10)),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'Kembali',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        )),
-                  ],
-                ),
-              )
             ],
           ),
         ))
