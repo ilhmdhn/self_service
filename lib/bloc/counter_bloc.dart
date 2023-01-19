@@ -17,3 +17,9 @@ class CounterCubit extends Cubit<int> {
   void setValue(value) => emit(value);
   void reset() => emit(1);
 }
+
+class DynamicCubit extends Cubit<dynamic> {
+  DynamicCubit({dynamic}) : super(false);
+
+  void getData(init) => emit(init);
+}

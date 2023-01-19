@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:self_service/bloc/checkin_data_bloc.dart';
+import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/promo_voucer_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
@@ -11,18 +11,22 @@ class VoucherPage extends StatelessWidget {
 
   final PromoRoomCubit promoRoomCubit = PromoRoomCubit();
   final PromoFnBCubit promoFnBCubit = PromoFnBCubit();
-  final VouchermembershipCubit vouchermembershipCubit =
+  final VouchermembershipCubit voucherMembershipCubit =
       VouchermembershipCubit();
-  final CheckinDataCubit checkinDataCubit = CheckinDataCubit();
+  final DynamicCubit chosenPromoRoomCubit = DynamicCubit();
+  final DynamicCubit chosenPromoFnBCubit = DynamicCubit();
+  final DynamicCubit chosenVoucherCubit = DynamicCubit();
 
   @override
   Widget build(BuildContext context) {
     final checkinDataArgs =
         ModalRoute.of(context)!.settings.arguments as CheckinData;
-    checkinDataCubit.dataCheckin(checkinDataArgs);
+    chosenPromoRoomCubit.getData(checkinDataArgs.promoInfo.promoRoom);
+    chosenPromoFnBCubit.getData(checkinDataArgs.promoInfo.promoFnB);
+    chosenVoucherCubit.getData(checkinDataArgs.voucherInfo.voucherCode);
     promoRoomCubit.getData();
     promoFnBCubit.getData();
-    vouchermembershipCubit.getData(checkinDataArgs.checkinInfo.memberCode);
+    voucherMembershipCubit.getData(checkinDataArgs.checkinInfo.memberCode);
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false, title: const Text('Voucher')),
@@ -36,106 +40,124 @@ class VoucherPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  BlocBuilder<DynamicCubit, dynamic>(
+                    bloc: chosenPromoRoomCubit,
+                    builder: (context, state) {
+                      if (state != false) {
+                        checkinDataArgs.promoInfo.promoRoom = state;
+                      } else {
+                        checkinDataArgs.promoInfo.promoRoom = false;
+                      }
+                      return Container(
+                          child:
+                              state != false ? Text(state) : const SizedBox());
+                    },
+                  ),
+                  BlocBuilder<DynamicCubit, dynamic>(
+                      bloc: chosenPromoFnBCubit,
+                      builder: (context, stateChosenFnBPromo) {
+                        checkinDataArgs.promoInfo.promoFnB =
+                            stateChosenFnBPromo;
+                        return Container(
+                          child: stateChosenFnBPromo != false
+                              ? Text(stateChosenFnBPromo)
+                              : const SizedBox(),
+                        );
+                      }),
                   InkWell(
                     onTap: () {
                       showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title:
-                                      const Center(child: Text('Promo Room')),
-                                  content: BlocBuilder<PromoRoomCubit,
-                                      PromoDataResult>(
-                                    bloc: promoRoomCubit,
-                                    builder: (context, statePromoRoom) {
-                                      if (statePromoRoom.isLoading) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      if (statePromoRoom.state == false) {
-                                        return Center(
-                                          child: Text(statePromoRoom.message
-                                              .toString()),
-                                        );
-                                      }
-                                      return SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.8,
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.8,
-                                        child: ListView.builder(
-                                          itemCount: statePromoRoom
-                                              .promo?.length
-                                              .toInt(),
-                                          itemBuilder: (context, index) {
-                                            return InkWell(
-                                              onTap: () {
-                                                Navigator.pop(
-                                                    context,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Center(child: Text('Promo Room')),
+                              content:
+                                  BlocBuilder<PromoRoomCubit, PromoDataResult>(
+                                bloc: promoRoomCubit,
+                                builder: (context, statePromoRoom) {
+                                  if (statePromoRoom.isLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  if (statePromoRoom.state == false) {
+                                    return Center(
+                                      child: Text(
+                                          statePromoRoom.message.toString()),
+                                    );
+                                  }
+                                  return SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    height:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: ListView.builder(
+                                      itemCount:
+                                          statePromoRoom.promo?.length.toInt(),
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context,
+                                                statePromoRoom
+                                                    .promo?[index].name);
+                                          },
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.black54,
+                                                  width: 0.3),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
                                                     statePromoRoom
-                                                        .promo?[index].name);
-                                              },
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 8),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: Colors.black54,
-                                                      width: 0.3),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
+                                                            .promo?[index].name
+                                                            .toString() ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                        fontSize: 16),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
-                                                            .spaceEvenly,
+                                                            .spaceAround,
                                                     children: [
                                                       Text(
-                                                        statePromoRoom
-                                                                .promo?[index]
-                                                                .name
-                                                                .toString() ??
-                                                            '',
-                                                        style: const TextStyle(
-                                                            fontSize: 16),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          Text(
-                                                              'Diskon Persen Room ${statePromoRoom.promo?[index].discountPercent}%'),
-                                                          Text(
-                                                              'Diskon Rupiah Room Rp.${statePromoRoom.promo?[index].discountIdr}')
-                                                        ],
-                                                      )
+                                                          'Diskon Persen Room ${statePromoRoom.promo?[index].discountPercent}%'),
+                                                      Text(
+                                                          'Diskon Rupiah Room Rp.${statePromoRoom.promo?[index].discountIdr}')
                                                     ],
-                                                  ),
-                                                ),
+                                                  )
+                                                ],
                                               ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                              })
-                          .then((value) => {
-                                checkinDataArgs.promoInfo.promoRoom.promoName = value,
-                                checkinDataCubit.dataCheckin(checkinDataArgs)
-                              });
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          }).then((value) => {
+                            if (value != null)
+                              {chosenPromoRoomCubit.getData(value)}
+                          });
                     },
                     child: Container(
                       width: double.infinity,
@@ -181,48 +203,61 @@ class VoucherPage extends StatelessWidget {
                                             itemCount:
                                                 statePromoFnB.promo?.length,
                                             itemBuilder: (context, index) {
-                                              return Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 8),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: Colors.black54,
-                                                      width: 0.3),
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Text(statePromoFnB
-                                                              .promo?[index]
-                                                              .name
-                                                              .toString() ??
-                                                          ''),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceAround,
-                                                        children: [
-                                                          Text(
-                                                              'Diskon Persen: ${statePromoFnB.promo?[index].discountPercent}%'),
-                                                          Text(
-                                                              'Diskon Rupiah: Rp.${statePromoFnB.promo?[index].discountIdr}'),
-                                                        ],
-                                                      )
-                                                    ],
+                                              return InkWell(
+                                                onTap: () {
+                                                  Navigator.pop(
+                                                      context,
+                                                      statePromoFnB
+                                                          .promo?[index].name);
+                                                },
+                                                child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      top: 8),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    border: Border.all(
+                                                        color: Colors.black54,
+                                                        width: 0.3),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Text(statePromoFnB
+                                                                .promo?[index]
+                                                                .name
+                                                                .toString() ??
+                                                            ''),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            Text(
+                                                                'Diskon Persen: ${statePromoFnB.promo?[index].discountPercent}%'),
+                                                            Text(
+                                                                'Diskon Rupiah: Rp.${statePromoFnB.promo?[index].discountIdr}'),
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               );
                                             }),
                                       );
                                     }));
+                          }).then((value) => {
+                            if (value != null)
+                              {chosenPromoFnBCubit.getData(value)}
                           });
                     },
                     child: Container(
@@ -246,7 +281,7 @@ class VoucherPage extends StatelessWidget {
                                       child: Text('Voucher Member')),
                                   content: BlocBuilder<VouchermembershipCubit,
                                           VoucherDataResult>(
-                                      bloc: vouchermembershipCubit,
+                                      bloc: voucherMembershipCubit,
                                       builder: (context, stateVoucher) {
                                         if (stateVoucher.isLoading) {
                                           return const Center(

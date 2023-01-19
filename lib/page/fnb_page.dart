@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:self_service/bloc/checkin_data_bloc.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
@@ -20,13 +19,11 @@ class FnBPage extends StatelessWidget {
   final CounterCubit pageCubit = CounterCubit();
   final ImageUrlCubit imageFnBCategoryCubit = ImageUrlCubit();
   final ImageUrlCubit imageFnBCubit = ImageUrlCubit();
-  final CheckinDataCubit chekinDataCubit = CheckinDataCubit();
   final OrderFnBCubit orderFnBCubit = OrderFnBCubit();
 
   @override
   Widget build(BuildContext context) {
-    final checkinDataArgs =
-        ModalRoute.of(context)!.settings.arguments as CheckinData;
+    final checkinDataArgs = ModalRoute.of(context)!.settings.arguments as CheckinData;
     if (checkinDataArgs.fnbInfo.dataOrder != null) {
       // orderFnBCubit.insertData();
     }
@@ -37,7 +34,6 @@ class FnBPage extends StatelessWidget {
     if (category == '') {
       categoryName = 'ALL';
     }
-    chekinDataCubit.dataCheckin(checkinDataArgs);
     pageCubit.increment();
     fnbCategoryCubit.getData();
     categoryNameCubit.getData(categoryName);
