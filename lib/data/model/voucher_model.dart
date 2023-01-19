@@ -12,13 +12,11 @@ class VoucherDataResult {
       throw json['message'];
     }
     return VoucherDataResult(
-      isLoading: false,
-      state: json['state'],
-      message: json['message'],
-      voucherData: List<VoucherData>.from(
-        (json['data'] as List).map((x) =>VoucherData.fromJson(x))
-      )
-    );
+        isLoading: false,
+        state: json['state'],
+        message: json['message'],
+        voucherData: List<VoucherData>.from(
+            (json['data'] as List).map((x) => VoucherData.fromJson(x))));
   }
 }
 
@@ -40,6 +38,8 @@ class VoucherData {
   num? conditionPrice;
   num? voucherDiscount;
   num? conditionDiscount;
+  String? description;
+  String? image;
 
   VoucherData(
       {this.voucherCode,
@@ -58,7 +58,9 @@ class VoucherData {
       this.voucherPrice,
       this.conditionPrice,
       this.voucherDiscount,
-      this.conditionDiscount});
+      this.conditionDiscount,
+      this.description,
+      this.image});
 
   factory VoucherData.fromJson(Map<String, dynamic> json) => VoucherData(
         voucherCode: json['voucher_code'],
@@ -78,5 +80,7 @@ class VoucherData {
         conditionPrice: json['condition_price'],
         voucherDiscount: json['voucher_discount'],
         conditionDiscount: json['condition_discount'],
+        description: json['description'],
+        image: json['image'],
       );
 }

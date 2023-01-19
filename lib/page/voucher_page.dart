@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:self_service/bloc/promo_voucer_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 class VoucherPage extends StatelessWidget {
   VoucherPage({super.key});
@@ -49,8 +51,38 @@ class VoucherPage extends StatelessWidget {
                         checkinDataArgs.promoInfo.promoRoom = false;
                       }
                       return Container(
-                          child:
-                              state != false ? Text(state) : const SizedBox());
+                          child: state != false
+                              ? Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black54, width: 0.3),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(state),
+                                        IconButton(
+                                            onPressed: () {
+                                              chosenPromoRoomCubit
+                                                  .getData(false);
+                                            },
+                                            icon: const Icon(
+                                              Icons.cancel_outlined,
+                                              color: Colors.red,
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox());
                     },
                   ),
                   BlocBuilder<DynamicCubit, dynamic>(
@@ -60,7 +92,72 @@ class VoucherPage extends StatelessWidget {
                             stateChosenFnBPromo;
                         return Container(
                           child: stateChosenFnBPromo != false
-                              ? Text(stateChosenFnBPromo)
+                              ? Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black54, width: 0.3),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(stateChosenFnBPromo),
+                                        IconButton(
+                                            onPressed: () {
+                                              chosenPromoFnBCubit
+                                                  .getData(false);
+                                            },
+                                            icon: const Icon(
+                                              Icons.cancel_outlined,
+                                              color: Colors.red,
+                                            ))
+                                      ],
+                                    ),
+                                  ))
+                              : const SizedBox(),
+                        );
+                      }),
+                  BlocBuilder<DynamicCubit, dynamic>(
+                      bloc: chosenVoucherCubit,
+                      builder: (context, stateVoucher) {
+                        checkinDataArgs.voucherInfo.voucherCode = stateVoucher;
+                        return Container(
+                          child: stateVoucher != false
+                              ? Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black54, width: 0.3),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Voucher Dipilih: $stateVoucher'),
+                                        IconButton(
+                                            onPressed: () {
+                                              chosenVoucherCubit.getData(false);
+                                            },
+                                            icon: const Icon(
+                                              Icons.cancel_outlined,
+                                              color: Colors.red,
+                                            ))
+                                      ],
+                                    ),
+                                  ))
                               : const SizedBox(),
                         );
                       }),
@@ -162,10 +259,14 @@ class VoucherPage extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: Colors.blue.shade100,
+                          color: Colors.white,
                           border: Border.all(color: Colors.black54, width: 0.3),
                           borderRadius: BorderRadius.circular(10)),
-                      child: const Text('Promo Room'),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                        child: Text('Promo Room'),
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -263,11 +364,17 @@ class VoucherPage extends StatelessWidget {
                     child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            color: Colors.blue.shade100,
-                            border:
-                                Border.all(color: Colors.black54, width: 0.3),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Text('Promo FnB')),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.black54, width: 0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 12),
+                            child: Text(
+                              'Promo FnB',
+                              textAlign: TextAlign.start,
+                            ))),
                   ),
                   const SizedBox(
                     height: 10,
@@ -307,49 +414,149 @@ class VoucherPage extends StatelessWidget {
                                                 itemCount: stateVoucher
                                                     .voucherData?.length,
                                                 itemBuilder: (context, index) {
-                                                  return Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            top: 8),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors.black54,
-                                                          width: 0.3),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          Text(stateVoucher
-                                                                  .voucherData?[
-                                                                      index]
-                                                                  .voucherName ??
-                                                              "")
-                                                        ],
+                                                  return InkWell(
+                                                    onTap: () {
+                                                      Navigator.pop(
+                                                          context,
+                                                          stateVoucher
+                                                              .voucherData?[
+                                                                  index]
+                                                              .voucherCode);
+                                                    },
+                                                    child: Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(
+                                                            color:
+                                                                Colors.black54,
+                                                            width: 0.3),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            SizedBox(
+                                                              height: 75,
+                                                              width: 133,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      'https://adm.happypuppy.id/${stateVoucher.voucherData?[index].image}',
+                                                                  progressIndicatorBuilder:
+                                                                      (context,
+                                                                              url,
+                                                                              downloadProgress) =>
+                                                                          Center(
+                                                                    child: CircularProgressIndicator(
+                                                                        value: downloadProgress
+                                                                            .progress),
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      const Center(
+                                                                          child:
+                                                                              Icon(Icons.error)),
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Expanded(
+                                                                child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(stateVoucher
+                                                                        .voucherData?[
+                                                                            index]
+                                                                        .voucherName ??
+                                                                    ""),
+                                                                const SizedBox(
+                                                                  height: 36,
+                                                                ),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(stateVoucher
+                                                                            .voucherData?[index]
+                                                                            .voucherCode
+                                                                            .toString() ??
+                                                                        ''),
+                                                                    InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder: (BuildContext context) =>
+                                                                                AlertDialog(title: const Center(child: Text('Deskripsi Voucher')), content: HtmlWidget(stateVoucher.voucherData?[index].description.toString() ?? '')));
+                                                                      },
+                                                                      child:
+                                                                          const Text(
+                                                                        'S&K',
+                                                                        textAlign:
+                                                                            TextAlign.end,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.blue,
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ))
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   );
                                                 }));
                                       }),
-                                ));
+                                )).then((value) => {
+                              if (value != null)
+                                {chosenVoucherCubit.getData(value)}
+                            });
                       },
                       child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              color: Colors.blue.shade100,
+                              color: Colors.white,
                               border:
                                   Border.all(color: Colors.black54, width: 0.3),
                               borderRadius: BorderRadius.circular(10)),
-                          child: const Text('Voucher Membership'))),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 12),
+                            child: Text('Voucher Membership'),
+                          ))),
                 ],
               ),
             ),
