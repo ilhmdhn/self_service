@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
+import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
-import 'package:self_service/util/currency.dart';
 import '../bloc/fnb_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,22 +21,28 @@ class FnBPage extends StatefulWidget {
 }
 
 class _FnBPageState extends State<FnBPage> {
+//---------------------------------------------------------
+
   final FnBCategoryCubit fnbCategoryCubit = FnBCategoryCubit();
-
-  final InventoryCubit inventoryCubit = InventoryCubit();
-
-  final CategoryInventoryNameCubit categoryNameCubit =
-      CategoryInventoryNameCubit();
-
-  final CounterCubit pageCubit = CounterCubit();
 
   final ImageUrlCubit imageFnBCategoryCubit = ImageUrlCubit();
 
   final ImageUrlCubit imageFnBCubit = ImageUrlCubit();
 
+//---------------------------------------------------------
+
   final OrderFnBCubit orderFnBCubit = OrderFnBCubit();
 
-  static const pageSize = 20;
+  InventoryResult inventoryResult = InventoryResult();
+
+  DynamicCubit loadingCubit = DynamicCubit();
+
+  static const pageSize = 8;
+
+  String categoryCode = '';
+  String categoryName = '';
+  String search = '';
+
   final PagingController<int, Inventory> _pagingController =
       PagingController(firstPageKey: 1);
 
@@ -50,46 +56,35 @@ class _FnBPageState extends State<FnBPage> {
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      final newItems =
-          await ApiService().getInventory(pageKey, pageSize, '', '');
-      print(newItems.message);
-      if (newItems.state == false) {
-        throw newItems.message.toString();
+      inventoryResult = await ApiService()
+          .getInventory(pageKey, pageSize, categoryCode, search);
+      if (inventoryResult.state == false) {
+        throw inventoryResult.message.toString();
       }
 
-      final isLastPage = newItems.inventory!.length < pageSize;
+      final isLastPage = inventoryResult.inventory!.length < pageSize;
 
       if (isLastPage) {
-        _pagingController.appendLastPage(newItems.inventory!);
+        _pagingController.appendLastPage(inventoryResult.inventory!);
       } else {
-        final nextPageKey = pageKey + newItems.inventory!.length;
-        _pagingController.appendPage(newItems.inventory!, nextPageKey);
+        final nextPageKey = pageKey + 1;
+        _pagingController.appendPage(inventoryResult.inventory!, nextPageKey);
       }
     } catch (error) {
       _pagingController.error = error;
     }
+    loadingCubit.getData(false);
   }
 
   @override
   Widget build(BuildContext context) {
     final checkinDataArgs =
         ModalRoute.of(context)!.settings.arguments as CheckinData;
-    if (checkinDataArgs.fnbInfo.dataOrder != null) {
-      // orderFnBCubit.insertData();
-    }
-    String category = '';
-    String search = '';
-    String categoryName = '';
-    int page = 1;
-    if (category == '') {
-      categoryName = 'ALL';
-    }
-    pageCubit.increment();
+
     fnbCategoryCubit.getData();
-    categoryNameCubit.getData(categoryName);
-    inventoryCubit.getData(page, 10, category, search);
     imageFnBCubit.getImageFnB();
     imageFnBCategoryCubit.getFnBCategoryImage();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Food and Beverage')),
@@ -170,14 +165,19 @@ class _FnBPageState extends State<FnBPage> {
                                           .toString());
                               return InkWell(
                                 onTap: () {
-                                  category = state
-                                          .category?[index].fnbCategoryCode
-                                          .toString() ??
-                                      '';
-                                  categoryNameCubit.getData(
-                                      state.category?[index].fnbCategoryName);
-                                  inventoryCubit.getData(
-                                      1, 10, category, search);
+                                  setState(() {
+                                    loadingCubit.getData(true);
+                                    _pagingController.itemList?.clear();
+                                    categoryCode = state
+                                            .category?[index].fnbCategoryCode
+                                            .toString() ??
+                                        '';
+                                    categoryName = state
+                                            .category?[index].fnbCategoryName
+                                            .toString() ??
+                                        '';
+                                    _fetchPage(1);
+                                  });
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -202,14 +202,13 @@ class _FnBPageState extends State<FnBPage> {
                                                     error) =>
                                                 const Center(
                                                     child: Icon(Icons.error)),
-                                            // fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),
                                       Text(state
                                               .category?[index].fnbCategoryName
                                               .toString() ??
-                                          ""),
+                                          "")
                                     ],
                                   ),
                                 ),
@@ -227,12 +226,29 @@ class _FnBPageState extends State<FnBPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              BlocBuilder<CategoryInventoryNameCubit, String>(
-                bloc: categoryNameCubit,
-                builder: (context, state) => Text(
-                  state,
-                  style: const TextStyle(fontSize: 23),
-                ),
+              Container(
+                child: categoryName != ''
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(categoryName),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  loadingCubit.getData(true);
+                                  categoryName = '';
+                                  categoryCode = '';
+                                  _pagingController.itemList?.clear();
+                                  _fetchPage(1);
+                                });
+                              },
+                              icon: const Icon(Icons.delete))
+                        ],
+                      )
+                    : const SizedBox(),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5, top: 3),
@@ -244,58 +260,89 @@ class _FnBPageState extends State<FnBPage> {
                     hintText: 'Cari FnB',
                   ),
                   onChanged: (String value) {
-                    categoryNameCubit.getData('ALL');
-                    pageCubit.reset();
-                    inventoryCubit.getData(1, 10, '', value);
+                    setState(() {
+                      loadingCubit.getData(true);
+                      _pagingController.itemList?.clear();
+                      search = value;
+                      _fetchPage(1);
+                    });
                   },
                 ),
               ),
               Expanded(
-                child: PagedGridView(
-                  pagingController: _pagingController,
-                  builderDelegate: PagedChildBuilderDelegate<Inventory>(
-                      itemBuilder: (context, item, index) => Container(
-                            child: Text(item.name.toString()),
-                          )),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.0,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                  ),
+                child: BlocBuilder<DynamicCubit, dynamic>(
+                  bloc: loadingCubit,
+                  builder: (context, stateLoading) {
+                    if (stateLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return PagedGridView(
+                        pagingController: _pagingController,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1.0,
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 10.0,
+                        ),
+                        builderDelegate: PagedChildBuilderDelegate<Inventory>(
+                            itemBuilder: (context, item, index) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: AspectRatio(
+                                    aspectRatio: 3 / 4,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: Colors.black54, width: 0.3),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            BlocBuilder<ImageUrlCubit, String>(
+                                                bloc: imageFnBCubit,
+                                                builder:
+                                                    (context, stateImageFnB) {
+                                                  String imageUrl =
+                                                      stateImageFnB +
+                                                          (item.image ?? '');
+                                                  return AspectRatio(
+                                                    aspectRatio: 16 / 9,
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: CachedNetworkImage(
+                                                          imageUrl: imageUrl),
+                                                    ),
+                                                  );
+                                                }),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              item.name.toString(),
+                                              style: const TextStyle(fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                      );
+                    }
+                  },
                 ),
               ),
-              SizedBox(
-                height: 80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          pageCubit.decrement();
-                        },
-                        icon: const Icon(Icons.navigate_before)),
-                    BlocBuilder<CounterCubit, int>(
-                        bloc: pageCubit,
-                        builder: (context, state) {
-                          page = state;
-                          if (page == 0) {
-                            page = 1;
-                          }
-                          inventoryCubit.getData(page, 10, category, search);
-                          return Text(
-                            page.toString(),
-                            style: const TextStyle(fontSize: 21),
-                          );
-                        }),
-                    IconButton(
-                        onPressed: () {
-                          pageCubit.increment();
-                        },
-                        icon: const Icon(Icons.navigate_next)),
-                  ],
-                ),
-              )
             ],
           )),
         ],
@@ -382,290 +429,3 @@ class _FnBPageState extends State<FnBPage> {
     super.dispose();
   }
 }
-
-/*
-Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text('Pesanan Saya', style: TextStyle(fontSize: 23)),
-                    Expanded(
-                        child: BlocBuilder<OrderFnBCubit, List<DataOrder>>(
-                      bloc: orderFnBCubit,
-                      builder: (context, stateOrderData) {
-                        checkinDataArgs.fnbInfo.dataOrder = stateOrderData;
-                        if (stateOrderData.isEmpty) {
-                          return const Center(
-                            child: Text(
-                              'Empty Order',
-                              style: TextStyle(fontSize: 23),
-                            ),
-                          );
-                        }
-                        return ListView.builder(
-                            itemCount: stateOrderData.length,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              final SingleFnBCubit singleFnBCubit =
-                                  SingleFnBCubit();
-                              singleFnBCubit
-                                  .getData(stateOrderData[index].inventory);
-                              return BlocBuilder<SingleFnBCubit,
-                                      InventorySingleResult>(
-                                  bloc: singleFnBCubit,
-                                  builder: (context, stateSingleFnB) {
-                                    final CounterCubit counterFnb =
-                                        CounterCubit();
-                                    counterFnb.setValue(
-                                        stateOrderData[index].quantity);
-
-                                    if (stateSingleFnB.isLoading == true) {
-                                      return const Center(
-                                        child: CircularProgressIndicator(),
-                                      );
-                                    }
-                                    if (stateSingleFnB.state == false) {
-                                      return Center(
-                                        child: Text(
-                                            stateSingleFnB.message.toString()),
-                                      );
-                                    }
-                                    return Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              color: Colors.black54,
-                                              width: 0.3),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Text(
-                                                  stateSingleFnB.inventory!.name
-                                                      .toString(),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 8),
-                                                    child: BlocBuilder<
-                                                        ImageUrlCubit, String>(
-                                                      bloc: imageFnBCubit,
-                                                      builder: (context,
-                                                          imageUrlState) {
-                                                        String fnBImageUrl =
-                                                            imageUrlState +
-                                                                (stateSingleFnB
-                                                                        .inventory
-                                                                        ?.image ??
-                                                                    "");
-                                                        return ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child:
-                                                              CachedNetworkImage(
-                                                            imageUrl:
-                                                                fnBImageUrl,
-                                                            progressIndicatorBuilder:
-                                                                (context, url,
-                                                                        downloadProgress) =>
-                                                                    Center(
-                                                              child: CircularProgressIndicator(
-                                                                  value: downloadProgress
-                                                                      .progress),
-                                                            ),
-                                                            errorWidget: (context,
-                                                                    url,
-                                                                    error) =>
-                                                                const Center(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .error)),
-                                                            fit: BoxFit.fill,
-                                                          ),
-
-                                                          /*Image.network(
-                                                              imageUrlState +
-                                                                  stateSingleFnB
-                                                                      .inventory!
-                                                                      .image
-                                                                      .toString(),
-                                                                      ),*/
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 10),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          IconButton(
-                                                              onPressed: () {
-                                                                counterFnb
-                                                                    .decrement();
-                                                              },
-                                                              icon: const Icon(
-                                                                Icons
-                                                                    .remove_circle_outline_outlined,
-                                                                size: 23,
-                                                                color:
-                                                                    Colors.red,
-                                                              )),
-                                                          BlocBuilder<
-                                                              CounterCubit,
-                                                              int>(
-                                                            bloc: counterFnb,
-                                                            builder: (context,
-                                                                state) {
-                                                              stateOrderData[
-                                                                          index]
-                                                                      .quantity =
-                                                                  state;
-                                                              orderFnBCubit
-                                                                  .changeQuantity(
-                                                                      index,
-                                                                      state);
-                                                              return Text(
-                                                                state
-                                                                    .toString(),
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            18),
-                                                              );
-                                                            },
-                                                          ),
-                                                          IconButton(
-                                                              onPressed: () {
-                                                                counterFnb
-                                                                    .increment();
-                                                              },
-                                                              icon: const Icon(
-                                                                Icons
-                                                                    .add_circle_outline_outlined,
-                                                                size: 23,
-                                                                color: Colors
-                                                                    .green,
-                                                              ))
-                                                        ],
-                                                      ),
-                                                      ElevatedButton.icon(
-                                                          onPressed: () {
-                                                            TextEditingController
-                                                                orderNoteController =
-                                                                TextEditingController();
-                                                            showDialog<String>(
-                                                              context: context,
-                                                              builder: (BuildContext
-                                                                      context) =>
-                                                                  AlertDialog(
-                                                                title: const Text(
-                                                                    'Catatan Order'),
-                                                                content:
-                                                                    TextField(
-                                                                  decoration:
-                                                                      const InputDecoration(
-                                                                    border:
-                                                                        OutlineInputBorder(),
-                                                                  ),
-                                                                  controller:
-                                                                      orderNoteController,
-                                                                  maxLength:
-                                                                      250,
-                                                                  keyboardType:
-                                                                      TextInputType
-                                                                          .multiline,
-                                                                  maxLines:
-                                                                      null,
-                                                                ),
-                                                                actions: <
-                                                                    Widget>[
-                                                                  TextButton(
-                                                                    onPressed: () =>
-                                                                        Navigator.pop(
-                                                                            context,
-                                                                            ''),
-                                                                    child: const Text(
-                                                                        'Cancel'),
-                                                                  ),
-                                                                  TextButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context,
-                                                                          orderNoteController
-                                                                              .text);
-                                                                    },
-                                                                    child:
-                                                                        const Text(
-                                                                            'OK'),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                                .then(
-                                                                    (value) => {
-                                                                          orderFnBCubit.addNotes(
-                                                                              index,
-                                                                              value ?? '')
-                                                                        });
-                                                          },
-                                                          icon: const Icon(
-                                                              Icons.notes),
-                                                          label: const Text(
-                                                              'Order Note'))
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0,
-                                                  right: 8.0,
-                                                  top: 5,
-                                                  bottom: 5),
-                                              child: Text(
-                                                  'Catatan: ${stateOrderData[index].notes ?? ''}'),
-                                            )
-                                          ],
-                                        ));
-                                  });
-                            });
-                      },
-                    ))
-                  ],
-                ),
-              )
-            
-*/

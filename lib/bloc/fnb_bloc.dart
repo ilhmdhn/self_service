@@ -31,13 +31,6 @@ class SingleFnBCubit extends Cubit<InventorySingleResult> {
   }
 }
 
-class CategoryInventoryNameCubit extends Cubit<String> {
-  CategoryInventoryNameCubit() : super('ALL');
-  void getData(categoryName) async {
-    return emit(categoryName);
-  }
-}
-
 class OrderFnBCubit extends Cubit<List<DataOrder>> {
   OrderFnBCubit() : super(<DataOrder>[]);
 
