@@ -24,8 +24,7 @@ class RoomDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     int? guestTotal = 0;
     int? durationTotal = 0;
-    final checkinDataArgs =
-        ModalRoute.of(context)!.settings.arguments as CheckinData;
+    final checkinDataArgs = ModalRoute.of(context)!.settings.arguments as CheckinData;
     roomDetailCubit.getData(checkinDataArgs.checkinInfo.roomCode);
     imageUrlCubit.getImageRoom();
     return Scaffold(

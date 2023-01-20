@@ -1,26 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
+import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/voucher_page.dart';
 import 'package:self_service/util/currency.dart';
 import '../bloc/fnb_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-class FnBPage extends StatelessWidget {
-  FnBPage({super.key});
+class FnBPage extends StatefulWidget {
+  const FnBPage({super.key});
   static const nameRoute = '/fnb-page';
+  @override
+  State<FnBPage> createState() => _FnBPageState();
+}
 
+class _FnBPageState extends State<FnBPage> {
   final FnBCategoryCubit fnbCategoryCubit = FnBCategoryCubit();
+
   final InventoryCubit inventoryCubit = InventoryCubit();
+
   final CategoryInventoryNameCubit categoryNameCubit =
       CategoryInventoryNameCubit();
+
   final CounterCubit pageCubit = CounterCubit();
+
   final ImageUrlCubit imageFnBCategoryCubit = ImageUrlCubit();
+
   final ImageUrlCubit imageFnBCubit = ImageUrlCubit();
+
   final OrderFnBCubit orderFnBCubit = OrderFnBCubit();
+
+  static const pageSize = 20;
+  final PagingController<int, Inventory> _pagingController =
+      PagingController(firstPageKey: 1);
+
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final newItems =
+          await ApiService().getInventory(pageKey, pageSize, '', '');
+      print(newItems.message);
+      if (newItems.state == false) {
+        throw newItems.message.toString();
+      }
+
+      final isLastPage = newItems.inventory!.length < pageSize;
+
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems.inventory!);
+      } else {
+        final nextPageKey = pageKey + newItems.inventory!.length;
+        _pagingController.appendPage(newItems.inventory!, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +92,39 @@ class FnBPage extends StatelessWidget {
     imageFnBCategoryCubit.getFnBCategoryImage();
     return Scaffold(
       appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: const Text('Order Food and Beverage')),
+        title: const Center(child: Text('Food and Beverage')),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Center(child: Text('Batalkan Transaksi?')),
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Tidak')),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        SplashPage.nameRoute, (route) => false);
+                                  },
+                                  child: const Text('Iya'))
+                            ],
+                          ),
+                        ],
+                      );
+                    });
+              },
+              icon: const Icon(Icons.home_outlined))
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -144,225 +223,168 @@ class FnBPage extends StatelessWidget {
             ),
           ),
           Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    BlocBuilder<CategoryInventoryNameCubit, String>(
-                      bloc: categoryNameCubit,
-                      builder: (context, state) => Text(
-                        state,
-                        style: const TextStyle(fontSize: 23),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5, right: 5, top: 3),
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 8),
-                          hintText: 'Cari FnB',
-                        ),
-                        onChanged: (String value) {
-                          categoryNameCubit.getData('ALL');
-                          pageCubit.reset();
-                          inventoryCubit.getData(1, 10, '', value);
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: BlocBuilder<InventoryCubit, InventoryResult>(
-                          bloc: inventoryCubit,
-                          builder: (context, state) {
-                            if (state.isLoading) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            if (state.state == false) {
-                              return Center(
-                                child: Text(state.message.toString()),
-                              );
-                            }
-
-                            return ListView.builder(
-                              itemCount: state.inventory?.length ?? 0,
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: Colors.black54, width: 0.3),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(state.inventory?[index].name
-                                                  .toString() ??
-                                              ''),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                Expanded(
-                                                  child: BlocBuilder<
-                                                          ImageUrlCubit,
-                                                          String>(
-                                                      bloc: imageFnBCubit,
-                                                      builder: (context,
-                                                          stateImageFnB) {
-                                                        if (stateImageFnB ==
-                                                            '') {
-                                                          return const Center(
-                                                            child:
-                                                                CircularProgressIndicator(),
-                                                          );
-                                                        }
-                                                        String imageFnBUrl =
-                                                            stateImageFnB +
-                                                                state
-                                                                    .inventory![
-                                                                        index]
-                                                                    .image
-                                                                    .toString();
-                                                        return ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(5),
-                                                          child:
-                                                              CachedNetworkImage(
-                                                            imageUrl:
-                                                                imageFnBUrl,
-                                                            progressIndicatorBuilder:
-                                                                (context, url,
-                                                                        downloadProgress) =>
-                                                                    Center(
-                                                              child: CircularProgressIndicator(
-                                                                  value: downloadProgress
-                                                                      .progress),
-                                                            ),
-                                                            errorWidget: (context,
-                                                                    url,
-                                                                    error) =>
-                                                                const Center(
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .error)),
-                                                            fit: BoxFit.fill,
-                                                          ),
-
-                                                          /*Image.network(
-                                                            imageFnBUrl,
-                                                          ),*/
-                                                        );
-                                                      }),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10, right: 10),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      Text(
-                                                        'Rp. ${Currency.toRupiah(state.inventory?[index].price ?? 0)}',
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                      ),
-                                                      ElevatedButton.icon(
-                                                          onPressed: () {
-                                                            orderFnBCubit.insertData(DataOrder(
-                                                                inventory: state
-                                                                    .inventory?[
-                                                                        index]
-                                                                    .inventoryCode,
-                                                                quantity: 1));
-                                                          },
-                                                          icon: Icon(
-                                                            Icons
-                                                                .shopping_cart_checkout,
-                                                            color: Colors
-                                                                .green.shade100,
-                                                          ),
-                                                          label: const Text(
-                                                              'Add to Cart')),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }),
-                    ),
-                    SizedBox(
-                      height: 80,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                pageCubit.decrement();
-                              },
-                              icon: const Icon(Icons.navigate_before)),
-                          BlocBuilder<CounterCubit, int>(
-                              bloc: pageCubit,
-                              builder: (context, state) {
-                                page = state;
-                                if (page == 0) {
-                                  page = 1;
-                                }
-                                inventoryCubit.getData(
-                                    page, 10, category, search);
-                                return Text(
-                                  page.toString(),
-                                  style: const TextStyle(fontSize: 21),
-                                );
-                              }),
-                          IconButton(
-                              onPressed: () {
-                                pageCubit.increment();
-                              },
-                              icon: const Icon(Icons.navigate_next)),
-                        ],
-                      ),
-                    )
-                  ],
+              BlocBuilder<CategoryInventoryNameCubit, String>(
+                bloc: categoryNameCubit,
+                builder: (context, state) => Text(
+                  state,
+                  style: const TextStyle(fontSize: 23),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5, top: 3),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 8),
+                    hintText: 'Cari FnB',
+                  ),
+                  onChanged: (String value) {
+                    categoryNameCubit.getData('ALL');
+                    pageCubit.reset();
+                    inventoryCubit.getData(1, 10, '', value);
+                  },
                 ),
               ),
               Expanded(
+                child: PagedGridView(
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<Inventory>(
+                      itemBuilder: (context, item, index) => Container(
+                            child: Text(item.name.toString()),
+                          )),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.0,
+                    mainAxisSpacing: 10.0,
+                    crossAxisSpacing: 10.0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          pageCubit.decrement();
+                        },
+                        icon: const Icon(Icons.navigate_before)),
+                    BlocBuilder<CounterCubit, int>(
+                        bloc: pageCubit,
+                        builder: (context, state) {
+                          page = state;
+                          if (page == 0) {
+                            page = 1;
+                          }
+                          inventoryCubit.getData(page, 10, category, search);
+                          return Text(
+                            page.toString(),
+                            style: const TextStyle(fontSize: 21),
+                          );
+                        }),
+                    IconButton(
+                        onPressed: () {
+                          pageCubit.increment();
+                        },
+                        icon: const Icon(Icons.navigate_next)),
+                  ],
+                ),
+              )
+            ],
+          )),
+        ],
+      ),
+      floatingActionButton: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              width: 20,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.green.shade800),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Pesanan Saya (1)',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            'Rp10.000',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            width: 12,
+                          ),
+                          Icon(
+                            Icons.arrow_circle_up,
+                            color: Colors.white,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.fromLTRB(20, 10, 20, 10)),
+                  backgroundColor:
+                      const MaterialStatePropertyAll<Color>(Colors.green)),
+              onPressed: () {
+                Navigator.of(context).pushNamed(VoucherPage.nameRoute,
+                    arguments: checkinDataArgs);
+              },
+              // heroTag: null,
+              child: const Text('Lanjut'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+}
+
+/*
+Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -645,61 +667,5 @@ class FnBPage extends StatelessWidget {
                   ],
                 ),
               )
-            ],
-          )),
-          Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          const MaterialStatePropertyAll<Color>(Colors.red),
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/splash', (Route<dynamic> route) => false);
-                    },
-                    child: const Text(
-                      'Batal',
-                      style: TextStyle(fontSize: 18),
-                    )),
-                ElevatedButton(
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                      backgroundColor:
-                          MaterialStatePropertyAll<Color>(Colors.lime.shade800),
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Kembali',
-                      style: TextStyle(fontSize: 18),
-                    )),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.fromLTRB(20, 10, 20, 10)),
-                        backgroundColor: const MaterialStatePropertyAll<Color>(
-                            Colors.green)),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/voucher',
-                          arguments: checkinDataArgs);
-                    },
-                    child: const Text(
-                      'Lanjut',
-                      style: TextStyle(fontSize: 18),
-                    ))
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
+            
+*/
