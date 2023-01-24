@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
@@ -10,6 +11,7 @@ import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
 
+
 void main() async {
   runApp(const SelfService());
 }
@@ -19,6 +21,14 @@ class SelfService extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown
+        },
+      ),
       initialRoute: SplashPage.nameRoute,
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
@@ -27,7 +37,7 @@ class SelfService extends StatelessWidget {
         RoomCategoryPage.nameRoute: (context) => RoomCategoryPage(),
         RoomListPage.nameRoute: (context) => RoomListPage(),
         RoomDetailPage.nameRoute: (context) => RoomDetailPage(),
-        FnBPage.nameRoute: (context) => FnBPage(),
+        FnBPage.nameRoute: (context) => const FnBPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
         VoucherPage.nameRoute: (context) => VoucherPage(),
         ReviewBillPage.nameRoute: (context) => const ReviewBillPage()

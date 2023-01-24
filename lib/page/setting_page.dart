@@ -47,6 +47,7 @@ class SettingPage extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         baseUrlCubit.setData(url.text);
+                        baseUrlCubit.getData();
                       },
                       child: const Text('Submit'))
                 ],

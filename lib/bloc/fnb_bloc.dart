@@ -34,16 +34,6 @@ class SingleFnBCubit extends Cubit<InventorySingleResult> {
 class OrderFnBCubit extends Cubit<List<DataOrder>> {
   OrderFnBCubit() : super(<DataOrder>[]);
 
-  void changeQuantity(index, qty) {
-    state[index].quantity = qty;
-    emit(state);
-  }
-
-  void addNotes(index, notes) {
-    state[index].notes = notes;
-    emit(state);
-  }
-
   void insertData(DataOrder data) {
     emit([...state, data]);
   }

@@ -54,8 +54,11 @@ class DataOrder {
   String? inventory;
   int? quantity;
   String? notes;
+  num? price;
+  String? image;
+  String? name;
 
-  DataOrder({this.inventory, this.quantity, this.notes});
+  DataOrder({this.inventory, this.quantity, this.notes, this.price, this.image, this.name});
 }
 
 class PromoInfo {

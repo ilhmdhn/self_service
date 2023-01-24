@@ -8,6 +8,7 @@ import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
+import 'package:self_service/util/currency.dart';
 import '../bloc/fnb_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -80,6 +81,7 @@ class _FnBPageState extends State<FnBPage> {
   Widget build(BuildContext context) {
     final checkinDataArgs =
         ModalRoute.of(context)!.settings.arguments as CheckinData;
+    orderFnBCubit.insertAllData(checkinDataArgs.fnbInfo.dataOrder ?? []);
 
     fnbCategoryCubit.getData();
     imageFnBCubit.getImageFnB();
@@ -330,8 +332,22 @@ class _FnBPageState extends State<FnBPage> {
                                             ),
                                             Text(
                                               item.name.toString(),
-                                              style: const TextStyle(fontSize: 16),
+                                              style:
+                                                  const TextStyle(fontSize: 16),
                                             ),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  orderFnBCubit.insertData(
+                                                      DataOrder(
+                                                          inventory: item
+                                                              .inventoryCode,
+                                                          quantity: 1,
+                                                          notes: '',
+                                                          price: item.price,
+                                                          image: item.image,
+                                                          name: item.name));
+                                                },
+                                                child: const Text('Tambahkan'))
                                           ],
                                         ),
                                       ),
@@ -356,50 +372,215 @@ class _FnBPageState extends State<FnBPage> {
             const SizedBox(
               width: 20,
             ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.green.shade800),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Pesanan Saya (1)',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            'Rp10.000',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+            BlocBuilder<OrderFnBCubit, List<DataOrder>>(
+              bloc: orderFnBCubit,
+              builder: (context, stateOrder) {
+                checkinDataArgs.fnbInfo.dataOrder = stateOrder;
+                List<DataOrder> ordernya = [];
+                for (var orderState in stateOrder) {
+                  ordernya.add(orderState);
+                }
+                return Container(
+                  child: ordernya.isEmpty
+                      ? const SizedBox()
+                      : Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.green.shade800),
+                            child: InkWell(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return BlocBuilder(
+                                          bloc: imageFnBCubit,
+                                          builder: (context, stateImageFnB) {
+                                            return AlertDialog(
+                                              title: const Center(
+                                                  child: Text('Pesanan Saya')),
+                                              content: SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.8,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.8,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5),
+                                                  child: ListView.builder(
+                                                      itemCount:
+                                                          ordernya.length,
+                                                      scrollDirection:
+                                                          Axis.vertical,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        CounterCubit
+                                                            quantityCubit =
+                                                            CounterCubit();
+                                                        quantityCubit.setValue(
+                                                            ordernya[index]
+                                                                .quantity);
+                                                        return Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .black54,
+                                                                width: 0.3),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        8.0),
+                                                                child: SizedBox(
+                                                                  height: 75,
+                                                                  width: 133,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(5),
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            stateImageFnB.toString() +
+                                                                                ordernya[index].image.toString()),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(8),
+                                                                child: Expanded(
+                                                                  child: Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(ordernya[index]
+                                                                            .name
+                                                                            .toString()),
+                                                                        Text(Currency.toRupiah(
+                                                                            ordernya[index].price)),
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            IconButton(
+                                                                                onPressed: () {
+                                                                                  quantityCubit.decrement();
+                                                                                },
+                                                                                icon: const Icon(
+                                                                                  Icons.remove_circle_outline_outlined,
+                                                                                  color: Colors.red,
+                                                                                )),
+                                                                            BlocBuilder<CounterCubit,
+                                                                                int>(
+                                                                              bloc: quantityCubit,
+                                                                              builder: (context, stateQty) {
+                                                                                ordernya[index].quantity = stateQty;
+                                                                                orderFnBCubit.insertAllData(ordernya);
+                                                                                return Text(ordernya[index].quantity.toString());
+                                                                              },
+                                                                            ),
+                                                                            IconButton(
+                                                                                onPressed: () {
+                                                                                  quantityCubit.increment();
+                                                                                },
+                                                                                icon: const Icon(
+                                                                                  Icons.add_box_rounded,
+                                                                                  color: Colors.green,
+                                                                                ))
+                                                                          ],
+                                                                        )
+                                                                      ]),
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }),
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                    });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 12),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Pesanan Saya (${ordernya.length.toString()})',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          Currency.toRupiah(ordernya.fold(
+                                              0,
+                                              (sum, item) =>
+                                                  (sum ?? 0) +
+                                                  ((item.price ?? 0) *
+                                                      (item.quantity ?? 0)))),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_circle_up,
+                                          color: Colors.white,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Icon(
-                            Icons.arrow_circle_up,
-                            color: Colors.white,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                        ),
+                );
+              },
             ),
             const SizedBox(
               width: 20,
