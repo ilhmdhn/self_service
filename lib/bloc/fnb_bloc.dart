@@ -41,4 +41,17 @@ class OrderFnBCubit extends Cubit<List<DataOrder>> {
   void insertAllData(List<DataOrder> data) {
     emit(data);
   }
+
+  void quantityOrder(index, value) {
+    final newList = state.toList();
+
+    newList[index].quantity = value;
+    emit(newList);
+  }
+
+  void removeItem(index) {
+    final newList = List<DataOrder>.from(state);
+    newList.removeAt(index);
+    emit(newList);
+  }
 }
