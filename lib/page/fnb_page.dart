@@ -477,104 +477,101 @@ class _FnBPageState extends State<FnBPage> {
                                                               padding:
                                                                   const EdgeInsets
                                                                       .all(8),
-                                                              child: Expanded(
-                                                                // flex: 1,
-                                                                child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      Text(stateOrderList[
-                                                                              index]
-                                                                          .name
-                                                                          .toString()),
-                                                                      Text(Currency.toRupiah(
-                                                                          stateOrderList[index]
-                                                                              .price)),
-                                                                      BlocBuilder<
-                                                                          CounterCubit,
-                                                                          int>(
-                                                                        bloc:
-                                                                            quantityCubit,
-                                                                        builder:
-                                                                            (context,
-                                                                                stateQty) {
-                                                                          orderFnBCubit.quantityOrder(
-                                                                              index,
-                                                                              stateQty);
-                                                                          return Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.center,
-                                                                            children: [
-                                                                              Container(
-                                                                                child: stateQty > 1
-                                                                                    ? IconButton(
-                                                                                        onPressed: () {
-                                                                                          quantityCubit.decrement();
-                                                                                        },
-                                                                                        icon: const Icon(
-                                                                                          Icons.remove_circle_outline_outlined,
-                                                                                          color: Colors.red,
-                                                                                        ))
-                                                                                    : IconButton(
-                                                                                        onPressed: () {
-                                                                                          showDialog(
-                                                                                              context: context,
-                                                                                              builder: (BuildContext context) {
-                                                                                                return AlertDialog(
-                                                                                                  title: const Center(child: Text('Hapus Item?')),
-                                                                                                  actions: [
-                                                                                                    Row(
-                                                                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                                                      children: [
-                                                                                                        ElevatedButton(
-                                                                                                          onPressed: () {
-                                                                                                            Navigator.pop(context);
-                                                                                                          },
-                                                                                                          style: ButtonStyle(
-                                                                                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                                                                                                          ),
-                                                                                                          child: const Text('Tidak'),
+                                                              child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(stateOrderList[
+                                                                            index]
+                                                                        .name
+                                                                        .toString()),
+                                                                    Text(Currency.toRupiah(
+                                                                        stateOrderList[index]
+                                                                            .price)),
+                                                                    BlocBuilder<
+                                                                        CounterCubit,
+                                                                        int>(
+                                                                      bloc:
+                                                                          quantityCubit,
+                                                                      builder:
+                                                                          (context,
+                                                                              stateQty) {
+                                                                        orderFnBCubit.quantityOrder(
+                                                                            index,
+                                                                            stateQty);
+                                                                        return Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Container(
+                                                                              child: stateQty > 1
+                                                                                  ? IconButton(
+                                                                                      onPressed: () {
+                                                                                        quantityCubit.decrement();
+                                                                                      },
+                                                                                      icon: const Icon(
+                                                                                        Icons.remove_circle_outline_outlined,
+                                                                                        color: Colors.red,
+                                                                                      ))
+                                                                                  : IconButton(
+                                                                                      onPressed: () {
+                                                                                        showDialog(
+                                                                                            context: context,
+                                                                                            builder: (BuildContext context) {
+                                                                                              return AlertDialog(
+                                                                                                title: const Center(child: Text('Hapus Item?')),
+                                                                                                actions: [
+                                                                                                  Row(
+                                                                                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                                                                    children: [
+                                                                                                      ElevatedButton(
+                                                                                                        onPressed: () {
+                                                                                                          Navigator.pop(context);
+                                                                                                        },
+                                                                                                        style: ButtonStyle(
+                                                                                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
                                                                                                         ),
-                                                                                                        ElevatedButton(
-                                                                                                          onPressed: () {
-                                                                                                            orderFnBCubit.removeItem(index);
-                                                                                                            Navigator.pop(context);
-                                                                                                          },
-                                                                                                          style: ButtonStyle(
-                                                                                                            backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                                                                                                          ),
-                                                                                                          child: const Text('Hapus'),
+                                                                                                        child: const Text('Tidak'),
+                                                                                                      ),
+                                                                                                      ElevatedButton(
+                                                                                                        onPressed: () {
+                                                                                                          orderFnBCubit.removeItem(index);
+                                                                                                          Navigator.pop(context);
+                                                                                                        },
+                                                                                                        style: ButtonStyle(
+                                                                                                          backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
                                                                                                         ),
-                                                                                                      ],
-                                                                                                    )
-                                                                                                  ],
-                                                                                                );
-                                                                                              });
-                                                                                        },
-                                                                                        icon: const Icon(
-                                                                                          Icons.delete,
-                                                                                          color: Colors.red,
-                                                                                        )),
-                                                                              ),
-                                                                              Text(stateOrderList[index].quantity.toString()),
-                                                                              IconButton(
-                                                                                  onPressed: () {
-                                                                                    quantityCubit.increment();
-                                                                                  },
-                                                                                  icon: const Icon(
-                                                                                    Icons.add_circle_outline_rounded,
-                                                                                    color: Colors.green,
-                                                                                  ))
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      )
-                                                                    ]),
-                                                              ),
+                                                                                                        child: const Text('Hapus'),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  )
+                                                                                                ],
+                                                                                              );
+                                                                                            });
+                                                                                      },
+                                                                                      icon: const Icon(
+                                                                                        Icons.delete,
+                                                                                        color: Colors.red,
+                                                                                      )),
+                                                                            ),
+                                                                            Text(stateOrderList[index].quantity.toString()),
+                                                                            IconButton(
+                                                                                onPressed: () {
+                                                                                  quantityCubit.increment();
+                                                                                },
+                                                                                icon: const Icon(
+                                                                                  Icons.add_circle_outline_rounded,
+                                                                                  color: Colors.green,
+                                                                                ))
+                                                                          ],
+                                                                        );
+                                                                      },
+                                                                    )
+                                                                  ]),
                                                             )
                                                           ],
                                                         ),
