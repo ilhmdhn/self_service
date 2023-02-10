@@ -13,6 +13,6 @@ class PreferencesData {
 
   static Future<String> getBaseUrl() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('BASE_URL') ?? 'localhost:3099';
+    return prefs.getString('BASE_URL') ?? 'localhost';
   }
 }
