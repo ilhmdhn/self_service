@@ -10,9 +10,11 @@ import 'package:self_service/page/room_list_page.dart';
 import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
-
+import 'package:flutter/services.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const SelfService());
 }
 
