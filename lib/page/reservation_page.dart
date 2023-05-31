@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/page/category_and_room_page.dart';
+import 'package:self_service/page/setting_page.dart';
 import 'dart:async';
 import 'package:self_service/page/splash_screen.dart';
+import './style/button_style.dart';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({super.key});
@@ -43,19 +46,14 @@ class _ReservationPageState extends State<ReservationPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 145,
-                  height: 45,
+                  width: 105,
+                  height: 40,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xffF5FBFF),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(225.0)),
-                        // shadowColor: const Color(0xff3c7fb4),
-                        side: const BorderSide(
-                            width: 2, // the thickness
-                            color: Color(0xff3c7fb4) // the color of the border
-                            )),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, CategoryAndRoomPage.nameRoute);
+                    },
+                    style: CustomButtonStyle.styleLightBlueButton(),
                     child: Text(
                       'NO',
                       style: GoogleFonts.poppins(
@@ -66,20 +64,17 @@ class _ReservationPageState extends State<ReservationPage> {
                   ),
                 ),
                 const SizedBox(
-                  width: 95,
+                  width: 75,
                 ),
                 SizedBox(
-                  width: 145,
-                  height: 45,
+                  width: 105,
+                  height: 40,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-          context, SplashPage.nameRoute, (route) => false);
+                    onPressed: () {},
+                    onLongPress: () {
+                      Navigator.pushNamed(context, SettingPage.nameRoute);
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff3c7fb4),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(225.0))),
+                    style: CustomButtonStyle.styleDarkBlueButton(),
                     child: Text(
                       'YES',
                       style: GoogleFonts.poppins(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
-import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';

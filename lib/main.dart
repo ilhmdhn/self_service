@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:self_service/page/category_and_room_page.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
 import 'package:self_service/page/reservation_page.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const SelfService());
 }
@@ -31,10 +33,12 @@ class SelfService extends StatelessWidget {
           PointerDeviceKind.unknown
         },
       ),
+      debugShowCheckedModeBanner: false,
       initialRoute: SplashPage.nameRoute,
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),
+        CategoryAndRoomPage.nameRoute: (context) => const CategoryAndRoomPage(),
         LoginPage.nameRoute: (context) => LoginPage(),
         RoomCategoryPage.nameRoute: (context) => RoomCategoryPage(),
         RoomListPage.nameRoute: (context) => RoomListPage(),

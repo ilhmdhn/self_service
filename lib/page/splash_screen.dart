@@ -20,8 +20,9 @@ class _SplashPageState extends State<SplashPage>
     super.initState();
     _videoWelcomeController =
         VideoPlayerController.asset('assets/video/welcome.mp4')
-          ..initialize().then((value) => setState(() {}));
-    _videoWelcomeController.play();
+          ..setLooping(true)
+          ..initialize().then((_) => setState(() {}))
+          ..play();
   }
 
   @override
@@ -33,7 +34,7 @@ class _SplashPageState extends State<SplashPage>
             onTap: () {
               Navigator.of(context).pushNamed(ReservationPage.nameRoute);
             },
-            child:SizedBox(
+            child: SizedBox(
               height: double.infinity,
               width: double.infinity,
               child: Stack(
