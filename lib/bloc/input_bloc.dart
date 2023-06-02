@@ -6,3 +6,10 @@ class InputCubit extends Cubit<String> {
 
   void getData(init) => emit(init);
 }
+
+class InputIntCubit extends Cubit<int?> {
+  int? num;
+  InputIntCubit({this.num}) : super(null);
+
+  void setData(init) => emit(init);
+}

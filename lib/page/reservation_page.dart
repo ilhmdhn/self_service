@@ -15,15 +15,16 @@ class ReservationPage extends StatefulWidget {
 }
 
 class _ReservationPageState extends State<ReservationPage> {
-  Timer? _timerMoveSplash;
+  // Timer? _timerMoveSplash;
 
   @override
   void initState() {
+    //     _timerMoveSplash = Timer(const Duration(seconds: 30), () {
+    //   // _timerMoveSplash?.cancel();
+    //   Navigator.pushNamedAndRemoveUntil(
+    //       context, SplashPage.nameRoute, (route) => false);
+    // });
     super.initState();
-    _timerMoveSplash = Timer(const Duration(seconds: 30), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, SplashPage.nameRoute, (route) => false);
-    });
   }
 
   @override
@@ -50,6 +51,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
+                      // _timerMoveSplash?.cancel();
                       Navigator.pushNamed(
                           context, CategoryAndRoomPage.nameRoute);
                     },
@@ -72,6 +74,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   child: ElevatedButton(
                     onPressed: () {},
                     onLongPress: () {
+                      // _timerMoveSplash?.cancel();
                       Navigator.pushNamed(context, SettingPage.nameRoute);
                     },
                     style: CustomButtonStyle.styleDarkBlueButton(),
@@ -94,7 +97,7 @@ class _ReservationPageState extends State<ReservationPage> {
 
   @override
   void dispose() {
-    _timerMoveSplash?.cancel();
+    // _timerMoveSplash?.cancel();
     super.dispose();
   }
 }

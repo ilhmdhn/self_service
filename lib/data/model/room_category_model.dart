@@ -26,21 +26,23 @@ class RoomCategoryResult {
 
 class RoomCategory {
   String? roomCategoryName;
-  String? roomCategoryCode;
+  String? roomCategoryTv;
   int? roomCategoryCapacity;
-  String? roomCategoryImage;
+  bool? isToilet;
+  String? price;
 
-  RoomCategory({
-    this.roomCategoryName,
-    this.roomCategoryCode,
-    this.roomCategoryCapacity,
-    this.roomCategoryImage,
-  });
+  RoomCategory(
+      {this.roomCategoryName,
+      this.roomCategoryTv,
+      this.roomCategoryCapacity,
+      this.isToilet,
+      this.price});
 
   factory RoomCategory.fromJson(Map<String, dynamic> json) => RoomCategory(
         roomCategoryName: json['category_name'],
-        roomCategoryCode: json['category_code'],
-        roomCategoryCapacity: json['capacity'],
-        roomCategoryImage: json['category_image'],
+        roomCategoryTv: json['tv_detail'],
+        roomCategoryCapacity: json['pax'],
+        isToilet: json['toilet'],
+        price: json['price'],
       );
 }

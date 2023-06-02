@@ -6,7 +6,6 @@ import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/bloc/member_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/member_model.dart';
-import 'package:self_service/page/room_category_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 
 class LoginPage extends StatelessWidget {
@@ -71,8 +70,8 @@ class LoginPage extends StatelessWidget {
                       memberState.data?.memberCode;
                   checkinData.checkinInfo.memberName =
                       memberState.data?.memberName;
-                  Navigator.pushNamed(context, RoomCategoryPage.nameRoute,
-                      arguments: checkinData);
+                  // Navigator.pushNamed(context, RoomCategoryPage.nameRoute,
+                  //     arguments: checkinData);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text(memberState.message.toString()),
