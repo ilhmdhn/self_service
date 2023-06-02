@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/bloc/room_bloc.dart';
 import 'package:self_service/data/model/room_category_model.dart';
+import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/page/style/color_style.dart';
 
 class CategoryAndRoomPage extends StatelessWidget {
@@ -13,6 +15,7 @@ class CategoryAndRoomPage extends StatelessWidget {
   final RoomCategoryCubit roomCategoryCubit = RoomCategoryCubit();
   final ChooseCategoryRoom chooseCategoryCubit = ChooseCategoryRoom();
   final InputIntCubit indexChooseCategoryCubit = InputIntCubit();
+  final RoomListCubit roomListCubit = RoomListCubit();
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +134,7 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                       width: double.infinity,
                                                       height: 0.7,
                                                       color: Colors.white,
-                                                    ),
+                                                    )
                                                   ],
                                                 ),
                                               );
@@ -158,6 +161,9 @@ class CategoryAndRoomPage extends StatelessWidget {
                                 child: CircularProgressIndicator(),
                               );
                             }
+                            roomListCubit.setDate(chooseCategoryState
+                                .roomCategoryName
+                                .toString());
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,6 +332,76 @@ class CategoryAndRoomPage extends StatelessWidget {
                                     color: Colors.grey,
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                BlocBuilder<RoomListCubit, RoomListResult>(
+                                    bloc: roomListCubit,
+                                    builder: (context, listRoomState) {
+                                      if (listRoomState.isLoading) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else if (!(listRoomState.state ??
+                                          false)) {
+                                        return Center(
+                                          child: Text(
+                                              listRoomState.message.toString()),
+                                        );
+                                      }
+
+                                      return Expanded(
+                                        child: GridView.builder(
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: 5 / 6,
+                                            crossAxisSpacing: 15,
+                                            mainAxisSpacing: 10,
+                                          ),
+                                          itemCount: listRoomState.room!.length
+                                              .toInt(),
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    AspectRatio(
+                                                      aspectRatio: 1,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        child: CachedNetworkImage(
+                                                            fit: BoxFit.cover,
+                                                            imageUrl:
+                                                                listRoomState
+                                                                    .room![
+                                                                        index]
+                                                                    .roomImage!),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 0,
+                                                    ),
+                                                    Text(
+                                                      listRoomState
+                                                          .room![index].roomCode
+                                                          .toString(),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                    ),
+                                                  ]),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    })
                               ],
                             );
                           }),

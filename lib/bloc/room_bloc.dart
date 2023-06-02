@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/data/api/api_test.dart';
+import 'package:self_service/data/model/room_list_model.dart';
 import '../data/model/room_category_model.dart';
 
 class RoomCategoryCubit extends Cubit<RoomCategoryResult> {
@@ -16,5 +17,16 @@ class ChooseCategoryRoom extends Cubit<RoomCategory> {
 
   void setData(category) {
     emit(category);
+  }
+}
+
+class RoomListCubit extends Cubit<RoomListResult> {
+  RoomListCubit() : super(RoomListResult());
+
+  void setDate(String category) async {
+    final response = await ApiTest().roomList(category);
+    print(response.room?.length.toString());
+    print(response.state.toString());
+    emit(response);
   }
 }

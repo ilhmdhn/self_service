@@ -6,7 +6,6 @@ import 'package:self_service/page/login_member.dart';
 import 'package:self_service/page/reservation_page.dart';
 import 'package:self_service/page/review_bill_page.dart';
 import 'package:self_service/page/room_detail_page.dart';
-import 'package:self_service/page/room_list_page.dart';
 import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
@@ -39,7 +38,6 @@ class SelfService extends StatelessWidget {
         ReservationPage.nameRoute: (context) => const ReservationPage(),
         CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
         LoginPage.nameRoute: (context) => LoginPage(),
-        RoomListPage.nameRoute: (context) => RoomListPage(),
         RoomDetailPage.nameRoute: (context) => RoomDetailPage(),
         FnBPage.nameRoute: (context) => const FnBPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),

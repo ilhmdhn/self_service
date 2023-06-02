@@ -2,7 +2,7 @@ class RoomListResult {
   bool isLoading;
   bool? state;
   String? message;
-  List<RoomList>? room;
+  List<RoomList>? room = List.empty();
 
   RoomListResult({this.isLoading = true, this.state, this.message, this.room});
 
@@ -20,29 +20,14 @@ class RoomListResult {
 }
 
 class RoomList {
-  String? roomName;
   String? roomCode;
-  String? roomType;
-  num? roomCapacity;
   String? roomImage;
-  num? roomPrice;
-  num? roomIsReady;
+  String? roomCategory;
 
-  RoomList(
-      {this.roomName,
-      this.roomCode,
-      this.roomType,
-      this.roomCapacity,
-      this.roomImage,
-      this.roomPrice,
-      this.roomIsReady});
+  RoomList({this.roomCode, this.roomImage, this.roomCategory});
 
   factory RoomList.fromJson(Map<String, dynamic> json) => RoomList(
-      roomName: json['room_name'],
       roomCode: json['room_code'],
-      roomType: json['type_room'],
-      roomCapacity: json['capacity'],
       roomImage: json['room_image'],
-      roomPrice: json['price'],
-      roomIsReady: json['room_ready']);
+      roomCategory: json['room_category']);
 }
