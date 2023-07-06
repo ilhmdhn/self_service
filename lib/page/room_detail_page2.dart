@@ -7,12 +7,12 @@ import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:self_service/page/fnb_page.dart';
-import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 import '../util/currency.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class RoomDetailPage extends StatelessWidget {
-  RoomDetailPage({super.key});
+class RoomDetailPage2  extends StatelessWidget {
+  RoomDetailPage2 ({super.key});
   static const nameRoute = '/room-detail';
 
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();

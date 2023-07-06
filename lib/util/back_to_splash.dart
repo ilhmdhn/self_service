@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 
 class BackToSplash {
   void backToSplash(BuildContext context) {

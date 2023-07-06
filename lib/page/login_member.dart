@@ -6,7 +6,7 @@ import 'package:self_service/bloc/input_bloc.dart';
 import 'package:self_service/bloc/member_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/member_model.dart';
-import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});

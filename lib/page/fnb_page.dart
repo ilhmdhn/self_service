@@ -5,7 +5,7 @@ import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/fnb_category_model.dart';
 import 'package:self_service/data/model/inventory_model.dart';
-import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
 import 'package:self_service/util/currency.dart';
 import '../bloc/fnb_bloc.dart';

@@ -1,13 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:self_service/page/category_and_room_page.dart';
+import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
+import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
-import 'package:self_service/page/reservation_page.dart';
+import 'package:self_service/page/ask_reservation_page/reservation_page.dart';
 import 'package:self_service/page/review_bill_page.dart';
-import 'package:self_service/page/room_detail_page.dart';
+import 'package:self_service/page/room_detail_page2.dart';
 import 'package:self_service/page/setting_page.dart';
-import 'package:self_service/page/splash_screen.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
 import 'package:flutter/services.dart';
 
@@ -36,9 +37,11 @@ class SelfService extends StatelessWidget {
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),
-        CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
-        LoginPage.nameRoute: (context) => LoginPage(),
+        CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(), 
         RoomDetailPage.nameRoute: (context) => RoomDetailPage(),
+        //asdadads
+        LoginPage.nameRoute: (context) => LoginPage(),
+        RoomDetailPage2.nameRoute: (context) => RoomDetailPage2(),
         FnBPage.nameRoute: (context) => const FnBPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
         VoucherPage.nameRoute: (context) => VoucherPage(),

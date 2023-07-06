@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:self_service/page/reservation_page.dart';
+import 'package:self_service/page/ask_reservation_page/reservation_page.dart';
 import 'package:video_player/video_player.dart';
 
 class SplashPage extends StatefulWidget {

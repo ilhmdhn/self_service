@@ -2,7 +2,7 @@ class RoomListResult {
   bool isLoading;
   bool? state;
   String? message;
-  List<RoomList>? room = List.empty();
+  List<RoomList>? room;
 
   RoomListResult({this.isLoading = true, this.state, this.message, this.room});
 

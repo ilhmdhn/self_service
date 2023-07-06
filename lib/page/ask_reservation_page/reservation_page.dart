@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:self_service/page/category_and_room_page.dart';
+import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
 import 'package:self_service/page/setting_page.dart';
 import 'dart:async';
-import 'package:self_service/page/splash_screen.dart';
-import './style/button_style.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
+import '../style/button_style.dart';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({super.key});
@@ -47,8 +47,8 @@ class _ReservationPageState extends State<ReservationPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 105,
-                  height: 40,
+                  width: 125,
+                  height: 38,
                   child: ElevatedButton(
                     onPressed: () {
                       // _timerMoveSplash?.cancel();
@@ -60,17 +60,17 @@ class _ReservationPageState extends State<ReservationPage> {
                       'NO',
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
-                          fontSize: 25,
+                          fontSize: 22,
                           color: const Color(0xff3c7fb4)),
                     ),
                   ),
                 ),
                 const SizedBox(
-                  width: 75,
+                  width: 35,
                 ),
                 SizedBox(
-                  width: 105,
-                  height: 40,
+                  width: 125,
+                  height: 38,
                   child: ElevatedButton(
                     onPressed: () {},
                     onLongPress: () {
@@ -82,7 +82,7 @@ class _ReservationPageState extends State<ReservationPage> {
                       'YES',
                       style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w500,
-                          fontSize: 25,
+                          fontSize: 22,
                           color: const Color(0xffF5FBFF)),
                     ),
                   ),
