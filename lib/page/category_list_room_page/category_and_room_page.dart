@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:self_service/bloc/input_bloc.dart';
+import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_bloc.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
@@ -19,7 +19,6 @@ class CategoryAndRoomPage extends StatelessWidget {
   final ChooseCategoryRoom chooseCategoryCubit = ChooseCategoryRoom();
   final InputIntCubit indexChooseCategoryCubit = InputIntCubit();
   final RoomListCubit roomListCubit = RoomListCubit();
-
 
   @override
   Widget build(BuildContext context) {
@@ -392,8 +391,6 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                       .then((argumenKembali) {
                                                     orderData = argumenKembali
                                                         as OrderArgs;
-                                                    print(
-                                                        "room category: ${orderData.roomCategory} room code: ${orderData.roomCode}");
                                                   });
                                                 },
                                                 child: Column(

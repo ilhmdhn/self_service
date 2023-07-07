@@ -13,3 +13,11 @@ class InputIntCubit extends Cubit<int?> {
 
   void setData(init) => emit(init);
 }
+
+class InputArrayCubit<T> extends Cubit<List<T>?> {
+  List<T>? data;
+
+  InputArrayCubit({this.data}) : super(null);
+
+  void setData(List<T> initData) => emit(initData);
+}

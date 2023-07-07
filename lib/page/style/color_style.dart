@@ -16,4 +16,12 @@ class CustomColorStyle {
   static Color blackText() {
     return const Color(0xff36343f);
   }
+
+  static Color blueText(){
+        return CustomColorStyle().hexToColor('#3A5CA1');
+  }
+
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
 }
