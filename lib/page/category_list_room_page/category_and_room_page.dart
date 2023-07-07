@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/input_bloc.dart';
-import 'package:self_service/bloc/room_bloc.dart';
+import 'package:self_service/page/category_list_room_page/category_and_room_bloc.dart';
 import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';

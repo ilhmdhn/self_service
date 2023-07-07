@@ -43,3 +43,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 assets/video/welcome.mp4
+assets/data_test/
