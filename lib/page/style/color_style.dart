@@ -17,8 +17,12 @@ class CustomColorStyle {
     return const Color(0xff36343f);
   }
 
-  static Color blueText(){
-        return CustomColorStyle().hexToColor('#3A5CA1');
+  static Color blueText() {
+    return CustomColorStyle().hexToColor('#3A5CA1');
+  }
+
+  static Color blueLight() {
+    return CustomColorStyle().hexToColor('#3C7FB4');
   }
 
   Color hexToColor(String code) {

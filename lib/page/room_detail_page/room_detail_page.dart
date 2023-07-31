@@ -20,6 +20,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   final RoomDetailCubit roomDetailCubit = RoomDetailCubit();
   final InputCubit imageCarouselUrlCubit = InputCubit();
   final InputIntCubit indexCarouselCubit = InputIntCubit();
+  final CarouselController _carouselController = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,178 +43,184 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
               child: Text("Error: ${roomDetailState.message ?? ""}"),
             );
           } else {
-            return BlocBuilder<InputIntCubit, int?>(
-                bloc: indexCarouselCubit,
-                builder: (context, indexCarouselState) {
-                  return Stack(
+            return Stack(
+              children: [
+                Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: CarouselSlider.builder(
+                      carouselController: _carouselController,
+                      itemCount:
+                          roomDetailState.data?.roomImageList?.length ?? 0,
+                      options: CarouselOptions(
+                          aspectRatio: 5 / 6,
+                          enableInfiniteScroll: true,
+                          reverse: false,
+                          viewportFraction: 1,
+                          autoPlay: false,
+                          scrollPhysics: const FixedExtentScrollPhysics(),
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          enlargeFactor: 0.3,
+                          autoPlayInterval: const Duration(seconds: 3),
+                          autoPlayAnimationDuration: const Duration(seconds: 2),
+                          scrollDirection: Axis.horizontal),
+                      itemBuilder: ((context, indexCarousel, realIndex) {
+                        imageCarouselUrlCubit.getData(roomDetailState
+                            .data?.roomImageList?[indexCarousel]);
+                        //tandai atas
+                        indexCarouselCubit.setData(indexCarousel);
+                        return BlocBuilder<InputCubit, String>(
+                          bloc: imageCarouselUrlCubit,
+                          builder: (context, imageUrlState) {
+                            return CachedNetworkImage(
+                              imageUrl: imageUrlState,
+                              fit: BoxFit.fill,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: Container(
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(child: Icon(Icons.error)),
+                            );
+                          },
+                        );
+                      }),
+                    )),
+                Positioned(
+                  top: 3,
+                  left: 3,
+                  right: 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Positioned(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          height: MediaQuery.of(context).size.height * 0.6,
-                          child: CarouselSlider.builder(
-                            itemCount:
-                                roomDetailState.data?.roomImageList?.length ??
-                                    0,
-                            options: CarouselOptions(
-                                aspectRatio: 5 / 6,
-                                enableInfiniteScroll: true,
-                                reverse: false,
-                                viewportFraction: 1,
-                                autoPlay: false,
-                                initialPage: indexCarouselState ?? 0,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                enlargeCenterPage: true,
-                                scrollPhysics: const BouncingScrollPhysics(),
-                                enlargeFactor: 0.3,
-                                autoPlayInterval: const Duration(seconds: 3),
-                                autoPlayAnimationDuration:
-                                    const Duration(seconds: 2),
-                                scrollDirection: Axis.horizontal),
-                            itemBuilder: ((context, index, realIndex) {
-                              imageCarouselUrlCubit.getData(
-                                  roomDetailState.data?.roomImageList?[indexCarouselState??0]);
-                              return BlocBuilder<InputCubit, String>(
-                                bloc: imageCarouselUrlCubit,
-                                builder: (context, imageUrlState) {
-                                  indexCarouselCubit.setData(index);
-                                  return CachedNetworkImage(
-                                    imageUrl: imageUrlState,
-                                    fit: BoxFit.fill,
-                                    progressIndicatorBuilder:
-                                        (context, url, downloadProgress) =>
-                                            Center(
-                                      child: Container(
-                                        color: Colors.amber,
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        const Center(child: Icon(Icons.error)),
-                                  );
-                                },
-                              );
-                            }),
-                          )),
-                      Positioned(
-                        top: 3,
-                        left: 3,
-                        right: 3,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 35,
-                              height: 35,
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context, orderArgs);
-                                },
-                                icon: Image.asset('assets/icon/arrow_back.png'),
-                                iconSize: 30,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: Image.asset('assets/icon/home.png'),
-                              ),
-                            )
-                          ],
+                      SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context, orderArgs);
+                          },
+                          icon: Image.asset('assets/icon/arrow_back.png'),
+                          iconSize: 30,
+                          color: Colors.white,
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: CustomColorStyle.lightBlue(),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(56.0), // Sudut kiri atas
-                              topRight:
-                                  Radius.circular(56.0), // Sudut kanan atas
+                      SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Image.asset('assets/icon/home.png'),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: CustomColorStyle.lightBlue(),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(56.0), // Sudut kiri atas
+                        topRight: Radius.circular(56.0), // Sudut kanan atas
+                      ),
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 26, right: 26, top: 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 18),
+                            child: Text(
+                              roomDetailState.data?.roomCode ?? "room code",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 23,
+                                height: 0.9,
+                                color: CustomColorStyle.blueText(),
+                              ),
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 26, right: 26, top: 20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 18),
-                                  child: Text(
-                                    roomDetailState.data?.roomCode ?? "no name",
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 23,
-                                        color: CustomColorStyle.blueText()),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 18),
-                                  child: Text(
-                                    roomDetailState.data?.roomCategory ??
-                                        "no name",
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14,
-                                        color: CustomColorStyle.blueText()),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 76,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 10,
-                                    itemBuilder: (BuildContext context,
-                                        int indexListImage) {
-                                      return InkWell(
-                                        onTap: () {
-                                          imageCarouselUrlCubit.getData(
-                                              roomDetailState
-                                                          .data?.roomImageList?[
-                                                      indexListImage] ??
-                                                  "");
-                                          indexCarouselCubit
-                                              .setData(indexListImage);
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 10.0),
-                                          child: Container(
-                                            height: 76,
-                                            width: 76,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 18),
+                            child: Text(
+                              roomDetailState.data?.roomCategory ?? "room type",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                height: 0.9,
+                                color: CustomColorStyle.blueText(),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 68,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 10,
+                              itemBuilder:
+                                  (BuildContext context, int indexListImage) {
+                                return InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _carouselController
+                                          .jumpToPage(indexListImage);
+                                    });
+                                    indexCarouselCubit.setData(indexListImage);
+                                    imageCarouselUrlCubit.getData(
+                                        roomDetailState.data?.roomImageList?[
+                                                indexListImage] ??
+                                            "");
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: Container(
+                                      height: 76,
+                                      width: 76,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              top: 0,
+                                              left: 0,
+                                              right: 0,
+                                              bottom: 0,
+                                              child: CachedNetworkImage(
+                                                imageUrl: roomDetailState.data
+                                                            ?.roomImageList?[
+                                                        indexListImage] ??
+                                                    "",
+                                                fit: BoxFit.fill,
+                                              ),
                                             ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Stack(
-                                                children: [
-                                                  Positioned(
-                                                    top: 0,
-                                                    left: 0,
-                                                    right: 0,
-                                                    bottom: 0,
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: roomDetailState
-                                                                  .data
-                                                                  ?.roomImageList?[
-                                                              indexListImage] ??
-                                                          "",
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  ),
-                                                  Container(
+                                            BlocBuilder<InputIntCubit, int?>(
+                                                bloc: indexCarouselCubit,
+                                                builder: (context,
+                                                    indexCarouselState) {
+                                                  return Container(
                                                     child: indexCarouselState ==
                                                             indexListImage
                                                         ? Positioned(
@@ -226,24 +233,164 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                                                   .black54,
                                                             ))
                                                         : const SizedBox(),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                                  );
+                                                })
+                                          ],
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    ),
                                   ),
-                                )
-                              ],
+                                );
+                              },
                             ),
                           ),
-                        ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                      width: 21,
+                                      height: 21,
+                                      child: Image.asset(
+                                        'assets/icon/tv.png',
+                                      )),
+                                  const SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    roomDetailState.data?.roomTvDetail ??
+                                        "Tidak ada",
+                                    style: GoogleFonts.poppins(fontSize: 12),
+                                  ),
+                                  const SizedBox(
+                                    width: 34,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                          width: 21,
+                                          height: 21,
+                                          child: Image.asset(
+                                            'assets/icon/tag_price.png',
+                                          )),
+                                      const SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        roomDetailState.data?.roomPrice ?? "0",
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                      width: 21,
+                                      height: 21,
+                                      child: Image.asset(
+                                        'assets/icon/pax.png',
+                                      )),
+                                  const SizedBox(
+                                    width: 6,
+                                  ),
+                                  Text(
+                                    "${roomDetailState.data?.roomPax} pax",
+                                    style: GoogleFonts.poppins(fontSize: 12),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Container(
+                              child: roomDetailState.data?.roomToilet == true
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                    width: 21,
+                                                    height: 21,
+                                                    child: Image.asset(
+                                                      'assets/icon/toilet.png',
+                                                    )),
+                                                const SizedBox(
+                                                  width: 6,
+                                                ),
+                                                Text(
+                                                  "Toilet",
+                                                  style: GoogleFonts.poppins(
+                                                      fontSize: 12),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox()),
+                          const SizedBox(
+                            height: 26,
+                          ),
+                          Container(
+                            width: double.infinity,
+                            height: 0.5,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 34),
+                                backgroundColor: CustomColorStyle.blueLight(),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(225.0))),
+                            onPressed: () {},
+                            child: Text(
+                              'PILIH RUANGAN',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 19, fontWeight: FontWeight.w600),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  );
-                });
+                    ),
+                  ),
+                ),
+              ],
+            );
           }
         },
       )),
