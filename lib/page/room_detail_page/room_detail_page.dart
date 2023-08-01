@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
+import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_bloc.dart';
 import 'package:self_service/page/style/color_style.dart';
 import '../../util/order_args.dart';
@@ -24,7 +25,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    OrderArgs orderArgs =
+        ModalRoute.of(context)!.settings.arguments as OrderArgs;
     roomDetailCubit.setData(orderArgs.roomCategory, orderArgs.roomCode);
 
     return WillPopScope(
@@ -33,7 +35,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         return false;
       },
       child: Scaffold(
-          body: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
+        body: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
         bloc: roomDetailCubit,
         builder: (context, roomDetailState) {
           if (roomDetailState.isLoading) {
@@ -377,7 +379,14 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.circular(225.0))),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(RegisterClubPage.nameRoute,
+                                      arguments: orderArgs)
+                                  .then((argumenKembali) {
+                                orderArgs = argumenKembali as OrderArgs;
+                              });
+                            },
                             child: Text(
                               'PILIH RUANGAN',
                               style: GoogleFonts.poppins(

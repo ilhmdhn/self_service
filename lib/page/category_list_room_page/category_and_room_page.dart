@@ -27,6 +27,7 @@ class CategoryAndRoomPage extends StatelessWidget {
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
+          Navigator.pop(context);
           return false;
         },
         child: Stack(children: <Widget>[
