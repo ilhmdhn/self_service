@@ -10,7 +10,7 @@ class CustomButtonStyle {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
         // shadowColor: const Color(0xff3c7fb4),
         side: const BorderSide(
-            width: 2, // the thickness
+            width: 1.2, // the thickness
             color: Color(0xff3c7fb4) // the color of the border
             ));
   }
@@ -27,11 +27,11 @@ class CustomButtonStyle {
         backgroundColor: CustomColorStyle.lightBlue(),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
-        side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0));
+        side: BorderSide(color: CustomColorStyle.blueLight(), width: 1.3));
   }
 
-  static flutter.ButtonStyle buttonStyleDarkBlue(){
-        return flutter.ElevatedButton.styleFrom(
+  static flutter.ButtonStyle buttonStyleDarkBlue() {
+    return flutter.ElevatedButton.styleFrom(
         backgroundColor: CustomColorStyle.darkBlue(),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),

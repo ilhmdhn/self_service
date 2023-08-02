@@ -443,8 +443,8 @@ class CategoryAndRoomPage extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 3,
-            left: 3,
+            top: 4,
+            left: 4,
             child: SizedBox(
               width: 35,
               height: 35,
@@ -462,8 +462,8 @@ class CategoryAndRoomPage extends StatelessWidget {
               top: 3,
               right: 3,
               child: SizedBox(
-                width: 40,
-                height: 40,
+                width: 45,
+                height: 45,
                 child: IconButton(
                   onPressed: () {},
                   icon: Image.asset('assets/icon/home.png'),

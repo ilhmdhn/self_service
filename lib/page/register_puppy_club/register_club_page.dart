@@ -37,7 +37,7 @@ class RegisterClubPage extends StatelessWidget {
                               CustomButtonStyle.buttonStyleRoundedBlueTrans(),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                                horizontal: 10, vertical: 4),
                             child: Text(
                               "SUDAH",
                               style: GoogleFonts.poppins(
@@ -54,7 +54,7 @@ class RegisterClubPage extends StatelessWidget {
                           style: CustomButtonStyle.buttonStyleDarkBlue(),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                                horizontal: 10, vertical: 4),
                             child: Text(
                               "DAFTAR",
                               style: GoogleFonts.poppins(
@@ -80,15 +80,15 @@ class RegisterClubPage extends StatelessWidget {
                         width: 5,
                       ),
                       SizedBox(
-                          width: 21,
-                          height: 21,
+                          width: 17,
+                          height: 17,
                           child: Image.asset(
                             'assets/icon/next.png',
                           )),
                     ],
                   )),
               Positioned(
-                top: 10,
+                top: 6,
                 left: 7,
                 right: 7,
                 child: Row(
@@ -99,12 +99,12 @@ class RegisterClubPage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back),
-                      iconSize: 31,
+                      iconSize: 29,
                       color: Colors.black,
                     ),
                     SizedBox(
-                      width: 40,
-                      height: 40,
+                      width: 45,
+                      height: 45,
                       child: IconButton(
                         onPressed: () {},
                         icon: Image.asset('assets/icon/home.png'),

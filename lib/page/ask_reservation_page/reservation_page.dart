@@ -48,7 +48,7 @@ class _ReservationPageState extends State<ReservationPage> {
               children: [
                 SizedBox(
                   width: 125,
-                  height: 38,
+                  height: 36,
                   child: ElevatedButton(
                     onPressed: () {
                       // _timerMoveSplash?.cancel();
@@ -70,7 +70,7 @@ class _ReservationPageState extends State<ReservationPage> {
                 ),
                 SizedBox(
                   width: 125,
-                  height: 38,
+                  height: 36,
                   child: ElevatedButton(
                     onPressed: () {},
                     onLongPress: () {

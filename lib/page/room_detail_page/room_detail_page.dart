@@ -35,7 +35,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         return false;
       },
       child: Scaffold(
-        body: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
+          body: BlocBuilder<RoomDetailCubit, RoomDetailResult>(
         bloc: roomDetailCubit,
         builder: (context, roomDetailState) {
           if (roomDetailState.isLoading) {
@@ -62,12 +62,13 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           reverse: false,
                           viewportFraction: 1,
                           autoPlay: false,
-                          scrollPhysics: const FixedExtentScrollPhysics(),
-                          autoPlayCurve: Curves.fastOutSlowIn,
+                          // scrollPhysics: const FixedExtentScrollPhysics(),
+                          scrollPhysics: const PageScrollPhysics(),
+                          autoPlayCurve: Curves.easeInOut,
                           enlargeCenterPage: true,
-                          enlargeFactor: 0.3,
-                          autoPlayInterval: const Duration(seconds: 3),
-                          autoPlayAnimationDuration: const Duration(seconds: 2),
+                          enlargeFactor: 0.1,
+                          autoPlayInterval: const Duration(seconds: 5),
+                          autoPlayAnimationDuration: const Duration(seconds: 4),
                           scrollDirection: Axis.horizontal),
                       itemBuilder: ((context, indexCarousel, realIndex) {
                         imageCarouselUrlCubit.getData(roomDetailState
@@ -83,7 +84,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                               progressIndicatorBuilder:
                                   (context, url, downloadProgress) => Center(
                                 child: Container(
-                                  color: Colors.amber,
+                                  color: Colors.white,
                                 ),
                               ),
                               errorWidget: (context, url, error) =>
@@ -113,8 +114,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         ),
                       ),
                       SizedBox(
-                        width: 40,
-                        height: 40,
+                        width: 44,
+                        height: 44,
                         child: IconButton(
                           onPressed: () {},
                           icon: Image.asset('assets/icon/home.png'),
@@ -163,7 +164,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             child: Text(
                               roomDetailState.data?.roomCategory ?? "room type",
                               style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                                 fontSize: 14,
                                 height: 0.9,
                                 color: CustomColorStyle.blueText(),
@@ -365,7 +366,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           ),
                           Container(
                             width: double.infinity,
-                            height: 0.5,
+                            height: 0.9,
                             color: Colors.black,
                           ),
                           const SizedBox(
@@ -390,7 +391,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             child: Text(
                               'PILIH RUANGAN',
                               style: GoogleFonts.poppins(
-                                  fontSize: 19, fontWeight: FontWeight.w600),
+                                  fontSize: 18, fontWeight: FontWeight.w600),
                             ),
                           )
                         ],

@@ -11,7 +11,7 @@ class ApiTest {
       final result =
           await rootBundle.loadString('assets/data_test/category_room.json');
       final convertedResult = await json.decode(result);
-      await delay(const Duration(seconds: 1));
+      await delay(const Duration(seconds: 0));
       return RoomCategoryResult.fromJson(convertedResult);
     } catch (e) {
       return RoomCategoryResult(
@@ -27,7 +27,7 @@ class ApiTest {
       final response =
           await rootBundle.loadString('assets/data_test/list_room.json');
       final convertedResult = await json.decode(response);
-      await delay(const Duration(seconds: 1));
+      await delay(const Duration(seconds: 0));
       final parseResult = RoomListResult.fromJson(convertedResult);
       final filtered = parseResult.room
           ?.where((result) => result.roomCategory == category)
@@ -45,9 +45,10 @@ class ApiTest {
 
   Future<RoomDetailResult> roomDetail(String category, String roomCode) async {
     try {
-      final response = await rootBundle.loadString('assets/data_test/detail_room.json');
+      final response =
+          await rootBundle.loadString('assets/data_test/detail_room.json');
       final convertedResult = await json.decode(response);
-      await delay(const Duration(seconds: 1));
+      await delay(const Duration(seconds: 0));
       final parseResult = RoomDetailResult.fromJson(convertedResult);
       return parseResult;
     } catch (e) {
