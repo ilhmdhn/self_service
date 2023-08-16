@@ -11,6 +11,7 @@ import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
 import 'package:flutter/services.dart';
+import 'package:self_service/util/tools.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class SelfService extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorObservers: [routeObserver],
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,

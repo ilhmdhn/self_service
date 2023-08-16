@@ -100,7 +100,7 @@ class LoginPage extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return AlertDialog(
+                        return const AlertDialog(
                             content: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

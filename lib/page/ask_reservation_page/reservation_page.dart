@@ -5,32 +5,22 @@ import 'package:self_service/page/setting_page.dart';
 import 'dart:async';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import '../style/button_style.dart';
+import 'package:self_service/util/tools.dart';
 
 class ReservationPage extends StatefulWidget {
   const ReservationPage({Key? key}) : super(key: key);
   static const nameRoute = '/reservation';
-
   @override
   State<ReservationPage> createState() => _ReservationPageState();
 }
 
 class _ReservationPageState extends State<ReservationPage> with RouteAware {
-  final RouteObserver<Route> routeObserver = RouteObserver<Route>();
   Timer? _timerMoveSplash;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     routeObserver.subscribe(this, ModalRoute.of(context)!);
-  }
-
-  @override
-  void initState() {
-    _timerMoveSplash = Timer(const Duration(seconds: 3), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, SplashPage.nameRoute, (route) => false);
-    });
-    super.initState();
   }
 
   @override
@@ -109,21 +99,33 @@ class _ReservationPageState extends State<ReservationPage> with RouteAware {
 
   @override
   void didPush() {
-    print('manggil 1');
+    _timerMoveSplash = Timer(const Duration(seconds: 3), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, SplashPage.nameRoute, (route) => false);
+    });
     super.didPush();
     // Action to perform when this page is pushed onto the route stack.
   }
 
   @override
   void didPopNext() {
-        print('manggil 2');
+    _timerMoveSplash = Timer(const Duration(seconds: 3), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, SplashPage.nameRoute, (route) => false);
+    });
     super.didPopNext();
     // Action to perform when the user returns to this page from another page.
   }
 
   @override
+  void didPushNext() {
+    _timerMoveSplash?.cancel();
+    super.didPushNext();
+  }
+
+  @override
   void didPop() {
-        print('manggil 3');
+    _timerMoveSplash?.cancel();
     super.didPop();
     // Action to perform when the user goes back from this page to the previous page.
   }
