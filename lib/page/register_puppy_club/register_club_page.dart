@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';
+import 'package:self_service/page/splash_page/splash_screen.dart';
 
 class RegisterClubPage extends StatelessWidget {
   const RegisterClubPage({super.key});
@@ -106,7 +107,37 @@ class RegisterClubPage extends StatelessWidget {
                       width: 45,
                       height: 45,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Center(
+                                      child: Text('Batalkan Transaksi?')),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('Tidak')),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  SplashPage.nameRoute,
+                                                  (route) => false);
+                                            },
+                                            child: const Text('Iya'))
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                         icon: Image.asset('assets/icon/home.png'),
                       ),
                     ),
