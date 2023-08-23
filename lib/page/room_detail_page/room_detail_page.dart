@@ -120,34 +120,35 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         child: IconButton(
                           onPressed: () {
                             showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Center(
-                                child: Text('Batalkan Transaksi?')),
-                            actions: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Tidak')),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pushNamedAndRemoveUntil(
-                                            context,
-                                            SplashPage.nameRoute,
-                                            (route) => false);
-                                      },
-                                      child: const Text('Iya'))
-                                ],
-                              ),
-                            ],
-                          );
-                        });
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Center(
+                                        child: Text('Batalkan Transaksi?')),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('Tidak')),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                        context,
+                                                        SplashPage.nameRoute,
+                                                        (route) => false);
+                                              },
+                                              child: const Text('Iya'))
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
                           },
                           icon: Image.asset('assets/icon/home.png'),
                         ),
@@ -403,28 +404,53 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           const SizedBox(
                             height: 16,
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 34),
-                                backgroundColor: CustomColorStyle.blueLight(),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(225.0))),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pushNamed(RegisterClubPage.nameRoute,
-                                      arguments: orderArgs)
-                                  .then((argumenKembali) {
-                                orderArgs = argumenKembali as OrderArgs;
-                              });
-                            },
-                            child: Text(
-                              'PILIH RUANGAN',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                            ),
-                          )
+                          Container(
+                              child: roomDetailState.data?.roomReady == true
+                                  ? ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 34),
+                                          backgroundColor:
+                                              CustomColorStyle.blueLight(),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      225.0))),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamed(
+                                                RegisterClubPage.nameRoute,
+                                                arguments: orderArgs)
+                                            .then((argumenKembali) {
+                                          orderArgs =
+                                              argumenKembali as OrderArgs;
+                                        });
+                                      },
+                                      child: Text(
+                                        'PILIH RUANGAN',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )
+                                  : ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 34),
+                                          backgroundColor: Colors.grey.shade300,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      225.0))),
+                                      onPressed: () {},
+                                      child: Text(
+                                        'SEDANG DIGUNAKAN',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 18,
+                                            color: CustomColorStyle.blackText(),
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )),
                         ],
                       ),
                     ),

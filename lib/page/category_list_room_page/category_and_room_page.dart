@@ -405,29 +405,62 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(15),
-                                                          child: CachedNetworkImage(
-                                                              fit: BoxFit.cover,
-                                                              imageUrl: listRoomState
-                                                                      .room?[
-                                                                          index]
-                                                                      .roomImage ??
-                                                                  ''),
+                                                          child: Stack(
+                                                              children: [
+                                                                Positioned(
+                                                                  left: 0,
+                                                                  top: 0,
+                                                                  right: 0,
+                                                                  bottom: 0,
+                                                                  child: CachedNetworkImage(
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      imageUrl:
+                                                                          listRoomState.room?[index].roomImage ??
+                                                                              ''),
+                                                                ),
+                                                              ]),
                                                         ),
                                                       ),
                                                       const SizedBox(
                                                         height: 0,
                                                       ),
-                                                      Text(
-                                                        listRoomState
-                                                            .room![index]
-                                                            .roomCode
-                                                            .toString(),
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            listRoomState
+                                                                .room![index]
+                                                                .roomCode
+                                                                .toString(),
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600),
+                                                          ),
+                                                          Container(
+                                                            child: listRoomState
+                                                                        .room?[
+                                                                            index]
+                                                                        .roomReady ==
+                                                                    true
+                                                                ? const SizedBox(
+                                                                    width: 0,
+                                                                    height: 0,
+                                                                  )
+                                                                : const Text(
+                                                                    'digunakan',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            10),
+                                                                  ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ]),
                                               );

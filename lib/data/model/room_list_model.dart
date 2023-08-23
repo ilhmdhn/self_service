@@ -23,11 +23,13 @@ class RoomList {
   String? roomCode;
   String? roomImage;
   String? roomCategory;
+  bool? roomReady;
 
-  RoomList({this.roomCode, this.roomImage, this.roomCategory});
+  RoomList({this.roomCode, this.roomImage, this.roomCategory, this.roomReady});
 
   factory RoomList.fromJson(Map<String, dynamic> json) => RoomList(
       roomCode: json['room_code'],
       roomImage: json['room_image'],
-      roomCategory: json['room_category']);
+      roomCategory: json['room_category'],
+      roomReady: json['room_ready']);
 }
