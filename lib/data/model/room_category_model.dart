@@ -29,7 +29,7 @@ class RoomCategory {
   String? roomCategoryTv;
   int? roomCategoryCapacity;
   bool? isToilet;
-  String? price;
+  num? price;
 
   RoomCategory(
       {this.roomCategoryName,

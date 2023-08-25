@@ -9,8 +9,10 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BaseUrlCubit baseUrlCubit = BaseUrlCubit();
+    final TestModeCubit testModeCubit = TestModeCubit();
     TextEditingController url = TextEditingController();
     baseUrlCubit.getData();
+    testModeCubit.getData();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setting Page'),
@@ -49,7 +51,26 @@ class SettingPage extends StatelessWidget {
                         baseUrlCubit.setData(url.text);
                         baseUrlCubit.getData();
                       },
-                      child: const Text('Submit'))
+                      child: const Text('Submit')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('Test Mode'),
+                        BlocBuilder<TestModeCubit, bool>(
+                          bloc: testModeCubit,
+                          builder: (context, state) {
+                            return Switch(
+                                value: state,
+                                onChanged: (bool value) {
+                                  testModeCubit.setData();
+                                });
+                          },
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               );
             },

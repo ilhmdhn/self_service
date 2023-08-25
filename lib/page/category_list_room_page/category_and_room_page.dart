@@ -9,6 +9,7 @@ import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 
@@ -101,6 +102,15 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                         const SizedBox(
                                                           height: 20,
                                                         ),
+                                                        // Container(
+                                                        //   child: index != 0
+                                                        //       ? const SizedBox(
+                                                        //           height: 20,
+                                                        //         )
+                                                        //       : const SizedBox(
+                                                        //           height: 20,
+                                                        //         ),
+                                                        // ),
                                                         Container(
                                                             child:
                                                                 indexCategoryState ==
@@ -228,53 +238,68 @@ class CategoryAndRoomPage extends StatelessWidget {
                                     height: 12,
                                   ),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                              width: 21,
-                                              height: 21,
-                                              child: Image.asset(
-                                                'assets/icon/tv.png',
-                                              )),
-                                          const SizedBox(
-                                            width: 6,
-                                          ),
-                                          Text(
-                                            chooseCategoryState.roomCategoryTv
-                                                .toString(),
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 12),
-                                          )
-                                        ],
+                                      Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            SizedBox(
+                                                width: 21,
+                                                height: 21,
+                                                child: Image.asset(
+                                                  'assets/icon/tv.png',
+                                                )),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                chooseCategoryState
+                                                    .roomCategoryTv
+                                                    .toString(),
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 12),
+                                                overflow: TextOverflow.visible,
+                                                maxLines: 3,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       const SizedBox(
                                         width: 26,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                              width: 21,
-                                              height: 21,
-                                              child: Image.asset(
-                                                'assets/icon/tag_price.png',
-                                              )),
-                                          const SizedBox(
-                                            width: 6,
-                                          ),
-                                          Text(
-                                            chooseCategoryState.price
-                                                .toString(),
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700),
-                                          )
-                                        ],
+                                      Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            SizedBox(
+                                                width: 21,
+                                                height: 21,
+                                                child: Image.asset(
+                                                  'assets/icon/tag_price.png',
+                                                )),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            Text(
+                                              Currency.toRupiah(
+                                                  chooseCategoryState.price),
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

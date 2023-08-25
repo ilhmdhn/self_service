@@ -7,56 +7,56 @@
             "tv_detail": "60 inch x 1",
             "pax": 10,
             "toilet": true,
-            "price": "100.000"
+            "price": 100.000
         },
         {
             "category_name": "MEDIUM",
             "tv_detail": "60 inch x 2",
             "pax": 15,
             "toilet": true,
-            "price": "120.000"
+            "price": 120.000
         },
         {
             "category_name": "LARGE",
             "tv_detail": "60 inch x 3",
             "pax": 20,
             "toilet": true,
-            "price": "130.000"
+            "price": 130.000
         },
         {
             "category_name": "JUNIOR SUITE",
             "tv_detail": "60 inch x 4",
             "pax": 25,
             "toilet": true,
-            "price": "150.000"
+            "price": 150.000
         },
         {
             "category_name": "SUITE",
             "tv_detail": "60 inch x 5",
             "pax": 27,
             "toilet": true,
-            "price": "175.000"
+            "price": 175.000
         },
         {
             "category_name": "CHAIRMAN SUITE",
             "tv_detail": "60 inch x 6",
             "pax": 30,
             "toilet": true,
-            "price": "300.000"
+            "price": 300.000
         },
         {
             "category_name": "PRESIDENT SUITE",
             "tv_detail": "60 inch x 7",
             "pax": 35,
             "toilet": true,
-            "price": "500.000"
+            "price": 500.000
         },
         {
             "category_name": "ROYAL SUITE",
             "tv_detail": "60 inch x 8",
             "pax": 40,
             "toilet": true,
-            "price": "750.000"
+            "price": 750.000
         }
     ]
 }

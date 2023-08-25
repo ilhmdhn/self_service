@@ -5,10 +5,23 @@ class BaseUrlCubit extends Cubit<String> {
   BaseUrlCubit() : super('');
 
   void setData(url) async {
-    await  PreferencesData.setBaseUrl(url);
+    await PreferencesData.setBaseUrl(url);
   }
 
   void getData() async {
     emit(await PreferencesData.getBaseUrl());
+  }
+}
+
+class TestModeCubit extends Cubit<bool> {
+  TestModeCubit() : super(false);
+
+  void setData() async {
+    await PreferencesData.setTestMode();
+    getData();
+  }
+
+  void getData() async {
+    emit(await PreferencesData.getTestMode());
   }
 }

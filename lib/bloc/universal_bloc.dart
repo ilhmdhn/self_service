@@ -21,3 +21,10 @@ class InputArrayCubit<T> extends Cubit<List<T>?> {
 
   void setData(List<T> initData) => emit(initData);
 }
+
+class BoolCubit<bool> extends Cubit<bool?> {
+  bool? init;
+  BoolCubit({this.init}) : super(init);
+
+  void setData(init) => emit(init);
+}
