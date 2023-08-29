@@ -7,28 +7,28 @@
             "tv_detail": "60 inch x 1",
             "pax": 10,
             "toilet": true,
-            "price": 100.000
+            "price": 100000
         },
         {
             "category_name": "MEDIUM",
             "tv_detail": "60 inch x 2",
             "pax": 15,
             "toilet": true,
-            "price": 120.000
+            "price": 120000
         },
         {
             "category_name": "LARGE",
             "tv_detail": "60 inch x 3",
             "pax": 20,
             "toilet": true,
-            "price": 130.000
+            "price": 130000
         },
         {
             "category_name": "JUNIOR SUITE",
             "tv_detail": "60 inch x 4",
             "pax": 25,
             "toilet": true,
-            "price": 150.000
+            "price": 150000
         },
         {
             "category_name": "SUITE",
@@ -42,21 +42,63 @@
             "tv_detail": "60 inch x 6",
             "pax": 30,
             "toilet": true,
-            "price": 300.000
+            "price": 300000
         },
         {
             "category_name": "PRESIDENT SUITE",
             "tv_detail": "60 inch x 7",
             "pax": 35,
             "toilet": true,
-            "price": 500.000
+            "price": 500000
         },
         {
             "category_name": "ROYAL SUITE",
             "tv_detail": "60 inch x 8",
             "pax": 40,
             "toilet": true,
-            "price": 750.000
+            "price": 750000
+        },
+        {
+            "category_name": "DUMMY CATEGORY 1",
+            "tv_detail": "60 inch x 1",
+            "pax": 41,
+            "toilet": true,
+            "price": 1
+        },
+        {
+            "category_name": "DUMMY CATEGORY 2",
+            "tv_detail": "60 inch x 2",
+            "pax": 42,
+            "toilet": true,
+            "price": 2
+        },
+        {
+            "category_name": "DUMMY CATEGORY 3",
+            "tv_detail": "60 inch x 3",
+            "pax": 43,
+            "toilet": true,
+            "price": 3
+        },
+        {
+            "category_name": "DUMMY CATEGORY 4",
+            "tv_detail": "60 inch x 4",
+            "pax": 44,
+            "toilet": true,
+            "price": 4
+        },
+        {
+            "category_name": "DUMMY CATEGORY 5",
+            "tv_detail": "60 inch x 5",
+            "pax": 45,
+            "toilet": true,
+            "price": 5
+        },
+        {
+            "category_name": "DUMMY CATEGORY 6",
+            "tv_detail": "60 inch x 6",
+            "pax": 46,
+            "toilet": true,
+            "price": 6
         }
     ]
 }
