@@ -17,8 +17,20 @@ class CustomColorStyle {
     return const Color(0xff36343f);
   }
 
+  static Color transparent() {
+    return const Color.fromRGBO(225, 255, 255, 0);
+  }
+
   static Color blueText() {
     return CustomColorStyle().hexToColor('#3A5CA1');
+  }
+
+  static Color darkRed() {
+    return CustomColorStyle().hexToColor('#AD0000');
+  }
+
+  static Color darkGrey() {
+    return CustomColorStyle().hexToColor('#9DA2B0');
   }
 
   static Color blueLight() {

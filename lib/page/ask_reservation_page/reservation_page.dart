@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
 import 'package:self_service/page/setting_page.dart';
+import 'package:self_service/page/reservation_code_page/reservation_scan_page.dart';
 import 'dart:async';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import '../style/button_style.dart';
@@ -75,7 +76,10 @@ class _ReservationPageState extends State<ReservationPage> with RouteAware {
                   width: 125,
                   height: 36,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(
+                          context, ReservationScanPage.nameRoute);
+                    },
                     onLongPress: () {
                       Navigator.pushNamed(context, SettingPage.nameRoute);
                     },

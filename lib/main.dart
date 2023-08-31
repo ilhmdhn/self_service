@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
+import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
@@ -10,6 +11,7 @@ import 'package:self_service/page/review_bill_page.dart';
 import 'package:self_service/page/setting_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/voucher_page.dart';
+import 'package:self_service/page/reservation_code_page/reservation_scan_page.dart';
 import 'package:flutter/services.dart';
 import 'package:self_service/util/tools.dart';
 
@@ -39,9 +41,11 @@ class SelfService extends StatelessWidget {
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),
+        ReservationScanPage.nameRoute: (context) => const ReservationScanPage(),
         CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
         RoomDetailPage.nameRoute: (context) => const RoomDetailPage(),
         RegisterClubPage.nameRoute: (context) => const RegisterClubPage(),
+        ReservationInputPage.nameRoute: (context) => const ReservationInputPage(),
 
         //asdadads
         LoginPage.nameRoute: (context) => LoginPage(),

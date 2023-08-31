@@ -104,7 +104,7 @@ class LoginPage extends StatelessWidget {
                             content: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               Text('QR Code IOS'),
                               Text('QR Code Android'),
                             ],
