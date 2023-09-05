@@ -30,69 +30,66 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 1,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                        iconSize: 30,
-                        color: Colors.black,
-                      ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                      iconSize: 30,
+                      color: Colors.black,
                     ),
-                    SizedBox(
-                      width: 44,
-                      height: 44,
-                      child: IconButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Center(
-                                      child: Text('Batalkan Transaksi?')),
-                                  actions: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('Tidak')),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  SplashPage.nameRoute,
-                                                  (route) => false);
-                                            },
-                                            child: const Text('Iya'))
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              });
-                        },
-                        icon: Image.asset('assets/icon/home.png'),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Center(
+                                    child: Text('Batalkan Transaksi?')),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Tidak')),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                SplashPage.nameRoute,
+                                                (route) => false);
+                                          },
+                                          child: const Text('Iya'))
+                                    ],
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      icon: Image.asset('assets/icon/home.png'),
+                    ),
+                  )
+                ],
               ),
-              Expanded(
-                flex: 1,
+              Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 35),
+                  padding:
+                      const EdgeInsets.only(left: 30, right: 30, bottom: 35),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -105,7 +102,7 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                         ),
                       ),
                       const SizedBox(
-                        height: 7,
+                        height: 12,
                       ),
                       SizedBox(
                         height: 39,
@@ -128,7 +125,7 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 14,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
@@ -137,6 +134,9 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600, fontSize: 15),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 12,
                       ),
                       SizedBox(
                         height: 39,
@@ -161,7 +161,7 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
