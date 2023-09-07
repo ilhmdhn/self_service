@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
+import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
+import 'package:self_service/page/reservation_code_page/slip_checkin_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
@@ -45,7 +47,11 @@ class SelfService extends StatelessWidget {
         CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
         RoomDetailPage.nameRoute: (context) => const RoomDetailPage(),
         RegisterClubPage.nameRoute: (context) => const RegisterClubPage(),
-        ReservationInputPage.nameRoute: (context) => const ReservationInputPage(),
+        ReservationInputPage.nameRoute: (context) =>
+            const ReservationInputPage(),
+        FnBOrderOfferingPage.nameRoute: (context) =>
+            const FnBOrderOfferingPage(),
+        SlipCheckinPage.nameRoute: (context) => const SlipCheckinPage(),
 
         //asdadads
         LoginPage.nameRoute: (context) => LoginPage(),

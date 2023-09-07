@@ -39,6 +39,8 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                     height: 35,
                     child: IconButton(
                       onPressed: () {
+                        SystemChrome.setEnabledSystemUIMode(
+                            SystemUiMode.immersiveSticky);
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back),

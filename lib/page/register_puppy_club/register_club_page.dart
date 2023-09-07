@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
+import 'package:self_service/page/reservation_code_page/slip_checkin_page.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';
@@ -69,24 +71,29 @@ class RegisterClubPage extends StatelessWidget {
               Positioned(
                   right: 28,
                   bottom: 28,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "SKIP",
-                        style: GoogleFonts.poppins(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SizedBox(
-                          width: 17,
-                          height: 17,
-                          child: Image.asset(
-                            'assets/icon/next.png',
-                          )),
-                    ],
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, SlipCheckinPage.nameRoute);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "SKIP",
+                          style: GoogleFonts.poppins(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                            width: 17,
+                            height: 17,
+                            child: Image.asset(
+                              'assets/icon/next.png',
+                            )),
+                      ],
+                    ),
                   )),
               Positioned(
                 top: 6,
