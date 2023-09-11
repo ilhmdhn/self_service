@@ -18,7 +18,6 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
         Navigator.pop(context);
         return false;
       },
@@ -39,8 +38,6 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                     height: 35,
                     child: IconButton(
                       onPressed: () {
-                        SystemChrome.setEnabledSystemUIMode(
-                            SystemUiMode.immersiveSticky);
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back),
@@ -143,10 +140,6 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                       SizedBox(
                         height: 39,
                         child: TextField(
-                          onTap: () {
-                            SystemChrome.setEnabledSystemUIMode(
-                                SystemUiMode.immersiveSticky);
-                          },
                           style: const TextStyle(
                               fontSize: 15, color: Colors.white),
                           decoration: InputDecoration(
@@ -172,8 +165,6 @@ class _ReservationInputPageState extends State<ReservationInputPage> {
                 padding: const EdgeInsets.only(left: 68, bottom: 99),
                 child: ElevatedButton(
                   onPressed: () {
-                    SystemChrome.setEnabledSystemUIMode(
-                        SystemUiMode.immersiveSticky);
                   },
                   style: CustomButtonStyle.styleDarkBlueButton(),
                   child: Padding(

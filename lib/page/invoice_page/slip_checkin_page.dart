@@ -98,14 +98,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Kode Reservasi',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -127,14 +127,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Kode Member',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -156,14 +156,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Nama Member',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -185,14 +185,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Tanggal Reservasi',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -214,14 +214,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Jam Reservasi',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -243,14 +243,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Jenis Kamar',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -272,14 +272,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Durasi Reservasi',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -301,14 +301,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Harga Kamar',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -330,14 +330,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Promo',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -359,14 +359,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Jumlah Ruangan',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -388,14 +388,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Service',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -417,14 +417,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Pajak',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(
@@ -446,7 +446,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Uang Muka',
-                            style: GoogleFonts.poppins(fontSize: 14),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
@@ -475,14 +475,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           flex: 2,
                           child: Text(
                             'Jumlah',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 12),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
                             ':',
-                            style: GoogleFonts.poppins(fontSize: 10),
+                            style: GoogleFonts.poppins(fontSize: 14),
                           ),
                         ),
                         Expanded(

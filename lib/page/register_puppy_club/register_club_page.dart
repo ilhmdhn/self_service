@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
-import 'package:self_service/page/reservation_code_page/slip_checkin_page.dart';
+import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';
@@ -104,7 +104,7 @@ class RegisterClubPage extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, orderArgs);
                       },
                       icon: const Icon(Icons.arrow_back),
                       iconSize: 29,

@@ -4,7 +4,7 @@ import 'package:self_service/page/category_list_room_page/category_and_room_page
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
-import 'package:self_service/page/reservation_code_page/slip_checkin_page.dart';
+import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
