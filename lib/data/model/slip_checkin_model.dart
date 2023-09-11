@@ -12,7 +12,7 @@ class SlipCheckinResult {
   });
 
   factory SlipCheckinResult.fromJson(Map<String, dynamic> json) {
-    if (json['state'] == true) {
+    if (json['state'] == false) {
       throw json['message'];
     }
     return SlipCheckinResult(
