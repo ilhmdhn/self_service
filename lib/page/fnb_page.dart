@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:self_service/bloc/counter_bloc.dart';
 import 'package:self_service/bloc/image_url_bloc.dart';
@@ -662,3 +663,4 @@ class _FnBPageState extends State<FnBPage> {
     super.dispose();
   }
 }
+*/

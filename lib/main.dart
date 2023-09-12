@@ -6,7 +6,6 @@ import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
 import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
-import 'package:self_service/page/fnb_page.dart';
 import 'package:self_service/page/login_member.dart';
 import 'package:self_service/page/ask_reservation_page/reservation_page.dart';
 import 'package:self_service/page/review_bill_page.dart';
@@ -55,7 +54,7 @@ class SelfService extends StatelessWidget {
 
         //asdadads
         LoginPage.nameRoute: (context) => LoginPage(),
-        FnBPage.nameRoute: (context) => const FnBPage(),
+        // FnBPage.nameRoute: (context) => const FnBPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
         VoucherPage.nameRoute: (context) => VoucherPage(),
         ReviewBillPage.nameRoute: (context) => const ReviewBillPage()

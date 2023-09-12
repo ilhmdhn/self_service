@@ -54,7 +54,7 @@ class ApiService {
           isLoading: false, state: false, message: e.toString());
     }
   }
-
+/*
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
       final serverUrl = await baseUrl();
@@ -80,7 +80,7 @@ class ApiService {
           isLoading: false, state: false, message: err.toString());
     }
   }
-
+*/
   Future<MemberResult> getMember(String memberCode) async {
     try {
       final serverUrl = await baseUrl();
@@ -93,6 +93,7 @@ class ApiService {
     }
   }
 
+/*
   Future<InventorySingleResult> getFnBSingle(String inventoryCode) async {
     try {
       final serverUrl = await baseUrl();
@@ -107,7 +108,7 @@ class ApiService {
           message: err.toString());
     }
   }
-
+*/
   Future<PromoDataResult> getPromoRoom() async {
     try {
       final serverUrl = await baseUrl();
