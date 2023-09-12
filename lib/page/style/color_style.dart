@@ -13,6 +13,10 @@ class CustomColorStyle {
     return const Color(0xff3c7fb4);
   }
 
+  static Color lightGrey() {
+    return CustomColorStyle().hexToColor('#e9e9e9');
+  }
+
   static Color blackText() {
     return const Color(0xff36343f);
   }

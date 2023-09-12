@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
+import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
@@ -28,6 +29,24 @@ class SelfService extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.blue, // Ganti warna border sesuai kebutuhan Anda
+            width: 2.0, // Ganti lebar border sesuai kebutuhan Anda
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color:
+                Colors.grey, // Ganti warna border normal sesuai kebutuhan Anda
+            width: 1.0, // Ganti lebar border normal sesuai kebutuhan Anda
+          ),
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+      )),
       navigatorObservers: [routeObserver],
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
@@ -51,6 +70,7 @@ class SelfService extends StatelessWidget {
         FnBOrderOfferingPage.nameRoute: (context) =>
             const FnBOrderOfferingPage(),
         SlipCheckinPage.nameRoute: (context) => const SlipCheckinPage(),
+        FnbListPage.nameRoute: (context) => const FnbListPage(),
 
         //asdadads
         LoginPage.nameRoute: (context) => LoginPage(),

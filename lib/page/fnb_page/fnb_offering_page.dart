@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 
@@ -87,7 +88,9 @@ class FnBOrderOfferingPage extends StatelessWidget {
               width: double.infinity,
               child: Center(
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, FnbListPage.nameRoute);
+                    },
                     style: CustomButtonStyle.buttonStyleDarkBlue(),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
