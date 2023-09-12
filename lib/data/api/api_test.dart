@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:self_service/data/model/fnb_category.dart';
+import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
@@ -86,11 +87,20 @@ class ApiTest {
       return parseResult;
     } catch (err) {
       return FnBCategoryResult(
-        isLoading: false,
-        state: false,
-        message: err.toString(),
-        data: []
-      );
+          isLoading: false, state: false, message: err.toString(), data: []);
+    }
+  }
+
+  Future<FnBResultModel> getFnB() async {
+    try {
+      final response = await rootBundle.loadString('assets/data_test/fnb.json');
+      final convertedResult = await json.decode(response);
+      final parseResult = FnBResultModel.fromJson(convertedResult);
+      await delay(const Duration(seconds: 1));
+      return parseResult;
+    } catch (err) {
+      return FnBResultModel(
+          isLoading: false, message: err.toString(), data: []);
     }
   }
 }
