@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/model/fnb_category.dart';
+import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/fnb_page/fnb_bloc.dart';
@@ -19,6 +20,7 @@ class FnbListPage extends StatefulWidget {
 class _FnbListPageState extends State<FnbListPage> {
   final FnBCategoryCubit fnBCategoryCubit = FnBCategoryCubit();
   final InputCubit chooseCategorCubit = InputCubit();
+  final FnBCubit fnbCubit = FnBCubit();
 
   @override
   void initState() {
@@ -34,6 +36,9 @@ class _FnbListPageState extends State<FnbListPage> {
           BlocBuilder<InputCubit, String>(
               bloc: chooseCategorCubit,
               builder: (context, chooseCategoryState) {
+                if (chooseCategoryState != '') {
+                  fnbCubit.setData(chooseCategoryState);
+                }
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -241,6 +246,46 @@ class _FnbListPageState extends State<FnbListPage> {
                                   )
                                 ]),
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Expanded(
+                                  child: BlocBuilder<FnBCubit, FnBResultModel>(
+                                bloc: fnbCubit,
+                                builder: (context, fnbState) {
+                                  if (fnbState.isLoading) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (fnbState.state != true) {
+                                    return Center(
+                                      child: Text(fnbState.message.toString()),
+                                    );
+                                  } else if ((fnbState.data?.isEmpty ??
+                                          List.empty()) ==
+                                      []) {
+                                    return const Center(
+                                      child: Text('Kosong'),
+                                    );
+                                  }
+                                  return GridView.builder(
+                                      itemCount: fnbState.data?.length ?? 0,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 5 / 6,
+                                        crossAxisSpacing: 15,
+                                        mainAxisSpacing: 10,
+                                      ),
+                                      itemBuilder: (context, indexFnb) {
+                                        return InkWell(
+                                          child: Container(
+                                            color: Colors.amber,
+                                          ),
+                                        );
+                                      });
+                                },
+                              ))
                             ],
                           ),
                         ))

@@ -91,12 +91,17 @@ class ApiTest {
     }
   }
 
-  Future<FnBResultModel> getFnB() async {
+  Future<FnBResultModel> getFnB(String category) async {
     try {
       final response = await rootBundle.loadString('assets/data_test/fnb.json');
       final convertedResult = await json.decode(response);
-      final parseResult = FnBResultModel.fromJson(convertedResult);
-      await delay(const Duration(seconds: 1));
+      FnBResultModel parseResult = FnBResultModel.fromJson(convertedResult);
+      final filteredFnBs = parseResult.data
+          ?.where((fnb) => fnb.categoryFnb == category)
+          .toList();
+      parseResult.data = filteredFnBs;
+      print('Panjang result ' + parseResult.data!.length.toString());
+      // await delay(const Duration(seconds: 1));
       return parseResult;
     } catch (err) {
       return FnBResultModel(

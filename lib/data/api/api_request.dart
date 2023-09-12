@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:self_service/data/model/fnb_category_model.dart';
-import 'package:self_service/data/model/inventory_model.dart';
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_category_model.dart';
