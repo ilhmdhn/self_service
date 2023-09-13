@@ -1,12 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/universal_bloc.dart';
+import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/fnb_page/fnb_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:self_service/util/currency.dart';
+import 'package:self_service/util/order_args.dart';
 
 class FnbListPage extends StatefulWidget {
   const FnbListPage({super.key});
@@ -21,11 +26,31 @@ class _FnbListPageState extends State<FnbListPage> {
   final FnBCategoryCubit fnBCategoryCubit = FnBCategoryCubit();
   final InputCubit chooseCategorCubit = InputCubit();
   final FnBCubit fnbCubit = FnBCubit();
+  final PagingController<int, FnB> _pagingController =
+      PagingController(firstPageKey: 1);
+  static const pageSize = 8;
+  String stateFnbCategory = '';
+
+  List<FnBOrder> fnbOrderData = [];
 
   @override
   void initState() {
     fnBCategoryCubit.setData();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
     super.initState();
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    final getFnB = await ApiTest().getFnB(stateFnbCategory, pageKey);
+    if (getFnB.state != true) {
+      _pagingController.error = getFnB.message;
+    } else if ((getFnB.data?.length ?? 0) < pageSize) {
+      _pagingController.appendLastPage(getFnB.data ?? List.empty());
+    } else {
+      _pagingController.appendPage(getFnB.data!, pageKey + 1);
+    }
   }
 
   @override
@@ -36,8 +61,11 @@ class _FnbListPageState extends State<FnbListPage> {
           BlocBuilder<InputCubit, String>(
               bloc: chooseCategorCubit,
               builder: (context, chooseCategoryState) {
-                if (chooseCategoryState != '') {
-                  fnbCubit.setData(chooseCategoryState);
+                if (chooseCategoryState != '' &&
+                    stateFnbCategory != chooseCategoryState) {
+                  stateFnbCategory = chooseCategoryState;
+                  // setState(() {
+                  // });
                 }
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -73,19 +101,23 @@ class _FnbListPageState extends State<FnbListPage> {
                                       child: Text('Data Kosong'),
                                     );
                                   }
-                                  if (chooseCategoryState == '') {
-                                    chooseCategorCubit.getData(
-                                        fnbCategoryState.data?[0].categoryName);
-                                  }
                                   return ListView.builder(
                                       itemCount:
                                           fnbCategoryState.data?.length.toInt(),
                                       itemBuilder: (context, index) {
                                         return InkWell(
                                           onTap: () {
+                                            setState(() {
+                                              stateFnbCategory =
+                                                  fnbCategoryState.data?[index]
+                                                          .categoryName ??
+                                                      '';
+                                            });
                                             chooseCategorCubit.getData(
                                                 fnbCategoryState
                                                     .data?[index].categoryName);
+                                            _pagingController.refresh();
+                                            _fetchPage(1);
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -124,15 +156,15 @@ class _FnbListPageState extends State<FnbListPage> {
                                                                     .clip,
                                                           ),
                                                         ),
-                                                        const SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        const Icon(
-                                                          Icons.circle,
-                                                          color: Colors.white,
-                                                          size:
-                                                              12, // Ganti dengan ukuran yang Anda inginkan
-                                                        )
+                                                        // const SizedBox(
+                                                        //   width: 5,
+                                                        // ),
+                                                        // const Icon(
+                                                        //   Icons.circle,
+                                                        //   color: Colors.white,
+                                                        //   size:
+                                                        //       12, // Ganti dengan ukuran yang Anda inginkan
+                                                        // )
                                                       ],
                                                     )
                                                   : Text(
@@ -250,42 +282,183 @@ class _FnbListPageState extends State<FnbListPage> {
                                 height: 10,
                               ),
                               Expanded(
-                                  child: BlocBuilder<FnBCubit, FnBResultModel>(
-                                bloc: fnbCubit,
-                                builder: (context, fnbState) {
-                                  if (fnbState.isLoading) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  } else if (fnbState.state != true) {
-                                    return Center(
-                                      child: Text(fnbState.message.toString()),
-                                    );
-                                  } else if ((fnbState.data?.isEmpty ??
-                                          List.empty()) ==
-                                      []) {
-                                    return const Center(
-                                      child: Text('Kosong'),
-                                    );
-                                  }
-                                  return GridView.builder(
-                                      itemCount: fnbState.data?.length ?? 0,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 5 / 6,
-                                        crossAxisSpacing: 15,
-                                        mainAxisSpacing: 10,
-                                      ),
-                                      itemBuilder: (context, indexFnb) {
-                                        return InkWell(
-                                          child: Container(
-                                            color: Colors.amber,
-                                          ),
-                                        );
-                                      });
-                                },
-                              ))
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 33),
+                                    child: PagedGridView(
+                                        pagingController: _pagingController,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 1.0 / 1.35,
+                                          mainAxisSpacing: 15.0,
+                                          crossAxisSpacing: 15.0,
+                                        ),
+                                        builderDelegate:
+                                            PagedChildBuilderDelegate<FnB>(
+                                          itemBuilder: (context, item, index) =>
+                                              InkWell(
+                                                  onTap: () {
+                                                    // setState(() {
+                                                    //   if ((fnbOrderData.any(
+                                                    //           (orderItem) =>
+                                                    //               orderItem
+                                                    //                   .idGlobal ==
+                                                    //               item.idGlobal)) !=
+                                                    //       true) {
+                                                    //     fnbOrderData.add(
+                                                    //         FnBOrder(
+                                                    //             idGlobal: item
+                                                    //                 .idGlobal,
+                                                    //             itemName: item
+                                                    //                 .fnbName,
+                                                    //             qty: 1,
+                                                    //             price: item
+                                                    //                 .priceFnb,
+                                                    //             note: ''));
+                                                    //   } else {
+                                                    //     for (var order
+                                                    //         in fnbOrderData) {
+                                                    //       if (order.idGlobal ==
+                                                    //           item.idGlobal) {
+                                                    //         order.qty =
+                                                    //             (order.qty ??
+                                                    //                     0) +
+                                                    //                 1;
+                                                    //       }
+                                                    //     }
+                                                    //   }
+                                                    // });
+                                                    showDialogDetailFnB(
+                                                        context, item);
+                                                  },
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Stack(children: [
+                                                        AspectRatio(
+                                                          aspectRatio: 1 / 1,
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15),
+                                                            child: CachedNetworkImage(
+                                                                imageUrl:
+                                                                    'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}',
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error),
+                                                                progressIndicatorBuilder: (context,
+                                                                        url,
+                                                                        downloadProgress) =>
+                                                                    Transform.scale(
+                                                                        scale:
+                                                                            0.3,
+                                                                        child: CircularProgressIndicator(
+                                                                            value: downloadProgress
+                                                                                .progress)),
+                                                                fit: BoxFit
+                                                                    .cover),
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          bottom: 5,
+                                                          left: 5,
+                                                          child: Container(
+                                                            child: ((fnbOrderData.any((orderItem) =>
+                                                                        orderItem
+                                                                            .idGlobal ==
+                                                                        item
+                                                                            .idGlobal)) ==
+                                                                    true
+                                                                ? Container(
+                                                                    width: 25,
+                                                                    height: 25,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: CustomColorStyle
+                                                                          .darkBlue(),
+                                                                    ),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                      ('${fnbOrderData.firstWhere((order) => order.idGlobal == item.idGlobal).qty}x'),
+                                                                      style: GoogleFonts.poppins(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontSize:
+                                                                              10,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    )))
+                                                                : const SizedBox()),
+                                                          ),
+                                                        )
+                                                      ]),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 10),
+                                                        child: SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          child: Text(
+                                                              item.fnbName
+                                                                  .toString(),
+                                                              style: GoogleFonts.poppins(
+                                                                  fontSize: 9,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: (fnbOrderData.any((orderItem) =>
+                                                                              orderItem.idGlobal ==
+                                                                              item
+                                                                                  .idGlobal)) ==
+                                                                          true
+                                                                      ? CustomColorStyle
+                                                                          .darkBlue()
+                                                                      : Colors
+                                                                          .black),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip,
+                                                              maxLines: 2),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 10),
+                                                        child: Text(
+                                                            Currency.toRupiah(
+                                                                item.priceFnb),
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize: 9,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Colors
+                                                                        .black),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                            maxLines: 2),
+                                                      )
+                                                    ],
+                                                  )),
+                                        ))),
+                              )
                             ],
                           ),
                         ))
@@ -350,6 +523,127 @@ class _FnbListPageState extends State<FnbListPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void showDialogDetailFnB(BuildContext context, FnB fnb) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: CachedNetworkImage(
+                        imageUrl: 'https://adm.happypuppy.id/${fnb.image}',
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Transform.scale(
+                                scale: 0.3,
+                                child: CircularProgressIndicator(
+                                    value: downloadProgress.progress)),
+                        fit: BoxFit.cover),
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.close)),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft:
+                          Radius.circular(40.0), // Radius pada pojok kiri atas
+                      topRight:
+                          Radius.circular(40.0), // Radius pada pojok kanan atas
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      decoration: BoxDecoration(
+                        color: CustomColorStyle.lightBlue(),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  fnb.fnbName.toString(),
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  Currency.toRupiah(fnb.priceFnb),
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape
+                                            .rectangle, // Mengatur bentuknya menjadi lingkaran
+                                        border: Border.all(
+                                          color: Colors.grey
+                                              .shade300, // Warna garis tepi
+                                          width: 1.0, // Lebar garis tepi
+                                        ),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          // Tindakan yang ingin Anda lakukan ketika tombol ditekan
+                                        },
+                                        borderRadius: BorderRadius.circular(
+                                            3.0), // Radius pojok
+                                        child:
+                                            Center(child: Icon(Icons.)),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

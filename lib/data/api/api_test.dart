@@ -91,17 +91,32 @@ class ApiTest {
     }
   }
 
-  Future<FnBResultModel> getFnB(String category) async {
+  Future<FnBResultModel> getFnB(String category, int index) async {
     try {
       final response = await rootBundle.loadString('assets/data_test/fnb.json');
       final convertedResult = await json.decode(response);
       FnBResultModel parseResult = FnBResultModel.fromJson(convertedResult);
-      final filteredFnBs = parseResult.data
-          ?.where((fnb) => fnb.categoryFnb == category)
-          .toList();
-      parseResult.data = filteredFnBs;
-      print('Panjang result ' + parseResult.data!.length.toString());
-      // await delay(const Duration(seconds: 1));
+      List<FnB>? fnbSort = List.empty();
+
+      if (parseResult.data != null &&
+          (parseResult.data?.length ?? 0) >= index * 10 + 10) {
+        fnbSort = parseResult.data?.sublist(index * 10, index * 10 + 10);
+      } else {
+        fnbSort = List.empty();
+      }
+
+      // List<FnB> fnbSort = List.empty();
+      // final filteredFnBs = parseResult.data
+      //     ?.where((fnb) => fnb.categoryFnb == category)
+      //     .toList();
+      // if (filteredFnBs != null) {
+      //   fnbSort = filteredFnBs.sublist(index * 10, index * 10 + 10);
+      // } else {
+      //   fnbSort = List.empty();
+      // }
+      // parseResult.data = fnbSort;
+      await delay(const Duration(seconds: 1));
+      parseResult.data = fnbSort;
       return parseResult;
     } catch (err) {
       return FnBResultModel(

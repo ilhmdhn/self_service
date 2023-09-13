@@ -19,11 +19,19 @@ class FnBCategoryCubit extends Cubit<FnBCategoryResult> {
 class FnBCubit extends Cubit<FnBResultModel> {
   FnBCubit() : super(FnBResultModel());
 
-  void setData(String category) async {
+  void setData(String category, int startIndex) async {
     final isTestMode = await PreferencesData.getTestMode();
     if (isTestMode) {
-      final response = await ApiTest().getFnB(category);
+      final response = await ApiTest().getFnB(category, startIndex);
       emit(response);
     }
+  }
+}
+
+class FnBListCubit extends Cubit<List<FnB>> {
+  FnBListCubit() : super(List.empty());
+
+  void setData(List<FnB> data) {
+    emit(data);
   }
 }

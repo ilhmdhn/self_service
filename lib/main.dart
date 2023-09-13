@@ -32,14 +32,14 @@ class SelfService extends StatelessWidget {
       theme: ThemeData(
           inputDecorationTheme: InputDecorationTheme(
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.blue, // Ganti warna border sesuai kebutuhan Anda
-            width: 2.0, // Ganti lebar border sesuai kebutuhan Anda
+          borderSide: const BorderSide(
+            color: Colors.blue,
+            width: 2.0,
           ),
           borderRadius: BorderRadius.circular(20.0),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color:
                 Colors.grey, // Ganti warna border normal sesuai kebutuhan Anda
             width: 1.0, // Ganti lebar border normal sesuai kebutuhan Anda
