@@ -9,14 +9,14 @@ class FnBOrder {
   String? idGlobal = '';
   String? itemName = '';
   String? note = '';
-  num? qty = 0;
-  num? price = 0;
+  num qty;
+  num price;
 
   FnBOrder({
     this.idGlobal,
     this.itemName,
     this.note,
-    this.qty,
-    this.price
+    this.qty = 0,
+    this.price = 0
   });
 }

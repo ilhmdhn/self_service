@@ -7,6 +7,7 @@ import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
+import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/fnb_page/fnb_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -30,8 +31,8 @@ class _FnbListPageState extends State<FnbListPage> {
       PagingController(firstPageKey: 1);
   static const pageSize = 8;
   String stateFnbCategory = '';
-
   List<FnBOrder> fnbOrderData = [];
+  FnBOrder orderItem = FnBOrder();
 
   @override
   void initState() {
@@ -527,6 +528,14 @@ class _FnbListPageState extends State<FnbListPage> {
   }
 
   void showDialogDetailFnB(BuildContext context, FnB fnb) {
+    orderItem = FnBOrder(
+        idGlobal: fnb.idGlobal,
+        itemName: fnb.fnbName,
+        note: '',
+        qty: 1,
+        price: fnb.priceFnb ?? 0);
+
+    TextEditingController orderNoteController = TextEditingController();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -600,7 +609,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                 Text(
                                   Currency.toRupiah(fnb.priceFnb),
                                   style: GoogleFonts.poppins(
-                                      fontSize: 11,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 const SizedBox(
@@ -609,32 +618,102 @@ class _FnbListPageState extends State<FnbListPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape
-                                            .rectangle, // Mengatur bentuknya menjadi lingkaran
-                                        border: Border.all(
-                                          color: Colors.grey
-                                              .shade300, // Warna garis tepi
-                                          width: 1.0, // Lebar garis tepi
-                                        ),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          // Tindakan yang ingin Anda lakukan ketika tombol ditekan
-                                        },
-                                        borderRadius: BorderRadius.circular(
-                                            3.0), // Radius pojok
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          orderItem.qty--;
+                                        });
+                                      }, // Radius pojok
+                                      child: Center(
+                                          child: SizedBox(
+                                        height: 23,
+                                        width: 23,
+                                        child: Image.asset(
+                                            'assets/icon/minus.png'),
+                                      )),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      orderItem.qty.toString(),
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.black),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                      onTap: () {}, // Radius pojok
+                                      child: Center(
+                                          child: SizedBox(
+                                        height: 23,
+                                        width: 23,
                                         child:
-                                            Center(child: Icon(Icons.)),
-                                      ),
-                                    )
+                                            Image.asset('assets/icon/plus.png'),
+                                      )),
+                                    ),
                                   ],
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Text(
+                                  'CATATAN',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 65,
+                                  child: TextField(
+                                    controller: orderNoteController,
+                                    decoration: const InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    maxLines: null,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 2,
+                                  color: Colors.black,
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      orderItem.qty++;
+                                    });
+                                    print('DEBUGGING jumlah order ' +
+                                        orderItem.qty.toString());
+                                  },
+                                  style:
+                                      CustomButtonStyle.styleDarkBlueButton(),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: Center(
+                                      child: Text(
+                                        'TAMBAH PESANAN',
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
                           ],
                         ),
+                        //end column
                       ),
                     ),
                   ),
