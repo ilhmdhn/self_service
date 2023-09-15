@@ -115,7 +115,7 @@ class ApiTest {
       //   fnbSort = List.empty();
       // }
       // parseResult.data = fnbSort;
-      // await delay(const Duration(seconds: 1));
+      await delay(const Duration(milliseconds: 200));
       // parseResult.data = fnbSort;
       return parseResult;
     } catch (err) {

@@ -276,15 +276,18 @@ class _FnbListPageState extends State<FnbListPage> {
                                         borderRadius:
                                             BorderRadiusDirectional.circular(
                                                 20)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 2),
-                                      child: Text(
-                                        chooseCategoryState,
-                                        style: GoogleFonts.poppins(
-                                            color: Colors.white, fontSize: 14),
-                                      ),
-                                    ),
+                                    child: chooseCategoryState != ''
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 2),
+                                            child: Text(
+                                              chooseCategoryState,
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                          )
+                                        : const SizedBox(),
                                   ),
                                   Expanded(
                                     child: Container(
@@ -509,97 +512,103 @@ class _FnbListPageState extends State<FnbListPage> {
           ),
         ],
       ),
-      floatingActionButton: Row(
-        children: [
-          const Expanded(
-            flex: 1,
-            child: SizedBox(),
-          ),
-          Expanded(
-            flex: 4,
-            child: SizedBox(
-                height: 35,
-                child: fnbOrderData.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 33),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: CustomColorStyle.darkBlue(),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Column(
+      floatingActionButton: InkWell(
+        onTap: () {
+          showDialogListOrder(context);
+        },
+        child: Row(
+          children: [
+            const Expanded(
+              flex: 1,
+              child: SizedBox(),
+            ),
+            Expanded(
+              flex: 4,
+              child: SizedBox(
+                  height: 35,
+                  child: fnbOrderData.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 33),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColorStyle.darkBlue(),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${fnbOrderData.fold(0, (sum, order) => sum + (order.qty).toInt())} item',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 10,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(
+                                              listItem,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 9,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w400),
+                                              overflow: TextOverflow.ellipsis,
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            '${fnbOrderData.fold(0, (sum, order) => sum + (order.qty).toInt())} item',
+                                            Currency.toRupiah(totalBayar),
                                             style: GoogleFonts.poppins(
-                                                fontSize: 10,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600),
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white),
                                           ),
-                                          Text(
-                                            listItem,
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 9,
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.fastfood_rounded,
                                                 color: Colors.white,
-                                                fontWeight: FontWeight.w400),
-                                            overflow: TextOverflow.ellipsis,
+                                                size: 15,
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              )
+                                            ],
                                           )
                                         ],
-                                      ),
-                                    )),
-                                Expanded(
-                                    flex: 2,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          Currency.toRupiah(totalBayar),
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        const Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.fastfood_rounded,
-                                              color: Colors.white,
-                                              size: 15,
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ))
-                              ],
+                                      ))
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : const SizedBox()),
-          )
-        ],
+                        )
+                      : const SizedBox()),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -899,6 +908,66 @@ class _FnbListPageState extends State<FnbListPage> {
         );
       },
     );
+  }
+
+  void showDialogListOrder(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              insetPadding: EdgeInsets.zero,
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: SizedBox(
+                    child: Container(
+                  color: CustomColorStyle.lightBlue(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 7,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: IconButton(
+                                alignment: Alignment.topRight,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close)),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'Order Summary',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 21,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column()
+                    ],
+                  ),
+                )),
+              ));
+        });
   }
 
   @override
