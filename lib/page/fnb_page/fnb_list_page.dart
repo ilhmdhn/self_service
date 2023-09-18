@@ -6,6 +6,7 @@ import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
+import 'package:self_service/page/invoice_page/billing_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
@@ -1154,7 +1155,10 @@ class _FnbListPageState extends State<FnbListPage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, BillingPage.nameRoute);
+                                        },
                                         style: CustomButtonStyle
                                             .buttonStyleDarkBlue(),
                                         child: Padding(

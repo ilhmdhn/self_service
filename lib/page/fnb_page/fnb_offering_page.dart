@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/fnb_page/fnb_list_page.dart';
+import 'package:self_service/page/invoice_page/billing_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 
@@ -111,7 +112,7 @@ class FnBOrderOfferingPage extends StatelessWidget {
               bottom: 28,
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, FnBOrderOfferingPage.nameRoute);
+                  Navigator.pushNamed(context, BillingPage.nameRoute);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

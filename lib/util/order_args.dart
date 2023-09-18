@@ -1,8 +1,8 @@
 class OrderArgs {
   final String roomCategory;
   final String roomCode;
-
-  OrderArgs(this.roomCategory, this.roomCode);
+  final List<FnBOrder> fnb;
+  OrderArgs(this.roomCategory, this.roomCode, this.fnb);
 }
 
 class FnBOrder {
@@ -15,5 +15,11 @@ class FnBOrder {
   String image = '';
 
   FnBOrder(
-      {this.idGlobal, this.itemName, this.note, this.qty = 0, this.price = 0, this.category = '', this.image = ''});
+      {this.idGlobal,
+      this.itemName,
+      this.note,
+      this.qty = 0,
+      this.price = 0,
+      this.category = '',
+      this.image = ''});
 }
