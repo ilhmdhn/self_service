@@ -34,6 +34,7 @@ class _FnbListPageState extends State<FnbListPage> {
   String stateFnbCategory = '';
   List<FnBOrder> fnbOrderData = [];
   FnBOrder orderItem = FnBOrder();
+  num totalBayar = 0;
 
   @override
   void initState() {
@@ -57,8 +58,8 @@ class _FnbListPageState extends State<FnbListPage> {
 
   @override
   Widget build(BuildContext context) {
-    num totalBayar = 0;
     String listItem = '';
+    totalBayar = 0;
     for (var order in fnbOrderData) {
       totalBayar += (order.qty) * (order.price);
     }
@@ -866,8 +867,10 @@ class _FnbListPageState extends State<FnbListPage> {
                                                       note: orderNoteController
                                                           .text,
                                                       qty: qtyOrderState ?? 0,
-                                                      price:
-                                                          fnb.priceFnb ?? 0));
+                                                      price: fnb.priceFnb ?? 0,
+                                                      category:
+                                                          fnb.categoryFnb ?? '',
+                                                      image: fnb.image ?? ''));
                                                 })
                                               : setState(() {
                                                   fnbOrderData[indexSame].qty =
@@ -914,60 +917,547 @@ class _FnbListPageState extends State<FnbListPage> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-              insetPadding: EdgeInsets.zero,
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
+          return StatefulBuilder(builder: (context, setState) {
+            totalBayar = 0;
+            for (var order in fnbOrderData) {
+              totalBayar += (order.qty) * (order.price);
+            }
+            return Dialog(
+                insetPadding: EdgeInsets.zero,
                 child: SizedBox(
-                    child: Container(
-                  color: CustomColorStyle.lightBlue(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 7,
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: SizedBox(
+                      child: Container(
+                    color: CustomColorStyle.lightBlue(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 55,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: IconButton(
+                                    alignment: Alignment.topRight,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.close)),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: IconButton(
-                                alignment: Alignment.topRight,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.close)),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 35),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                              'Order Summary',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 21,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
                         ),
-                      ),
-                      Column()
-                    ],
-                  ),
-                )),
-              ));
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 31,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {});
+                                  },
+                                  child: Text(
+                                    'Order Summary',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 21,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 38,
+                                ),
+                                Expanded(
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: fnbOrderData.length,
+                                      itemBuilder: (context, index) {
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    height: 25,
+                                                    width: 25,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: CustomColorStyle
+                                                            .darkBlue()),
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${fnbOrderData[index].qty}x',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 11),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Expanded(
+                                                  flex: 7,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        fnbOrderData[index]
+                                                            .itemName
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                      ),
+                                                      fnbOrderData[index]
+                                                                  .note !=
+                                                              ''
+                                                          ? Text(
+                                                              'Catatan :${fnbOrderData[index].note}',
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                      fontSize:
+                                                                          11),
+                                                            )
+                                                          : const SizedBox(),
+                                                      InkWell(
+                                                          onTap: () async {
+                                                            bool edited =
+                                                                await editOrderFnB(
+                                                                    context,
+                                                                    index);
+                                                            if (edited) {
+                                                              setState(() {});
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            'Edit',
+                                                            style: GoogleFonts.poppins(
+                                                                color: CustomColorStyle
+                                                                    .blueText(),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 11),
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Text(
+                                                      Currency.toRupiah(
+                                                          fnbOrderData[index]
+                                                                  .qty *
+                                                              fnbOrderData[
+                                                                      index]
+                                                                  .price),
+                                                      textAlign: TextAlign.end,
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontSize: 13)),
+                                                )
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            index != (fnbOrderData.length - 1)
+                                                ? Container(
+                                                    width: double.infinity,
+                                                    height: 1,
+                                                    color: Colors.grey,
+                                                  )
+                                                : const SizedBox(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 145,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 35),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 1,
+                                  width: double.infinity,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(
+                                  height: 25,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Total',
+                                      style: GoogleFonts.poppins(fontSize: 12),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    Text(
+                                      Currency.toRupiah(totalBayar),
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.start,
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: CustomButtonStyle
+                                            .buttonStyleDarkBlue(),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 31, vertical: 5),
+                                          child: Text(
+                                            'PESAN',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ),
+                                    ])
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+                ));
+          });
         });
+  }
+
+  Future<bool> editOrderFnB(BuildContext context, int index) async {
+    int qtyOrder = 0;
+    InputIntCubit qtyOrderCubit = InputIntCubit();
+    orderNoteController.text = fnbOrderData[index].note ?? '';
+    bool? edited = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        qtyOrderCubit.setData(fnbOrderData[index].qty);
+        qtyOrder = fnbOrderData[index].qty.toInt();
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: CachedNetworkImage(
+                        imageUrl:
+                            'https://adm.happypuppy.id/${fnbOrderData[index].image}',
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Transform.scale(
+                                scale: 0.3,
+                                child: CircularProgressIndicator(
+                                    value: downloadProgress.progress)),
+                        fit: BoxFit.cover),
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context, false);
+                      },
+                      icon: const Icon(Icons.close)),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: BlocBuilder<InputIntCubit, int?>(
+                      bloc: qtyOrderCubit,
+                      builder: (context, qtyOrderState) {
+                        return ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(
+                                40.0), // Radius pada pojok kiri atas
+                            topRight: Radius.circular(
+                                40.0), // Radius pada pojok kanan atas
+                          ),
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            decoration: BoxDecoration(
+                              color: CustomColorStyle.lightBlue(),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 25),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        fnbOrderData[index].itemName.toString(),
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        Currency.toRupiah(
+                                            fnbOrderData[index].price *
+                                                qtyOrder),
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              if (qtyOrder > 1) {
+                                                setState(() {
+                                                  qtyOrderCubit
+                                                      .setData(--qtyOrder);
+                                                });
+                                              } else {
+                                                final deleteItem =
+                                                    await showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            title: Center(
+                                                              child: Text(
+                                                                'Hapus pesanan?',
+                                                                style: GoogleFonts.poppins(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ),
+                                                            content: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceAround,
+                                                              children: [
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context,
+                                                                          false);
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Tidak')),
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context,
+                                                                          true);
+                                                                    },
+                                                                    child: Text(
+                                                                      'Ya',
+                                                                      style: GoogleFonts
+                                                                          .poppins(),
+                                                                    ))
+                                                              ],
+                                                            ),
+                                                          );
+                                                        });
+
+                                                if (deleteItem == true) {
+                                                  setState(() {
+                                                    fnbOrderData
+                                                        .removeAt(index);
+                                                  });
+                                                }
+                                                if (!mounted) return;
+                                                Navigator.pop(context, true);
+                                              }
+                                            }, // Radius pojok
+                                            child: Center(
+                                                child: SizedBox(
+                                              height: 23,
+                                              width: 23,
+                                              child: Image.asset(
+                                                  'assets/icon/minus.png'),
+                                            )),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            qtyOrderState.toString(),
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                qtyOrderCubit
+                                                    .setData(++qtyOrder);
+                                              });
+                                            },
+                                            child: Center(
+                                                child: SizedBox(
+                                              height: 23,
+                                              width: 23,
+                                              child: Image.asset(
+                                                  'assets/icon/plus.png'),
+                                            )),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Text(
+                                        'CATATAN',
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 65,
+                                        child: TextField(
+                                          controller: orderNoteController,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                          ),
+                                          maxLines: null,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 2,
+                                        color: Colors.black,
+                                      ),
+                                      const SizedBox(
+                                        height: 30,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            fnbOrderData[index].qty =
+                                                qtyOrderState ?? 0;
+                                            fnbOrderData[index].note =
+                                                orderNoteController.text;
+                                          });
+                                          Navigator.pop(context, true);
+                                        },
+                                        style: CustomButtonStyle
+                                            .styleDarkBlueButton(),
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: Center(
+                                            child: Text(
+                                              'UBAH PESANAN',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              //end column
+                            ),
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (edited == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
