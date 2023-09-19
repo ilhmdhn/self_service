@@ -1,9 +1,20 @@
 class OrderArgs {
-  final String roomCategory;
-  final String roomCode;
-  final List<FnBOrder> fnb;
-  OrderArgs(this.roomCategory, this.roomCode, this.fnb);
+  String roomCategory = '';
+  String roomCode = '';
+  String memberCode = '';
+  String memberName = '';
+  List<FnBOrder> fnb = List.empty();
+
+  OrderArgs({
+    this.roomCategory = '', 
+    this.roomCode = '',
+    this.fnb = const [],
+    this.memberCode = '',
+    this.memberName = ''
+  });
 }
+
+
 
 class FnBOrder {
   String? idGlobal = '';

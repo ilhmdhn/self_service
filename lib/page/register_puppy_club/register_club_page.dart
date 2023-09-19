@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
@@ -10,9 +9,12 @@ import 'package:self_service/page/splash_page/splash_screen.dart';
 class RegisterClubPage extends StatelessWidget {
   const RegisterClubPage({super.key});
   static const nameRoute = '/room-club-register-page';
+
   @override
   Widget build(BuildContext context) {
-    final orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    OrderArgs orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    orderArgs.memberName = 'Ilham Dohaan';
+    orderArgs.memberCode = '000022061122';
     return WillPopScope(
         child: Scaffold(
           body: Stack(
@@ -73,7 +75,12 @@ class RegisterClubPage extends StatelessWidget {
                   bottom: 28,
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, SlipCheckinPage.nameRoute);
+                      Navigator.pushNamed(context, SlipCheckinPage.nameRoute,
+                              arguments: orderArgs)
+                          .then((argumenKembali) {
+                        orderArgs = argumenKembali as OrderArgs;
+                      });
+                      
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

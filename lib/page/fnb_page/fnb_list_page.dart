@@ -36,6 +36,7 @@ class _FnbListPageState extends State<FnbListPage> {
   List<FnBOrder> fnbOrderData = [];
   FnBOrder orderItem = FnBOrder();
   num totalBayar = 0;
+  late OrderArgs orderArgs;
 
   @override
   void initState() {
@@ -59,6 +60,8 @@ class _FnbListPageState extends State<FnbListPage> {
 
   @override
   Widget build(BuildContext context) {
+    orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    orderArgs.fnb = fnbOrderData;
     String listItem = '';
     totalBayar = 0;
     for (var order in fnbOrderData) {
@@ -73,543 +76,559 @@ class _FnbListPageState extends State<FnbListPage> {
       }
     });
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          BlocBuilder<InputCubit, String>(
-              bloc: chooseCategorCubit,
-              builder: (context, chooseCategoryState) {
-                if (chooseCategoryState != '' &&
-                    stateFnbCategory != chooseCategoryState) {
-                  stateFnbCategory = chooseCategoryState;
-                  // setState(() {
-                  // });
-                }
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Container(
-                          color: CustomColorStyle.bluePrimary(),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 117,
-                              ),
-                              Expanded(
-                                  child: BlocBuilder<FnBCategoryCubit,
-                                      FnBCategoryResult>(
-                                bloc: fnBCategoryCubit,
-                                builder: (context, fnbCategoryState) {
-                                  if (fnbCategoryState.isLoading) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  } else if (fnbCategoryState.state != true) {
-                                    return Center(
-                                      child: Text(
-                                          fnbCategoryState.message.toString()),
-                                    );
-                                  } else if ((fnbCategoryState.data?.length ??
-                                          0) ==
-                                      0) {
-                                    return const Center(
-                                      child: Text('Data Kosong'),
-                                    );
-                                  }
-                                  return ListView.builder(
-                                      itemCount:
-                                          fnbCategoryState.data?.length.toInt(),
-                                      itemBuilder: (context, index) {
-                                        return InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              stateFnbCategory =
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, OrderArgs);
+        return true;
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            BlocBuilder<InputCubit, String>(
+                bloc: chooseCategorCubit,
+                builder: (context, chooseCategoryState) {
+                  if (chooseCategoryState != '' &&
+                      stateFnbCategory != chooseCategoryState) {
+                    stateFnbCategory = chooseCategoryState;
+                    // setState(() {
+                    // });
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: CustomColorStyle.bluePrimary(),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 117,
+                                ),
+                                Expanded(
+                                    child: BlocBuilder<FnBCategoryCubit,
+                                        FnBCategoryResult>(
+                                  bloc: fnBCategoryCubit,
+                                  builder: (context, fnbCategoryState) {
+                                    if (fnbCategoryState.isLoading) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else if (fnbCategoryState.state != true) {
+                                      return Center(
+                                        child: Text(fnbCategoryState.message
+                                            .toString()),
+                                      );
+                                    } else if ((fnbCategoryState.data?.length ??
+                                            0) ==
+                                        0) {
+                                      return const Center(
+                                        child: Text('Data Kosong'),
+                                      );
+                                    }
+                                    return ListView.builder(
+                                        itemCount: fnbCategoryState.data?.length
+                                            .toInt(),
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              setState(() {
+                                                stateFnbCategory =
+                                                    fnbCategoryState
+                                                            .data?[index]
+                                                            .categoryName ??
+                                                        '';
+                                              });
+                                              chooseCategorCubit.getData(
                                                   fnbCategoryState.data?[index]
-                                                          .categoryName ??
-                                                      '';
-                                            });
-                                            chooseCategorCubit.getData(
-                                                fnbCategoryState
-                                                    .data?[index].categoryName);
-                                            _pagingController.refresh();
-                                            _fetchPage(1);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 5),
-                                            child: Center(
-                                              child: fnbCategoryState
-                                                          .data?[index]
-                                                          .categoryName ==
-                                                      chooseCategoryState
-                                                  ? Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Flexible(
-                                                          child: Text(
-                                                            fnbCategoryState
-                                                                    .data?[
-                                                                        index]
-                                                                    .categoryName ??
-                                                                '',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                      .categoryName);
+                                              _pagingController.refresh();
+                                              _fetchPage(1);
+                                            },
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 5),
+                                              child: Center(
+                                                child: fnbCategoryState
+                                                            .data?[index]
+                                                            .categoryName ==
+                                                        chooseCategoryState
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Flexible(
+                                                            child: Text(
+                                                              fnbCategoryState
+                                                                      .data?[
+                                                                          index]
+                                                                      .categoryName ??
+                                                                  '',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip,
                                                             ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .clip,
                                                           ),
+                                                          // const SizedBox(
+                                                          //   width: 5,
+                                                          // ),
+                                                          // const Icon(
+                                                          //   Icons.circle,
+                                                          //   color: Colors.white,
+                                                          //   size:
+                                                          //       12, // Ganti dengan ukuran yang Anda inginkan
+                                                          // )
+                                                        ],
+                                                      )
+                                                    : Text(
+                                                        fnbCategoryState
+                                                                .data?[index]
+                                                                .categoryName ??
+                                                            '',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          color: Colors.white,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
-                                                        // const SizedBox(
-                                                        //   width: 5,
-                                                        // ),
-                                                        // const Icon(
-                                                        //   Icons.circle,
-                                                        //   color: Colors.white,
-                                                        //   size:
-                                                        //       12, // Ganti dengan ukuran yang Anda inginkan
-                                                        // )
-                                                      ],
-                                                    )
-                                                  : Text(
-                                                      fnbCategoryState
-                                                              .data?[index]
-                                                              .categoryName ??
-                                                          '',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                        color: Colors.white,
-                                                        fontSize: 11,
-                                                        fontWeight:
-                                                            FontWeight.w500,
+                                                        overflow:
+                                                            TextOverflow.clip,
                                                       ),
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                    ),
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      });
-                                },
-                              ))
-                            ],
-                          ),
-                        )),
-                    Expanded(
-                        flex: 4,
-                        child: Container(
-                          color: CustomColorStyle.lightBlue(),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 65,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 33),
-                                child: Text(
-                                  'Food',
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold),
+                                          );
+                                        });
+                                  },
+                                ))
+                              ],
+                            ),
+                          )),
+                      Expanded(
+                          flex: 4,
+                          child: Container(
+                            color: CustomColorStyle.lightBlue(),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 65,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 33),
-                                child: SizedBox(
-                                  height: 30,
-                                  child: TextField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        // searchText = value;
-                                      });
-                                    },
-                                    decoration: InputDecoration(
-                                        hintText: 'search',
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                        suffixIcon: const Icon(Icons.search),
-                                        filled: true,
-                                        fillColor: CustomColorStyle.lightGrey(),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                        ),
-                                        suffixIconColor: Colors.grey.shade600),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 33),
+                                  child: Text(
+                                    'Food',
                                     style: GoogleFonts.poppins(
-                                        color: Colors.grey.shade900),
+                                        color: Colors.black,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 33),
-                                child: Row(children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        color: CustomColorStyle.darkBlue(),
-                                        borderRadius:
-                                            BorderRadiusDirectional.circular(
-                                                20)),
-                                    child: chooseCategoryState != ''
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 2),
-                                            child: Text(
-                                              chooseCategoryState,
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.white,
-                                                  fontSize: 14),
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      height: 1.3,
-                                      color: Colors.black,
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 33),
+                                  child: SizedBox(
+                                    height: 30,
+                                    child: TextField(
+                                      onChanged: (value) {
+                                        setState(() {
+                                          // searchText = value;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: 'search',
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                          suffixIcon: const Icon(Icons.search),
+                                          filled: true,
+                                          fillColor:
+                                              CustomColorStyle.lightGrey(),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
+                                          ),
+                                          suffixIconColor:
+                                              Colors.grey.shade600),
+                                      style: GoogleFonts.poppins(
+                                          color: Colors.grey.shade900),
                                     ),
-                                  )
-                                ]),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 33),
-                                    child: PagedGridView(
-                                        pagingController: _pagingController,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 1.0 / 1.35,
-                                          mainAxisSpacing: 15.0,
-                                          crossAxisSpacing: 15.0,
-                                        ),
-                                        builderDelegate:
-                                            PagedChildBuilderDelegate<FnB>(
-                                          itemBuilder: (context, item, index) =>
-                                              InkWell(
-                                                  onTap: () {
-                                                    showDialogDetailFnB(
-                                                        context, item);
-                                                  },
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Stack(children: [
-                                                        AspectRatio(
-                                                          aspectRatio: 1 / 1,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            child: CachedNetworkImage(
-                                                                imageUrl:
-                                                                    'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}',
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    const Icon(Icons
-                                                                        .error),
-                                                                progressIndicatorBuilder: (context,
-                                                                        url,
-                                                                        downloadProgress) =>
-                                                                    Transform.scale(
-                                                                        scale:
-                                                                            0.3,
-                                                                        child: CircularProgressIndicator(
-                                                                            value: downloadProgress
-                                                                                .progress)),
-                                                                fit: BoxFit
-                                                                    .cover),
-                                                          ),
-                                                        ),
-                                                        Positioned(
-                                                          bottom: 5,
-                                                          left: 5,
-                                                          child: Container(
-                                                            child: ((fnbOrderData.any((orderItem) =>
-                                                                        orderItem
-                                                                            .idGlobal ==
-                                                                        item
-                                                                            .idGlobal)) ==
-                                                                    true
-                                                                ? Container(
-                                                                    width: 25,
-                                                                    height: 25,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      shape: BoxShape
-                                                                          .circle,
-                                                                      color: CustomColorStyle
-                                                                          .darkBlue(),
-                                                                    ),
-                                                                    child: Center(
-                                                                        child: Text(
-                                                                      ('${fnbOrderData.firstWhere((order) => order.idGlobal == item.idGlobal).qty}x'),
-                                                                      style: GoogleFonts.poppins(
-                                                                          color: Colors
-                                                                              .white,
-                                                                          fontSize:
-                                                                              10,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    )))
-                                                                : const SizedBox()),
-                                                          ),
-                                                        )
-                                                      ]),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal: 10),
-                                                        child: SizedBox(
-                                                          width:
-                                                              double.infinity,
-                                                          child: Text(
-                                                              item.fnbName
-                                                                  .toString(),
-                                                              style: GoogleFonts.poppins(
-                                                                  fontSize: 9,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: (fnbOrderData.any((orderItem) =>
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 33),
+                                  child: Row(children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: CustomColorStyle.darkBlue(),
+                                          borderRadius:
+                                              BorderRadiusDirectional.circular(
+                                                  20)),
+                                      child: chooseCategoryState != ''
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 2),
+                                              child: Text(
+                                                chooseCategoryState,
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.white,
+                                                    fontSize: 14),
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 1.3,
+                                        color: Colors.black,
+                                      ),
+                                    )
+                                  ]),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 33),
+                                      child: PagedGridView(
+                                          pagingController: _pagingController,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            childAspectRatio: 1.0 / 1.35,
+                                            mainAxisSpacing: 15.0,
+                                            crossAxisSpacing: 15.0,
+                                          ),
+                                          builderDelegate:
+                                              PagedChildBuilderDelegate<FnB>(
+                                            itemBuilder:
+                                                (context, item, index) =>
+                                                    InkWell(
+                                                        onTap: () {
+                                                          showDialogDetailFnB(
+                                                              context, item);
+                                                        },
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Stack(children: [
+                                                              AspectRatio(
+                                                                aspectRatio:
+                                                                    1 / 1,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  child: CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}',
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          const Icon(Icons
+                                                                              .error),
+                                                                      progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(
+                                                                          scale:
+                                                                              0.3,
+                                                                          child: CircularProgressIndicator(
+                                                                              value: downloadProgress
+                                                                                  .progress)),
+                                                                      fit: BoxFit
+                                                                          .cover),
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                bottom: 5,
+                                                                left: 5,
+                                                                child:
+                                                                    Container(
+                                                                  child: ((fnbOrderData.any((orderItem) =>
                                                                               orderItem.idGlobal ==
                                                                               item
                                                                                   .idGlobal)) ==
                                                                           true
-                                                                      ? CustomColorStyle
-                                                                          .darkBlue()
-                                                                      : Colors
+                                                                      ? Container(
+                                                                          width:
+                                                                              25,
+                                                                          height:
+                                                                              25,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                            color:
+                                                                                CustomColorStyle.darkBlue(),
+                                                                          ),
+                                                                          child: Center(
+                                                                              child: Text(
+                                                                            ('${fnbOrderData.firstWhere((order) => order.idGlobal == item.idGlobal).qty}x'),
+                                                                            style: GoogleFonts.poppins(
+                                                                                color: Colors.white,
+                                                                                fontSize: 10,
+                                                                                fontWeight: FontWeight.w500),
+                                                                          )))
+                                                                      : const SizedBox()),
+                                                                ),
+                                                              )
+                                                            ]),
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                              child: SizedBox(
+                                                                width: double
+                                                                    .infinity,
+                                                                child: Text(
+                                                                    item.fnbName
+                                                                        .toString(),
+                                                                    style: GoogleFonts.poppins(
+                                                                        fontSize:
+                                                                            9,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w500,
+                                                                        color: (fnbOrderData.any((orderItem) => orderItem.idGlobal == item.idGlobal)) ==
+                                                                                true
+                                                                            ? CustomColorStyle
+                                                                                .darkBlue()
+                                                                            : Colors
+                                                                                .black),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .clip,
+                                                                    maxLines:
+                                                                        2),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                              child: Text(
+                                                                  Currency.toRupiah(item
+                                                                      .priceFnb),
+                                                                  style: GoogleFonts.poppins(
+                                                                      fontSize:
+                                                                          9,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: Colors
                                                                           .black),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .clip,
-                                                              maxLines: 2),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal: 10),
-                                                        child: Text(
-                                                            Currency.toRupiah(
-                                                                item.priceFnb),
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                                    fontSize: 9,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    color: Colors
-                                                                        .black),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .clip,
-                                                            maxLines: 2),
-                                                      )
-                                                    ],
-                                                  )),
-                                        ))),
-                              )
-                            ],
-                          ),
-                        ))
-                  ],
-                );
-              }),
-          Positioned(
-            top: 6,
-            left: 7,
-            right: 7,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  iconSize: 29,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Center(
-                                  child: Text('Batalkan Transaksi?')),
-                              actions: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Tidak')),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              SplashPage.nameRoute,
-                                              (route) => false);
-                                        },
-                                        child: const Text('Iya'))
-                                  ],
-                                ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .clip,
+                                                                  maxLines: 2),
+                                                            )
+                                                          ],
+                                                        )),
+                                          ))),
+                                )
                               ],
-                            );
-                          });
+                            ),
+                          ))
+                    ],
+                  );
+                }),
+            Positioned(
+              top: 6,
+              left: 7,
+              right: 7,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context, orderArgs);
                     },
-                    icon: Image.asset('assets/icon/home.png'),
+                    icon: const Icon(Icons.arrow_back),
+                    iconSize: 29,
+                    color: Colors.white,
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: 45,
+                    height: 45,
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Center(
+                                    child: Text('Batalkan Transaksi?')),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Tidak')),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                SplashPage.nameRoute,
+                                                (route) => false);
+                                          },
+                                          child: const Text('Iya'))
+                                    ],
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      icon: Image.asset('assets/icon/home.png'),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: InkWell(
-        onTap: () {
-          showDialogListOrder(context);
-        },
-        child: Row(
-          children: [
-            const Expanded(
-              flex: 1,
-              child: SizedBox(),
-            ),
-            Expanded(
-              flex: 4,
-              child: SizedBox(
-                  height: 35,
-                  child: fnbOrderData.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 33),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: CustomColorStyle.darkBlue(),
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 3,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 20),
-                                        child: Column(
+          ],
+        ),
+        floatingActionButton: InkWell(
+          onTap: () {
+            showDialogListOrder(context);
+          },
+          child: Row(
+            children: [
+              const Expanded(
+                flex: 1,
+                child: SizedBox(),
+              ),
+              Expanded(
+                flex: 4,
+                child: SizedBox(
+                    height: 35,
+                    child: fnbOrderData.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 33),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: CustomColorStyle.darkBlue(),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        flex: 3,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 20),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${fnbOrderData.fold(0, (sum, order) => sum + (order.qty).toInt())} item',
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 10,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              Text(
+                                                listItem,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 9,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                                overflow: TextOverflow.ellipsis,
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                    Expanded(
+                                        flex: 2,
+                                        child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Text(
-                                              '${fnbOrderData.fold(0, (sum, order) => sum + (order.qty).toInt())} item',
+                                              Currency.toRupiah(totalBayar),
                                               style: GoogleFonts.poppins(
-                                                  fontSize: 10,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600),
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white),
                                             ),
-                                            Text(
-                                              listItem,
-                                              style: GoogleFonts.poppins(
-                                                  fontSize: 9,
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            const Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.fastfood_rounded,
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.w400),
-                                              overflow: TextOverflow.ellipsis,
+                                                  size: 15,
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                )
+                                              ],
                                             )
                                           ],
-                                        ),
-                                      )),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            Currency.toRupiah(totalBayar),
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.white),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          const Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.fastfood_rounded,
-                                                color: Colors.white,
-                                                size: 15,
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ))
-                                ],
+                                        ))
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const SizedBox()),
-            )
-          ],
+                          )
+                        : const SizedBox()),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -1156,8 +1175,11 @@ class _FnbListPageState extends State<FnbListPage> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, BillingPage.nameRoute);
+                                          Navigator.pushNamed(context,
+                                                  BillingPage.nameRoute,
+                                                  arguments: orderArgs)
+                                              .then((value) => orderArgs =
+                                                  value as OrderArgs);
                                         },
                                         style: CustomButtonStyle
                                             .buttonStyleDarkBlue(),

@@ -24,7 +24,7 @@ class CategoryAndRoomPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late OrderArgs orderData;
+    OrderArgs orderData;
     roomCategoryCubit.getData();
     return Scaffold(
       body: WillPopScope(
@@ -389,8 +389,7 @@ class CategoryAndRoomPage extends StatelessWidget {
 
                                         return Expanded(
                                           child: GridView.builder(
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
                                               childAspectRatio: 5 / 6,
                                               crossAxisSpacing: 15,
@@ -403,12 +402,9 @@ class CategoryAndRoomPage extends StatelessWidget {
                                               return InkWell(
                                                 onTap: () {
                                                   orderData = OrderArgs(
-                                                      listRoomState.room?[index]
-                                                              .roomCategory ??
-                                                          '',
-                                                      listRoomState.room?[index]
-                                                              .roomCode ??
-                                                          '');
+                                                      roomCategory: listRoomState.room![index].roomCategory??'',
+                                                      roomCode: listRoomState.room![index].roomCode ?? ''
+                                                  );
 
                                                   Navigator.of(context)
                                                       .pushNamed(
