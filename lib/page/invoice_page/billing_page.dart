@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
@@ -15,7 +16,7 @@ class BillingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         Navigator.pop(context, orderArgs);
         return true;
       },
@@ -31,11 +32,17 @@ class BillingPage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, orderArgs);
                     },
                     icon: const Icon(Icons.arrow_back),
                     iconSize: 29,
                     color: Colors.black,
+                  ),
+                  Text(
+                    'Billing',
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold, fontSize: 21),
+                    textAlign: TextAlign.left,
                   ),
                   SizedBox(
                     width: 45,
@@ -91,15 +98,6 @@ class BillingPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Billing',
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold, fontSize: 21),
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Row(
                           children: [
                             Expanded(
@@ -233,10 +231,175 @@ class BillingPage extends StatelessWidget {
                       ? Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [Text('Food and Beverages')],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Food and Beverages',
+                                style: FontBilling.textBilling(),
+                              ),
+                              Expanded(
+                                child: Scrollbar(
+                                  child: ListView.builder(
+                                      scrollDirection: Axis
+                                          .vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
+                                      controller: ScrollController(),
+                                      itemCount: orderArgs.fnb.length,
+                                      itemBuilder: (context, index) => Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 3),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    flex: 4,
+                                                    child: Text(
+                                                        orderArgs.fnb[index]
+                                                                    .qty ==
+                                                                1
+                                                            ? '${orderArgs.fnb[index].itemName}'
+                                                            : '${orderArgs.fnb[index].qty}x ${orderArgs.fnb[index].itemName}',
+                                                        style: FontBilling
+                                                            .textBilling())),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 4),
+                                                  child: Text(':',
+                                                      style: FontBilling
+                                                          .textBilling()),
+                                                ),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                        Currency.toRupiah(
+                                                            orderArgs.fnb[index]
+                                                                    .price *
+                                                                orderArgs
+                                                                    .fnb[index]
+                                                                    .qty),
+                                                        style: FontBilling
+                                                            .textBilling())),
+                                              ],
+                                            ),
+                                          )),
+                                ),
+                              )
+                            ],
                           ),
                         )
                       : const SizedBox(),
+                  SizedBox(
+                    height: 165,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Promo',
+                          style: GoogleFonts.poppins(),
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Container(
+                          height: 40,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.blue, width: 1.3),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    Icons.discount,
+                                    color: Colors.green.shade600,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Text(
+                                        'Pasang Promo untuk lebih hemat',
+                                        textAlign: TextAlign.start,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_circle_right_sharp,
+                                    color: CustomColorStyle.darkBlue(),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          'Voucher',
+                          style: GoogleFonts.poppins(),
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Container(
+                          height: 40,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.blue, width: 1.3),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(
+                                    Icons.card_giftcard,
+                                    color: Colors.green.shade600,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Text(
+                                        'Pilih Voucher',
+                                        textAlign: TextAlign.start,
+                                        style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.arrow_circle_right_sharp,
+                                    color: CustomColorStyle.darkBlue(),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
                 ],
               ),
             )),
@@ -276,7 +439,7 @@ class BillingPage extends StatelessWidget {
                     Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, BillingPage.nameRoute);
+                          // Navigator.pushNamed(context, BillingPage.nameRoute);
                         },
                         style: CustomButtonStyle.buttonStyleDarkBlue(),
                         child: Padding(
