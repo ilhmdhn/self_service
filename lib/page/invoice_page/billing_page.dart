@@ -15,6 +15,7 @@ class BillingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    final ScrollController scrollController = ScrollController();
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, orderArgs);
@@ -174,7 +175,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Service',
+                                child: Text('Service Ruangan',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -192,7 +193,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Tax',
+                                child: Text('Tax Ruangan',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -237,19 +238,25 @@ class BillingPage extends StatelessWidget {
                                 height: 10,
                               ),
                               Text(
-                                'Food and Beverages',
+                                'Food and Beverages:',
                                 style: FontBilling.textBilling(),
                               ),
                               Expanded(
-                                child: Scrollbar(
+                                child: RawScrollbar(
+                                  // isAlwaysShown: true,
+                                  thumbVisibility: true,
+                                  thickness: 2.5,
+                                  trackVisibility: true,
+                                  trackColor: Colors.grey.shade300,
+                                  thumbColor: CustomColorStyle.bluePrimary(),
+                                  controller: scrollController,
                                   child: ListView.builder(
-                                      scrollDirection: Axis
-                                          .vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
-                                      controller: ScrollController(),
+                                      // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
+                                      controller: scrollController,
                                       itemCount: orderArgs.fnb.length,
                                       itemBuilder: (context, index) => Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 3),
+                                                vertical: 1.8),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -287,26 +294,92 @@ class BillingPage extends StatelessWidget {
                                             ),
                                           )),
                                 ),
-                              )
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Text('Service FnB',
+                                          style: FontBilling.textBilling())),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: Text(':',
+                                        style: FontBilling.textBilling()),
+                                  ),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Text(Currency.toRupiah(1210000),
+                                          style: FontBilling.textBilling())),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Text('Tax FnB',
+                                          style: FontBilling.textBilling())),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: Text(':',
+                                        style: FontBilling.textBilling()),
+                                  ),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Text(Currency.toRupiah(12100000),
+                                          style: FontBilling.textBilling())),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 3,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Text('Total FnB',
+                                          style: FontBilling.textBilling())),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: Text(':',
+                                        style: FontBilling.textBilling()),
+                                  ),
+                                  Expanded(
+                                      flex: 2,
+                                      child: Text(Currency.toRupiah(12100000),
+                                          style: FontBilling.textBilling())),
+                                ],
+                              ),
                             ],
                           ),
                         )
                       : const SizedBox(),
                   SizedBox(
-                    height: 165,
+                    height: 135,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           'Promo',
-                          style: GoogleFonts.poppins(),
+                          style: GoogleFonts.poppins(fontSize: 13),
                         ),
                         const SizedBox(
-                          height: 6,
+                          height: 3,
                         ),
                         Container(
-                          height: 40,
+                          height: 35,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               border:
@@ -323,6 +396,7 @@ class BillingPage extends StatelessWidget {
                                   Icon(
                                     Icons.discount,
                                     color: Colors.green.shade600,
+                                    size: 16,
                                   ),
                                   Expanded(
                                     child: Padding(
@@ -340,6 +414,7 @@ class BillingPage extends StatelessWidget {
                                   Icon(
                                     Icons.arrow_circle_right_sharp,
                                     color: CustomColorStyle.darkBlue(),
+                                    size: 21,
                                   )
                                 ],
                               ),
@@ -347,17 +422,17 @@ class BillingPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(
-                          height: 15,
+                          height: 6,
                         ),
                         Text(
                           'Voucher',
-                          style: GoogleFonts.poppins(),
+                          style: GoogleFonts.poppins(fontSize: 13),
                         ),
                         const SizedBox(
-                          height: 6,
+                          height: 3,
                         ),
                         Container(
-                          height: 40,
+                          height: 35,
                           width: double.infinity,
                           decoration: BoxDecoration(
                               border:
@@ -374,6 +449,7 @@ class BillingPage extends StatelessWidget {
                                   Icon(
                                     Icons.card_giftcard,
                                     color: Colors.green.shade600,
+                                    size: 16,
                                   ),
                                   Expanded(
                                     child: Padding(
@@ -391,6 +467,7 @@ class BillingPage extends StatelessWidget {
                                   Icon(
                                     Icons.arrow_circle_right_sharp,
                                     color: CustomColorStyle.darkBlue(),
+                                    size: 21,
                                   )
                                 ],
                               ),
