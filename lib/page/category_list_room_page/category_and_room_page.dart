@@ -83,6 +83,8 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                 itemCount: listCategoryState
                                                     .category?.length
                                                     .toInt(),
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
                                                 itemBuilder: (context, index) {
                                                   return InkWell(
                                                     onTap: () {
@@ -102,15 +104,6 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                         const SizedBox(
                                                           height: 20,
                                                         ),
-                                                        // Container(
-                                                        //   child: index != 0
-                                                        //       ? const SizedBox(
-                                                        //           height: 20,
-                                                        //         )
-                                                        //       : const SizedBox(
-                                                        //           height: 20,
-                                                        //         ),
-                                                        // ),
                                                         Container(
                                                             child:
                                                                 indexCategoryState ==
@@ -389,7 +382,8 @@ class CategoryAndRoomPage extends StatelessWidget {
 
                                         return Expanded(
                                           child: GridView.builder(
-                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
                                               childAspectRatio: 5 / 6,
                                               crossAxisSpacing: 15,
@@ -402,9 +396,14 @@ class CategoryAndRoomPage extends StatelessWidget {
                                               return InkWell(
                                                 onTap: () {
                                                   orderData = OrderArgs(
-                                                      roomCategory: listRoomState.room![index].roomCategory??'',
-                                                      roomCode: listRoomState.room![index].roomCode ?? ''
-                                                  );
+                                                      roomCategory: listRoomState
+                                                              .room![index]
+                                                              .roomCategory ??
+                                                          '',
+                                                      roomCode: listRoomState
+                                                              .room![index]
+                                                              .roomCode ??
+                                                          '');
 
                                                   Navigator.of(context)
                                                       .pushNamed(

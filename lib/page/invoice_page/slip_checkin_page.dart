@@ -29,7 +29,8 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
 
   @override
   Widget build(BuildContext context) {
-    OrderArgs orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    OrderArgs orderArgs =
+        ModalRoute.of(context)!.settings.arguments as OrderArgs;
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, orderArgs);
@@ -83,7 +84,8 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                           children: [
                                             ElevatedButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop(orderArgs);
+                                                  Navigator.of(context)
+                                                      .pop(orderArgs);
                                                 },
                                                 child: const Text('Tidak')),
                                             ElevatedButton(
@@ -575,7 +577,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                       <strong>HAPPY PUPPY</strong> ini, Apabila terbukti kemudian, saya bersedia dikenakan denda sesuai dengan
                                       daftar denda yang berlaku.
                                   </p>
-                                  <p>(Periadi)</p>
+                                  <p>(Ilham)</p>
                                   <p>081345748098</p>
                                   '''),
                                       actions: [
@@ -643,11 +645,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                           ElevatedButton(
                                               onPressed: () {
                                                 Navigator.pushNamed(
-                                                    context,
-                                                    FnBOrderOfferingPage
-                                                        .nameRoute, arguments: orderArgs).then((argumenKembali) {
-                        orderArgs = argumenKembali as OrderArgs;
-                      });
+                                                        context,
+                                                        FnBOrderOfferingPage
+                                                            .nameRoute,
+                                                        arguments: orderArgs)
+                                                    .then((argumenKembali) {
+                                                  orderArgs = argumenKembali
+                                                      as OrderArgs;
+                                                });
                                               },
                                               style: CustomButtonStyle
                                                   .buttonStyleDarkBlue(),

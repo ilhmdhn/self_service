@@ -18,7 +18,7 @@
             "room_code": "103",
             "room_image": "https://adm.happypuppy.id/uploads/MasterOutletGallery/HP015%20(4).jpg",
             "room_category": "SMALL",
-            "room_ready": false
+            "room_ready": true
         },
         {
             "room_code": "201",
@@ -30,7 +30,7 @@
             "room_code": "202",
             "room_image": "https://adm.happypuppy.id/uploads/MasterOutletGallery/HP016%20(5).jpg",
             "room_category": "MEDIUM",
-            "room_ready": false
+            "room_ready": true
         },
         {
             "room_code": "203",
@@ -42,7 +42,7 @@
             "room_code": "301",
             "room_image": "https://adm.happypuppy.id/uploads/MasterOutletGallery/HP016%20(7).jpg",
             "room_category": "LARGE",
-            "room_ready": false
+            "room_ready": true
         },
         {
             "room_code": "302",

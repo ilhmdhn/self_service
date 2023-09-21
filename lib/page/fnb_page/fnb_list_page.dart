@@ -49,6 +49,7 @@ class _FnbListPageState extends State<FnbListPage> {
 
   Future<void> _fetchPage(int pageKey) async {
     final getFnB = await ApiTest().getFnB(stateFnbCategory, pageKey);
+    _pagingController.refresh();
     if (getFnB.state != true) {
       _pagingController.error = getFnB.message;
     } else if ((getFnB.data?.length ?? 0) < pageSize) {
@@ -134,6 +135,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                           return InkWell(
                                             onTap: () {
                                               setState(() {
+                                                // _pagingController.refresh();
                                                 stateFnbCategory =
                                                     fnbCategoryState
                                                             .data?[index]
@@ -143,7 +145,6 @@ class _FnbListPageState extends State<FnbListPage> {
                                               chooseCategorCubit.getData(
                                                   fnbCategoryState.data?[index]
                                                       .categoryName);
-                                              _pagingController.refresh();
                                               _fetchPage(1);
                                             },
                                             child: Padding(
@@ -773,14 +774,21 @@ class _FnbListPageState extends State<FnbListPage> {
                                                                       .spaceAround,
                                                               children: [
                                                                 ElevatedButton(
+                                                                    style: ElevatedButton.styleFrom(
+                                                                        backgroundColor:
+                                                                            Colors
+                                                                                .red),
                                                                     onPressed:
                                                                         () {
                                                                       Navigator.pop(
                                                                           context,
                                                                           false);
                                                                     },
-                                                                    child: const Text(
-                                                                        'Tidak')),
+                                                                    child: Text(
+                                                                      'Tidak',
+                                                                      style: GoogleFonts
+                                                                          .poppins(),
+                                                                    )),
                                                                 ElevatedButton(
                                                                     onPressed:
                                                                         () {
@@ -1336,6 +1344,10 @@ class _FnbListPageState extends State<FnbListPage> {
                                                                       .spaceAround,
                                                               children: [
                                                                 ElevatedButton(
+                                                                    style: ElevatedButton.styleFrom(
+                                                                        backgroundColor:
+                                                                            Colors
+                                                                                .red),
                                                                     onPressed:
                                                                         () {
                                                                       Navigator.pop(
