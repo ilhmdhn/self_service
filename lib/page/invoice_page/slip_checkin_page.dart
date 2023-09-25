@@ -611,15 +611,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           const SizedBox(
                             height: 30,
                           ),
-                          Text(
-                            'Saya telah membaca dan menyetujui persyaratan dan kebijakan dari pihak manejemen Happy Puppy',
-                            style: GoogleFonts.poppins(fontSize: 10),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Transform.scale(
                                 scale: 1.1,
@@ -635,47 +627,47 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                       });
                                     }),
                               ),
-                              Container(
-                                child: agreement == true
-                                    ? Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(
-                                                        context,
-                                                        FnBOrderOfferingPage
-                                                            .nameRoute,
-                                                        arguments: orderArgs)
-                                                    .then((argumenKembali) {
-                                                  orderArgs = argumenKembali
-                                                      as OrderArgs;
-                                                });
-                                              },
-                                              style: CustomButtonStyle
-                                                  .buttonStyleDarkBlue(),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 4),
-                                                child: Text(
-                                                  "LANJUT",
-                                                  style: GoogleFonts.poppins(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                              )),
-                                        ],
-                                      )
-                                    : const SizedBox(),
-                              )
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  'Saya telah membaca dan menyetujui persyaratan dan kebijakan dari pihak manejemen Happy Puppy',
+                                  style: GoogleFonts.poppins(fontSize: 10),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
                             ],
                           ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                agreement == true
+                                    ? Navigator.pushNamed(context,
+                                            FnBOrderOfferingPage.nameRoute,
+                                            arguments: orderArgs)
+                                        .then((argumenKembali) {
+                                        orderArgs = argumenKembali as OrderArgs;
+                                      })
+                                    : {};
+                              },
+                              style: agreement == true
+                                  ? CustomButtonStyle.buttonStyleDarkBlue()
+                                  : CustomButtonStyle
+                                      .buttonStyleDarkBlueDisable(),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                child: Text(
+                                  "LANJUT",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )),
                           const SizedBox(
                             height: 31,
                           ),

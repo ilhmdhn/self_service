@@ -37,4 +37,12 @@ class CustomButtonStyle {
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
         side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0));
   }
+
+  static flutter.ButtonStyle buttonStyleDarkBlueDisable() {
+    return flutter.ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey.shade600,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
+        side: BorderSide(color: Colors.grey.shade700, width: 2.0));
+  }
 }
