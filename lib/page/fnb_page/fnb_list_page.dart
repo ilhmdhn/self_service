@@ -426,8 +426,10 @@ class _FnbListPageState extends State<FnbListPage> {
                                                                     style: GoogleFonts.poppins(
                                                                         fontSize:
                                                                             9,
-                                                                        fontWeight:
-                                                                            FontWeight
+                                                                        fontWeight: (fnbOrderData.any((orderItem) => orderItem.idGlobal == item.idGlobal)) == true
+                                                                            ? FontWeight
+                                                                                .bold
+                                                                            : FontWeight
                                                                                 .w500,
                                                                         color: (fnbOrderData.any((orderItem) => orderItem.idGlobal == item.idGlobal)) ==
                                                                                 true

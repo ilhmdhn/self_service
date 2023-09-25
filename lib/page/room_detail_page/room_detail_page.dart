@@ -23,13 +23,12 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   final InputCubit imageCarouselUrlCubit = InputCubit();
   final InputIntCubit indexCarouselCubit = InputIntCubit();
   final CarouselController _carouselController = CarouselController();
+  OrderArgs orderArgs = OrderArgs();
 
   @override
   Widget build(BuildContext context) {
-    OrderArgs orderArgs =
-        ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
     roomDetailCubit.setData(orderArgs.roomCategory, orderArgs.roomCode);
-
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, orderArgs);
@@ -79,19 +78,18 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         return BlocBuilder<InputCubit, String>(
                           bloc: imageCarouselUrlCubit,
                           builder: (context, imageUrlState) {
-                            return Container(color: Colors.white);
-                            // return CachedNetworkImage(
-                            //   imageUrl: imageUrlState,
-                            //   fit: BoxFit.fill,
-                            //   progressIndicatorBuilder:
-                            //       (context, url, downloadProgress) => Center(
-                            //     child: Container(
-                            //       color: Colors.white,
-                            //     ),
-                            //   ),
-                            //   errorWidget: (context, url, error) =>
-                            //       const Center(child: Icon(Icons.error)),
-                            // );
+                            return CachedNetworkImage(
+                              imageUrl: imageUrlState,
+                              fit: BoxFit.fill,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: Container(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Center(child: Icon(Icons.error)),
+                            );
                           },
                         );
                       }),
@@ -418,14 +416,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                                   BorderRadius.circular(
                                                       225.0))),
                                       onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamed(
-                                                RegisterClubPage.nameRoute,
-                                                arguments: orderArgs)
-                                            .then((argumenKembali) {
-                                          orderArgs =
-                                              argumenKembali as OrderArgs;
-                                        });
+                                        showDialogCheckinDuration(context);
                                       },
                                       child: Text(
                                         'PILIH RUANGAN',
@@ -463,5 +454,97 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         },
       )),
     );
+  }
+
+  void showDialogCheckinDuration(BuildContext context) {
+    InputIntCubit checkinDurationCubit = InputIntCubit();
+    checkinDurationCubit.setData(orderArgs.checkinDuration);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(
+                child:
+                    Text('Durasi jam checkin', style: GoogleFonts.poppins())),
+            content: BlocBuilder<InputIntCubit, int?>(
+              bloc: checkinDurationCubit,
+              builder: (context, checkinDurationState) {
+                int checkinDuration = checkinDurationState ?? 0;
+                return SizedBox(
+                  height: 100,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                if (checkinDurationState! > 1) {
+                                  checkinDurationCubit
+                                      .setData(--checkinDuration);
+                                }
+                              });
+                            },
+                            child: SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: Image.asset('assets/icon/minus.png')),
+                          ),
+                          const SizedBox(
+                            width: 11,
+                          ),
+                          Text(
+                            checkinDuration.toString(),
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w500, fontSize: 24),
+                          ),
+                          const SizedBox(
+                            width: 11,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                if (checkinDurationState! < 6) {
+                                  checkinDurationCubit
+                                      .setData(++checkinDuration);
+                                }
+                              });
+                            },
+                            child: SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: Image.asset('assets/icon/plus.png')),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 7,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            orderArgs.checkinDuration = checkinDuration;
+                            Navigator.of(context)
+                                .pushNamed(RegisterClubPage.nameRoute,
+                                    arguments: orderArgs)
+                                .then((argumenKembali) {
+                              orderArgs = argumenKembali as OrderArgs;
+                            });
+                          },
+                          child: Center(
+                            child: Text(
+                              "Lanjut",
+                              style: GoogleFonts.poppins(fontSize: 18),
+                            ),
+                          ))
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        });
   }
 }

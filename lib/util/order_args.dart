@@ -3,18 +3,17 @@ class OrderArgs {
   String roomCode = '';
   String memberCode = '';
   String memberName = '';
+  int checkinDuration = 1;
   List<FnBOrder> fnb = List.empty();
 
-  OrderArgs({
-    this.roomCategory = '', 
-    this.roomCode = '',
-    this.fnb = const [],
-    this.memberCode = '',
-    this.memberName = ''
-  });
+  OrderArgs(
+      {this.roomCategory = '',
+      this.roomCode = '',
+      this.fnb = const [],
+      this.memberCode = '',
+      this.checkinDuration = 1,
+      this.memberName = ''});
 }
-
-
 
 class FnBOrder {
   String? idGlobal = '';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomColorStyle {
   static Color bluePrimary() {
-    return const Color(0xff56a2de);
+    return CustomColorStyle().hexToColor('#56a2de');
   }
 
   static Color lightBlue() {
@@ -14,7 +14,7 @@ class CustomColorStyle {
   // }
 
   static Color darkBlue() {
-    return const Color(0xff3c7fb4);
+    return CustomColorStyle().hexToColor('#3C7FB4');
   }
 
   static Color lightGrey() {
