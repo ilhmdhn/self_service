@@ -14,10 +14,10 @@ class ReviewBillPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
-                const Text(
+                Text(
                   'Invoice',
                   style: TextStyle(fontSize: 21),
                 ),

@@ -79,18 +79,19 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         return BlocBuilder<InputCubit, String>(
                           bloc: imageCarouselUrlCubit,
                           builder: (context, imageUrlState) {
-                            return CachedNetworkImage(
-                              imageUrl: imageUrlState,
-                              fit: BoxFit.fill,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
-                                child: Container(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const Center(child: Icon(Icons.error)),
-                            );
+                            return Container(color: Colors.white);
+                            // return CachedNetworkImage(
+                            //   imageUrl: imageUrlState,
+                            //   fit: BoxFit.fill,
+                            //   progressIndicatorBuilder:
+                            //       (context, url, downloadProgress) => Center(
+                            //     child: Container(
+                            //       color: Colors.white,
+                            //     ),
+                            //   ),
+                            //   errorWidget: (context, url, error) =>
+                            //       const Center(child: Icon(Icons.error)),
+                            // );
                           },
                         );
                       }),

@@ -66,10 +66,8 @@ class SelfService extends StatelessWidget {
         CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
         RoomDetailPage.nameRoute: (context) => const RoomDetailPage(),
         RegisterClubPage.nameRoute: (context) => const RegisterClubPage(),
-        ReservationInputPage.nameRoute: (context) =>
-            const ReservationInputPage(),
-        FnBOrderOfferingPage.nameRoute: (context) =>
-            const FnBOrderOfferingPage(),
+        ReservationInputPage.nameRoute: (context) => const ReservationInputPage(),
+        FnBOrderOfferingPage.nameRoute: (context) => const FnBOrderOfferingPage(),
         SlipCheckinPage.nameRoute: (context) => const SlipCheckinPage(),
         FnbListPage.nameRoute: (context) => const FnbListPage(),
         BillingPage.nameRoute: (context) => const BillingPage(),

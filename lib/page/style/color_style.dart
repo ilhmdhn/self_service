@@ -6,8 +6,12 @@ class CustomColorStyle {
   }
 
   static Color lightBlue() {
-    return const Color(0xfff6fbff);
+    return CustomColorStyle().hexToColor('#F5FBFF');
   }
+
+  // static Color lightBlue() {
+  //   return const Color(0xfff6fbff);
+  // }
 
   static Color darkBlue() {
     return const Color(0xff3c7fb4);

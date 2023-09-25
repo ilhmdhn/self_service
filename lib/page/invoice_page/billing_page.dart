@@ -27,7 +27,7 @@ class BillingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              height: 55,
+              height: 42,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -38,12 +38,6 @@ class BillingPage extends StatelessWidget {
                     icon: const Icon(Icons.arrow_back),
                     iconSize: 29,
                     color: Colors.black,
-                  ),
-                  Text(
-                    'Billing',
-                    style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold, fontSize: 21),
-                    textAlign: TextAlign.left,
                   ),
                   SizedBox(
                     width: 45,
@@ -93,6 +87,12 @@ class BillingPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Billing',
+                    style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold, fontSize: 18),
+                    textAlign: TextAlign.left,
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: Column(
@@ -117,6 +117,10 @@ class BillingPage extends StatelessWidget {
                                     style: FontBilling.textBilling())),
                           ],
                         ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Row(
                           children: [
                             Expanded(
@@ -134,6 +138,10 @@ class BillingPage extends StatelessWidget {
                                 child: Text('Ilham Dohaan',
                                     style: FontBilling.textBilling())),
                           ],
+                        ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
                         ),
                         Row(
                           children: [
@@ -153,6 +161,10 @@ class BillingPage extends StatelessWidget {
                                     style: FontBilling.textBilling())),
                           ],
                         ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Row(
                           children: [
                             Expanded(
@@ -170,6 +182,10 @@ class BillingPage extends StatelessWidget {
                                 child: Text(Currency.toRupiah(1000000),
                                     style: FontBilling.textBilling())),
                           ],
+                        ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
                         ),
                         Row(
                           children: [
@@ -189,6 +205,10 @@ class BillingPage extends StatelessWidget {
                                     style: FontBilling.textBilling())),
                           ],
                         ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Row(
                           children: [
                             Expanded(
@@ -206,6 +226,10 @@ class BillingPage extends StatelessWidget {
                                 child: Text(Currency.toRupiah(110000),
                                     style: FontBilling.textBilling())),
                           ],
+                        ),
+                        //space height
+                        const SizedBox(
+                          height: 3,
                         ),
                         Row(
                           children: [
