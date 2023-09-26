@@ -9,6 +9,7 @@ import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:self_service/util/order_args.dart';
+import 'package:self_service/util/tools.dart';
 
 class SlipCheckinPage extends StatefulWidget {
   const SlipCheckinPage({super.key});
@@ -651,7 +652,10 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                         .then((argumenKembali) {
                                         orderArgs = argumenKembali as OrderArgs;
                                       })
-                                    : {};
+                                    : {
+  showToastWarning(
+                                            "Setujui syarat dan ketentuan")
+                                    };
                               },
                               style: agreement == true
                                   ? CustomButtonStyle.buttonStyleDarkBlue()

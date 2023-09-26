@@ -6,6 +6,7 @@ import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_bloc.dart';
+import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import '../../util/order_args.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -434,7 +435,16 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       225.0))),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        // Fluttertoast.showToast(
+                                        //     msg: "Setujui syarat dan ketentuan",
+                                        //     toastLength: Toast.LENGTH_SHORT,
+                                        //     gravity: ToastGravity.CENTER,
+                                        //     timeInSecForIosWeb: 1,
+                                        //     backgroundColor: Colors.red,
+                                        //     textColor: Colors.white,
+                                        //     fontSize: 16.0);
+                                      },
                                       child: Text(
                                         'SEDANG DIGUNAKAN',
                                         style: GoogleFonts.poppins(
@@ -523,6 +533,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                         height: 7,
                       ),
                       ElevatedButton(
+                          style: CustomButtonStyle.buttonStyleDarkBlue(),
                           onPressed: () {
                             Navigator.pop(context);
                             orderArgs.checkinDuration = checkinDuration;

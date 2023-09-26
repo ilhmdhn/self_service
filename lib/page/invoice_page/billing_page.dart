@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
@@ -7,6 +9,8 @@ import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
+import 'package:self_service/page/invoice_page/invoice_bloc.dart';
+import 'package:self_service/data/model/voucher_model.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -385,7 +389,7 @@ class BillingPage extends StatelessWidget {
                             ],
                           ),
                         )
-                      : const SizedBox(),
+                      : Expanded(child: Container()),
                   SizedBox(
                     height: 135,
                     child: Column(
@@ -455,45 +459,50 @@ class BillingPage extends StatelessWidget {
                         const SizedBox(
                           height: 3,
                         ),
-                        Container(
-                          height: 35,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Colors.blue, width: 1.3),
-                              borderRadius: BorderRadius.circular(30)),
-                          child: Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(
-                                    Icons.card_giftcard,
-                                    color: Colors.green.shade600,
-                                    size: 16,
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      child: Text(
-                                        'Pilih Voucher',
-                                        textAlign: TextAlign.start,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500),
+                        InkWell(
+                          onTap: () {
+                            showVoucherDialog(context, '');
+                          },
+                          child: Container(
+                            height: 35,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.blue, width: 1.3),
+                                borderRadius: BorderRadius.circular(30)),
+                            child: Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.card_giftcard,
+                                      color: Colors.green.shade600,
+                                      size: 16,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Text(
+                                          'Pilih Voucher',
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_circle_right_sharp,
-                                    color: CustomColorStyle.darkBlue(),
-                                    size: 21,
-                                  )
-                                ],
+                                    Icon(
+                                      Icons.arrow_circle_right_sharp,
+                                      color: CustomColorStyle.darkBlue(),
+                                      size: 21,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -562,5 +571,151 @@ class BillingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showVoucherDialog(BuildContext context, String memberCOde) {
+    VoucherCubit voucherCubit = VoucherCubit();
+    voucherCubit.setData(memberCOde);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: BlocBuilder<VoucherCubit, VoucherDataResult>(
+                  bloc: voucherCubit,
+                  builder: (context, voucherResult) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: CustomColorStyle.lightBlue(),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: voucherResult.isLoading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : voucherResult.state == false
+                                  ? Center(
+                                      child: Text(
+                                        voucherResult.message.toString(),
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 14),
+                                      ),
+                                    )
+                                  : voucherResult.voucherData == null ||
+                                          (voucherResult.voucherData ??
+                                                  List.empty())
+                                              .isEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'Tidak memiliki voucher',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 14),
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: ListView.builder(
+                                              itemCount: voucherResult
+                                                  .voucherData?.length,
+                                              itemBuilder: (context, index) {
+                                                return Column(
+                                                  children: [
+                                                    CachedNetworkImage(
+                                                        imageUrl:
+                                                            'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
+                                                    const SizedBox(
+                                                      height: 2,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          voucherResult
+                                                              .voucherData![
+                                                                  index]
+                                                              .voucherName
+                                                              .toString(),
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize: 11,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    contentPadding: const EdgeInsets
+                                                                            .only(
+                                                                        left: 6,
+                                                                        right:
+                                                                            6,
+                                                                        top: 3,
+                                                                        bottom:
+                                                                            3),
+                                                                    content:
+                                                                        SizedBox(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.8,
+                                                                      height: MediaQuery.of(context)
+                                                                              .size
+                                                                              .height *
+                                                                          0.6,
+                                                                      child:
+                                                                          Expanded(
+                                                                        child: Column(
+                                                                            children: [
+                                                                              Align(
+                                                                                alignment: Alignment.topRight,
+                                                                                child: InkWell(
+                                                                                  onTap: () {
+                                                                                    Navigator.pop(context);
+                                                                                  },
+                                                                                  child: const Icon(Icons.close),
+                                                                                ),
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: SingleChildScrollView(
+                                                                                  child: HtmlWidget(voucherResult.voucherData?[index].description ?? ''),
+                                                                                ),
+                                                                              ),
+                                                                            ]),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                });
+                                                          },
+                                                          child: Icon(
+                                                            Icons.info_outline,
+                                                            color:
+                                                                CustomColorStyle
+                                                                    .darkBlue(),
+                                                            size: 20,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 12,
+                                                    ),
+                                                  ],
+                                                );
+                                              }),
+                                        )),
+                    );
+                  }));
+        });
   }
 }

@@ -5,6 +5,7 @@ import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
+import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/util/tools.dart';
 import '../model/room_category_model.dart';
 
@@ -121,6 +122,19 @@ class ApiTest {
     } catch (err) {
       return FnBResultModel(
           isLoading: false, message: err.toString(), data: []);
+    }
+  }
+
+  Future<VoucherDataResult> voucher() async {
+    try {
+      final response =
+          await rootBundle.loadString('assets/data_test/voucher.json');
+      final convertedResult = await json.decode(response);
+      VoucherDataResult data = VoucherDataResult.fromJson(convertedResult);
+      return data;
+    } catch (err) {
+      return VoucherDataResult(
+          isLoading: false, message: err.toString(), voucherData: []);
     }
   }
 }
