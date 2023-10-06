@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
-import 'package:self_service/data/model/room_category_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
-import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import '../shared_pref/preferences_data.dart';
 
@@ -14,32 +12,32 @@ class ApiService {
     return 'http://$url:3099/';
   }
 
-  Future<RoomCategoryResult> getRoomCategory() async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}room-category');
-      final apiResponse = await http.get(url);
-      return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
-    } catch (e) {
-      return RoomCategoryResult(
-          isLoading: false,
-          state: false,
-          message: e.toString(),
-          category: List.empty());
-    }
-  }
+  // Future<RoomCategoryResult> getRoomCategory() async {
+  //   try {
+  //     final serverUrl = await baseUrl();
+  //     Uri url = Uri.parse('${serverUrl}room-category');
+  //     final apiResponse = await http.get(url);
+  //     return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
+  //   } catch (e) {
+  //     return RoomCategoryResult(
+  //         isLoading: false,
+  //         state: false,
+  //         message: e.toString(),
+  //         category: List.empty());
+  //   }
+  // }
 
-  Future<RoomListResult> getRoomList(String roomCategory) async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}room?category=$roomCategory');
-      final apiResponse = await http.get(url);
-      return RoomListResult.fromJson(json.decode(apiResponse.body));
-    } catch (e) {
-      return RoomListResult(
-          isLoading: false, state: false, message: e.toString(), room: []);
-    }
-  }
+  // Future<RoomListResult> getRoomList(String roomCategory) async {
+  //   try {
+  //     final serverUrl = await baseUrl();
+  //     Uri url = Uri.parse('${serverUrl}room?category=$roomCategory');
+  //     final apiResponse = await http.get(url);
+  //     return RoomListResult.fromJson(json.decode(apiResponse.body));
+  //   } catch (e) {
+  //     return RoomListResult(
+  //         isLoading: false, state: false, message: e.toString(), room: []);
+  //   }
+  // }
 
   Future<RoomDetailResult> getRoomDetail(roomCode) async {
     try {

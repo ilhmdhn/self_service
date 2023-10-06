@@ -468,91 +468,169 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
 
   void showDialogCheckinDuration(BuildContext context) {
     InputIntCubit checkinDurationCubit = InputIntCubit();
+    InputIntCubit paxCubit = InputIntCubit();
     checkinDurationCubit.setData(orderArgs.checkinDuration);
+    paxCubit.setData(orderArgs.pax);
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Center(
-                child:
-                    Text('Durasi jam checkin', style: GoogleFonts.poppins())),
+                child: Text('Checkin Info',
+                    style: GoogleFonts.poppins(fontSize: 16))),
             content: BlocBuilder<InputIntCubit, int?>(
               bloc: checkinDurationCubit,
               builder: (context, checkinDurationState) {
                 int checkinDuration = checkinDurationState ?? 0;
-                return SizedBox(
-                  height: 100,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (checkinDurationState! > 1) {
-                                  checkinDurationCubit
-                                      .setData(--checkinDuration);
-                                }
-                              });
-                            },
-                            child: SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: Image.asset('assets/icon/minus.png')),
-                          ),
-                          const SizedBox(
-                            width: 11,
-                          ),
-                          Text(
-                            checkinDuration.toString(),
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w500, fontSize: 24),
-                          ),
-                          const SizedBox(
-                            width: 11,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (checkinDurationState! < 6) {
-                                  checkinDurationCubit
-                                      .setData(++checkinDuration);
-                                }
-                              });
-                            },
-                            child: SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: Image.asset('assets/icon/plus.png')),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 7,
-                      ),
-                      ElevatedButton(
-                          style: CustomButtonStyle.buttonStyleDarkBlue(),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            orderArgs.checkinDuration = checkinDuration;
-                            Navigator.of(context)
-                                .pushNamed(RegisterClubPage.nameRoute,
-                                    arguments: orderArgs)
-                                .then((argumenKembali) {
-                              orderArgs = argumenKembali as OrderArgs;
-                            });
-                          },
-                          child: Center(
-                            child: Text(
-                              "Lanjut",
-                              style: GoogleFonts.poppins(fontSize: 18),
+                return BlocBuilder<InputIntCubit, int?>(
+                    bloc: paxCubit,
+                    builder: (context, paxState) {
+                      int pax = paxState ?? 0;
+                      return SizedBox(
+                        height: 120,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Jam Checkin',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (checkinDurationState! > 1) {
+                                            checkinDurationCubit
+                                                .setData(--checkinDuration);
+                                          }
+                                        });
+                                      },
+                                      child: SizedBox(
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.asset(
+                                              'assets/icon/minus.png')),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      checkinDuration.toString(),
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (checkinDurationState! < 6) {
+                                            checkinDurationCubit
+                                                .setData(++checkinDuration);
+                                          }
+                                        });
+                                      },
+                                      child: SizedBox(
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.asset(
+                                              'assets/icon/plus.png')),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ))
-                    ],
-                  ),
-                );
+                            const SizedBox(
+                              height: 7,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Jumlah Tamu',
+                                  style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (checkinDurationState! > 1) {
+                                            paxCubit.setData(--pax);
+                                          }
+                                        });
+                                      },
+                                      child: SizedBox(
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.asset(
+                                              'assets/icon/minus.png')),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      pax.toString(),
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          paxCubit.setData(++pax);
+                                        });
+                                      },
+                                      child: SizedBox(
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.asset(
+                                              'assets/icon/plus.png')),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            ElevatedButton(
+                                style: CustomButtonStyle.buttonStyleDarkBlue(),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  orderArgs.checkinDuration = checkinDuration;
+                                  Navigator.of(context)
+                                      .pushNamed(RegisterClubPage.nameRoute,
+                                          arguments: orderArgs)
+                                      .then((argumenKembali) {
+                                    orderArgs = argumenKembali as OrderArgs;
+                                  });
+                                },
+                                child: Center(
+                                  child: Text(
+                                    "Lanjut",
+                                    style: GoogleFonts.poppins(fontSize: 18),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      );
+                    });
               },
             ),
           );

@@ -4,6 +4,7 @@ class OrderArgs {
   String memberCode = '';
   String memberName = '';
   int checkinDuration = 1;
+  int pax = 1;
   List<FnBOrder> fnb = List.empty();
 
   OrderArgs(
@@ -12,6 +13,7 @@ class OrderArgs {
       this.fnb = const [],
       this.memberCode = '',
       this.checkinDuration = 1,
+      this.pax = 1,
       this.memberName = ''});
 }
 

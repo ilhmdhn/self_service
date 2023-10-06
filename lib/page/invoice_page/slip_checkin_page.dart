@@ -50,7 +50,6 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                   child: Text(slipCheckinState.message.toString()),
                 );
               }
-              final slipCheckinData = slipCheckinState.slipCheckinData;
               return Container(
                 decoration: BoxDecoration(color: CustomColorStyle.lightBlue()),
                 child: Column(

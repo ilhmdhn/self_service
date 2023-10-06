@@ -4,49 +4,47 @@ import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
-import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/util/tools.dart';
-import '../model/room_category_model.dart';
 
 class ApiTest {
-  Future<RoomCategoryResult> roomCategory() async {
-    try {
-      final result =
-          await rootBundle.loadString('assets/data_test/category_room.json');
-      final convertedResult = await json.decode(result);
-      await delay(const Duration(seconds: 0));
-      return RoomCategoryResult.fromJson(convertedResult);
-    } catch (e) {
-      return RoomCategoryResult(
-          isLoading: false,
-          state: false,
-          message: e.toString(),
-          category: List.empty());
-    }
-  }
+  // Future<RoomCategoryResult> roomCategory() async {
+  //   try {
+  //     final result =
+  //         await rootBundle.loadString('assets/data_test/category_room.json');
+  //     final convertedResult = await json.decode(result);
+  //     await delay(const Duration(seconds: 0));
+  //     return RoomCategoryResult.fromJson(convertedResult);
+  //   } catch (e) {
+  //     return RoomCategoryResult(
+  //         isLoading: false,
+  //         state: false,
+  //         message: e.toString(),
+  //         category: List.empty());
+  //   }
+  // }
 
-  Future<RoomListResult> roomList(String category) async {
-    try {
-      final response =
-          await rootBundle.loadString('assets/data_test/list_room.json');
-      final convertedResult = await json.decode(response);
-      final parseResult = RoomListResult.fromJson(convertedResult);
-      final filtered = parseResult.room
-          ?.where((result) => result.roomCategory == category)
-          .toList();
-      await delay(const Duration(seconds: 0));
-      return RoomListResult(
-          state: parseResult.state,
-          isLoading: false,
-          message: parseResult.message,
-          room: filtered);
-    } catch (e) {
-      return RoomListResult(
-          isLoading: false, message: e.toString(), room: List.empty());
-    }
-  }
+  // Future<RoomListResult> roomList(String category) async {
+  //   try {
+  //     final response =
+  //         await rootBundle.loadString('assets/data_test/list_room.json');
+  //     final convertedResult = await json.decode(response);
+  //     final parseResult = RoomListResult.fromJson(convertedResult);
+  //     final filtered = parseResult.room
+  //         ?.where((result) => result.roomCategory == category)
+  //         .toList();
+  //     await delay(const Duration(seconds: 0));
+  //     return RoomListResult(
+  //         state: parseResult.state,
+  //         isLoading: false,
+  //         message: parseResult.message,
+  //         room: filtered);
+  //   } catch (e) {
+  //     return RoomListResult(
+  //         isLoading: false, message: e.toString(), room: List.empty());
+  //   }
+  // }
 
   Future<RoomDetailResult> roomDetail(String category, String roomCode) async {
     try {
@@ -96,24 +94,16 @@ class ApiTest {
   // }
 
   Future<NewListRoomModel> newListRoom() async {
-          return NewListRoomModel(
-        isLoading: false,
-        state: false,
-        message: ''
-      );
-    // try {
-    //   final response =
-    //       await rootBundle.loadString('assets/data_test/new_list_room.json');
-    //   final convertedResult = await json.decode(response);
-    //   final parseResult = NewListRoomModel.fromJson(convertedResult);
-    //   return parseResult;
-    // } catch (err) {
-    //   return NewListRoomModel(
-    //     isLoading: false,
-    //     state: false,
-    //     message: err.toString()
-    //   );
-    // }
+    try {
+      final response =
+          await rootBundle.loadString('assets/data_test/new_list_room.json');
+      final convertedResult = await json.decode(response);
+      final parseResult = NewListRoomModel.fromJson(convertedResult);
+      return parseResult;
+    } catch (err) {
+      return NewListRoomModel(
+          isLoading: false, state: false, message: err.toString());
+    }
   }
 
   Future<FnBCategoryResult> fnbCategory() async {
@@ -135,27 +125,7 @@ class ApiTest {
       final response = await rootBundle.loadString('assets/data_test/fnb.json');
       final convertedResult = await json.decode(response);
       FnBResultModel parseResult = FnBResultModel.fromJson(convertedResult);
-      List<FnB>? fnbSort = List.empty();
-
-      if (parseResult.data != null &&
-          (parseResult.data?.length ?? 0) >= index * 10 + 10) {
-        fnbSort = parseResult.data?.sublist(index * 10, index * 10 + 10);
-      } else {
-        fnbSort = List.empty();
-      }
-
-      // List<FnB> fnbSort = List.empty();
-      // final filteredFnBs = parseResult.data
-      //     ?.where((fnb) => fnb.categoryFnb == category)
-      //     .toList();
-      // if (filteredFnBs != null) {
-      //   fnbSort = filteredFnBs.sublist(index * 10, index * 10 + 10);
-      // } else {
-      //   fnbSort = List.empty();
-      // }
-      // parseResult.data = fnbSort;
       await delay(const Duration(milliseconds: 200));
-      // parseResult.data = fnbSort;
       return parseResult;
     } catch (err) {
       return FnBResultModel(

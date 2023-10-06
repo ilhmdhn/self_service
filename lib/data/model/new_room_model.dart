@@ -13,12 +13,13 @@ class NewListRoomModel {
 
   factory NewListRoomModel.fromJson(Map<String, dynamic> json) {
     return NewListRoomModel(
-        isLoading: false,
-        state: json['state'],
-        message: json['message'],
-        data: json['data']
-        // data: json['data'] != null ? ListRoomData.fromJson(json['data']) : ListRoomData(),
-        );
+      isLoading: false,
+      state: json['state'],
+      message: json['message'],
+      data: json['data'] != null
+          ? ListRoomData.fromJson(json['data'])
+          : ListRoomData(),
+    );
   }
 }
 
