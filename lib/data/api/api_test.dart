@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
+import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_list_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
@@ -76,6 +77,43 @@ class ApiTest {
           message: err.toString(),
           slipCheckinData: null);
     }
+  }
+
+  // Future<NewListRoomModel> newListRoom() async {
+  //   try {
+  //     final response =
+  //         await rootBundle.loadString('assets/data_test/new_list_room.json');
+  //     final convertedResult = await json.decode(response);
+  //     final parseResult = NewListRoomModel.fromJson(convertedResult);
+  //     return parseResult;
+  //   } catch (err) {
+  //     return NewListRoomModel(
+  //       isLoading: false,
+  //       state: false,
+  //       message: err.toString()
+  //     );
+  //   }
+  // }
+
+  Future<NewListRoomModel> newListRoom() async {
+          return NewListRoomModel(
+        isLoading: false,
+        state: false,
+        message: ''
+      );
+    // try {
+    //   final response =
+    //       await rootBundle.loadString('assets/data_test/new_list_room.json');
+    //   final convertedResult = await json.decode(response);
+    //   final parseResult = NewListRoomModel.fromJson(convertedResult);
+    //   return parseResult;
+    // } catch (err) {
+    //   return NewListRoomModel(
+    //     isLoading: false,
+    //     state: false,
+    //     message: err.toString()
+    //   );
+    // }
   }
 
   Future<FnBCategoryResult> fnbCategory() async {
