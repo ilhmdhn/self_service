@@ -102,38 +102,28 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                               const SizedBox(
                                                                 height: 20,
                                                               ),
-                                                              Container(
-                                                                  child: listState
-                                                                              .data
-                                                                              ?.category[indexCategory]
-                                                                              .roomCategoryName ==
-                                                                          categoryState.roomCategoryName
-                                                                      ? Stack(
-                                                                          children: [
-                                                                            Expanded(
-                                                                              child: Align(
-                                                                                alignment: Alignment.center,
-                                                                                child: AutoSizeText(
-                                                                                  listState.data?.category[indexCategory].roomCategoryName ?? '',
-                                                                                  style: GoogleFonts.poppins(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                  textAlign: TextAlign.center,
-                                                                                  minFontSize: 8,
-                                                                                ),
-                                                                              ),
-                                                                            )
-                                                                          ],
-                                                                        )
-                                                                      : AutoSizeText(
-                                                                          listState.data?.category[indexCategory].roomCategoryName ??
-                                                                              '',
-                                                                          style: GoogleFonts.poppins(
-                                                                              fontSize: 12,
-                                                                              color: Colors.white),
-                                                                          textAlign:
-                                                                              TextAlign.center,
-                                                                          minFontSize:
-                                                                              8,
-                                                                        )),
+                                                              listState
+                                                                          .data
+                                                                          ?.category[indexCategory]
+                                                                          .roomCategoryName ==
+                                                                      categoryState.roomCategoryName
+                                                                  ? AutoSizeText(
+                                                                    listState.data?.category[indexCategory].roomCategoryName ?? '',
+                                                                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                    textAlign: TextAlign.center,
+                                                                    minFontSize: 8,
+                                                                  )
+                                                                  : AutoSizeText(
+                                                                      listState.data?.category[indexCategory].roomCategoryName ??
+                                                                          '',
+                                                                      style: GoogleFonts.poppins(
+                                                                          fontSize: 12,
+                                                                          color: Colors.white),
+                                                                      textAlign:
+                                                                          TextAlign.center,
+                                                                      minFontSize:
+                                                                          8,
+                                                                    ),
                                                               const SizedBox(
                                                                 height: 20,
                                                               ),
