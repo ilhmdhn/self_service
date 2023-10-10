@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
+import 'package:self_service/page/register_puppy_club/login_club.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';
@@ -12,7 +13,8 @@ class RegisterClubPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderArgs orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    OrderArgs orderArgs =
+        ModalRoute.of(context)!.settings.arguments as OrderArgs;
     orderArgs.memberName = 'Ilham Dohaan';
     orderArgs.memberCode = '000022061122';
     return WillPopScope(
@@ -37,7 +39,10 @@ class RegisterClubPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, ScanClubPage.nameRoute, arguments: orderArgs);
+                          },
                           style:
                               CustomButtonStyle.buttonStyleRoundedBlueTrans(),
                           child: Padding(
@@ -80,7 +85,6 @@ class RegisterClubPage extends StatelessWidget {
                           .then((argumenKembali) {
                         orderArgs = argumenKembali as OrderArgs;
                       });
-                      
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

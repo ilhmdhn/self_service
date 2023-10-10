@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/new_room_model.dart';
-import 'package:self_service/data/shared_pref/preferences_data.dart';
-import 'package:self_service/data/api/api_request.dart';
 
 class NewListRoomCubit extends Cubit<NewListRoomModel> {
   NewListRoomCubit() : super(NewListRoomModel());
