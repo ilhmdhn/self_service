@@ -26,6 +26,12 @@ class _ReservationScanPageState extends State<ReservationScanPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _focusNode.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     reservationCodeCubit.getData("");
     return Scaffold(

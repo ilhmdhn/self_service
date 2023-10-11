@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
-import 'package:self_service/page/register_puppy_club/login_club.dart';
+import 'package:self_service/page/register_puppy_club/login_club_page.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';

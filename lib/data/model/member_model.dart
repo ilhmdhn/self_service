@@ -7,6 +7,7 @@ class MemberResult {
   MemberResult({this.isLoading = true, this.state, this.data, this.message});
 
   factory MemberResult.fromJson(Map<String, dynamic> json) {
+    print('CEK STATE ' + json['state'].toString());
     if (json['state'] == false) {
       throw json['message'];
     }

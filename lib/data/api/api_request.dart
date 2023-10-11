@@ -5,6 +5,7 @@ import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import '../shared_pref/preferences_data.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
   Future<String> baseUrl() async {
@@ -50,6 +51,7 @@ class ApiService {
           isLoading: false, state: false, message: e.toString());
     }
   }
+
 /*
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
@@ -77,6 +79,7 @@ class ApiService {
     }
   }
 */
+/*
   Future<MemberResult> getMember(String memberCode) async {
     try {
       final serverUrl = await baseUrl();
@@ -88,7 +91,7 @@ class ApiService {
           isLoading: false, state: false, data: null, message: err.toString());
     }
   }
-
+*/
 /*
   Future<InventorySingleResult> getFnBSingle(String inventoryCode) async {
     try {
@@ -138,11 +141,25 @@ class ApiService {
       return VoucherDataResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
       return VoucherDataResult(
-        isLoading: false,
-        state: false,
-        message: err.toString(),
-        voucherData: []
-      );
+          isLoading: false,
+          state: false,
+          message: err.toString(),
+          voucherData: []);
+    }
+  }
+
+  Future<MemberResult> getMember(memberCode) async {
+    try {
+      String? key = dotenv.env['key'] ?? '';
+      Uri url = Uri.parse(
+          'https://ihp-membership.azurewebsites.net/member-info?member_code=$memberCode');
+      final apiResponse = await http.get(url, headers: {'Authorization': key});
+      final convertedResult = json.decode(apiResponse.body);
+      return MemberResult.fromJson(convertedResult);
+    } catch (err) {
+      print('ERROR APA ' + err.toString());
+      return MemberResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 }
