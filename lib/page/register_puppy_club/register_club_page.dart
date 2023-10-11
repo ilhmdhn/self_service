@@ -6,6 +6,7 @@ import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
+import 'package:self_service/util/tools.dart';
 
 class RegisterClubPage extends StatelessWidget {
   const RegisterClubPage({super.key});
@@ -13,6 +14,7 @@ class RegisterClubPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController tfNameController = TextEditingController();
     OrderArgs orderArgs =
         ModalRoute.of(context)!.settings.arguments as OrderArgs;
     return WillPopScope(
@@ -79,12 +81,67 @@ class RegisterClubPage extends StatelessWidget {
                   right: 28,
                   bottom: 28,
                   child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, SlipCheckinPage.nameRoute,
-                              arguments: orderArgs)
-                          .then((argumenKembali) {
-                        orderArgs = argumenKembali as OrderArgs;
-                      });
+                    onTap: () async {
+                      final validName = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Center(
+                                child: Text(
+                                  'Nama Pengunjung',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              content: SizedBox(
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    TextField(
+                                      controller: tfNameController,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                          style: CustomButtonStyle
+                                              .styleDarkBlueButton(),
+                                          onPressed: () {
+                                            if (tfNameController.text.isEmpty) {
+                                              showToastWarning(
+                                                  'Nama tidak boleh kosong');
+                                            } else {
+                                              orderArgs.memberName =
+                                                  tfNameController.text;
+                                              orderArgs.memberCode =
+                                                  tfNameController.text;
+                                              Navigator.pop(context, true);
+                                            }
+                                          },
+                                          child: Text(
+                                            'Lanjut',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w500),
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                      if (validName == true) {
+                        if (context.mounted) {
+                          Navigator.pushNamed(
+                                  context, SlipCheckinPage.nameRoute,
+                                  arguments: orderArgs)
+                              .then((argumenKembali) {
+                            orderArgs = argumenKembali as OrderArgs;
+                          });
+                        }
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

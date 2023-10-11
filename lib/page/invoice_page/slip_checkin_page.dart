@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/data/model/room_price_model.dart';
-import 'package:self_service/data/model/slip_checkin_model.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
@@ -156,37 +155,47 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             // const SizedBox(
                             //   height: 5,
                             // ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    'Kode Member',
-                                    style: GoogleFonts.poppins(fontSize: 12),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Text(
-                                    ':',
-                                    style: GoogleFonts.poppins(fontSize: 14),
-                                  ),
-                                ),
-                                Expanded(
-                                    flex: 4,
-                                    child: Text(
-                                      orderArgs.memberCode,
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                    ))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            orderArgs.memberCode != orderArgs.memberName
+                                ? Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                              'Kode Member',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Text(
+                                              ':',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          Expanded(
+                                              flex: 4,
+                                              child: Text(
+                                                orderArgs.memberCode,
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ))
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -336,7 +345,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      orderArgs.checkinDuration.toString(),
+                                      '${orderArgs.checkinDuration.toString()} JAM',
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),

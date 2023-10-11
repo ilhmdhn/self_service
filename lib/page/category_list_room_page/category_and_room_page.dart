@@ -73,10 +73,15 @@ class CategoryAndRoomPage extends StatelessWidget {
                                               const SizedBox(
                                                 height: 123,
                                               ),
-                                              Container(
-                                                width: double.infinity,
-                                                height: 0.7,
-                                                color: Colors.white,
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 0.7,
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                               Expanded(
                                                   child: ListView.builder(
@@ -148,12 +153,19 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                               const SizedBox(
                                                                 height: 20,
                                                               ),
-                                                              Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                height: 0.7,
-                                                                color: Colors
-                                                                    .white,
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                                child:
+                                                                    Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: 0.7,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
                                                               )
                                                             ],
                                                           ),

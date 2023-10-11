@@ -7,7 +7,6 @@ class LoginMemberCubit extends Cubit<MemberResult> {
 
   void getData(String memberCode) async {
     final response = await ApiService().getMember(memberCode);
-    print('DEBUGGING LOGIN STATE ' + response.state.toString());
     emit(response);
   }
 }

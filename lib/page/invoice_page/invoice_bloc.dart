@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/room_price_model.dart';
-import 'package:self_service/data/model/slip_checkin_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/data/shared_pref/preferences_data.dart';
 

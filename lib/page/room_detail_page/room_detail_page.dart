@@ -81,7 +81,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           bloc: imageCarouselUrlCubit,
                           builder: (context, imageUrlState) {
                             return CachedNetworkImage(
-                              imageUrl: 'https://adm.happypuppy.id/$imageUrlState',
+                              imageUrl:
+                                  'https://adm.happypuppy.id/$imageUrlState',
                               fit: BoxFit.fill,
                               progressIndicatorBuilder:
                                   (context, url, downloadProgress) => Center(
@@ -212,7 +213,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             child: ListView.builder(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              itemCount: roomDetailState.data?.roomImageList?.length??0,
+                              itemCount:
+                                  roomDetailState.data?.roomImageList?.length ??
+                                      0,
                               itemBuilder:
                                   (BuildContext context, int indexListImage) {
                                 return InkWell(
@@ -245,9 +248,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                               right: 0,
                                               bottom: 0,
                                               child: CachedNetworkImage(
-                                                imageUrl: 'https://adm.happypuppy.id/${roomDetailState.data
-                                                            ?.roomImageList?[
-                                                        indexListImage]}',
+                                                imageUrl:
+                                                    'https://adm.happypuppy.id/${roomDetailState.data?.roomImageList?[indexListImage]}',
                                                 fit: BoxFit.fill,
                                               ),
                                             ),
@@ -393,7 +395,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                         ),
                                       ],
                                     )
-                                  : const SizedBox()),
+                                  : const SizedBox(
+                                      height: 29,
+                                    )),
                           const SizedBox(
                             height: 26,
                           ),
