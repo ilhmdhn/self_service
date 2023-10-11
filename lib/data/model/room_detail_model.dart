@@ -26,7 +26,7 @@ class RoomDetail {
   int? roomPax;
   bool? roomToilet;
   bool? roomReady;
-  String? roomPrice;
+  int? roomPrice;
   List<String>? roomImageList;
 
   RoomDetail(

@@ -8,6 +8,7 @@ import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/util/currency.dart';
 import '../../util/order_args.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
@@ -80,7 +81,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           bloc: imageCarouselUrlCubit,
                           builder: (context, imageUrlState) {
                             return CachedNetworkImage(
-                              imageUrl: imageUrlState,
+                              imageUrl: 'https://adm.happypuppy.id/$imageUrlState',
                               fit: BoxFit.fill,
                               progressIndicatorBuilder:
                                   (context, url, downloadProgress) => Center(
@@ -211,7 +212,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                             child: ListView.builder(
                               shrinkWrap: true,
                               scrollDirection: Axis.horizontal,
-                              itemCount: 10,
+                              itemCount: roomDetailState.data?.roomImageList?.length??0,
                               itemBuilder:
                                   (BuildContext context, int indexListImage) {
                                 return InkWell(
@@ -244,10 +245,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                               right: 0,
                                               bottom: 0,
                                               child: CachedNetworkImage(
-                                                imageUrl: roomDetailState.data
+                                                imageUrl: 'https://adm.happypuppy.id/${roomDetailState.data
                                                             ?.roomImageList?[
-                                                        indexListImage] ??
-                                                    "",
+                                                        indexListImage]}',
                                                 fit: BoxFit.fill,
                                               ),
                                             ),
@@ -318,7 +318,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                         width: 6,
                                       ),
                                       Text(
-                                        roomDetailState.data?.roomPrice ?? "0",
+                                        Currency.toRupiah(
+                                            roomDetailState.data?.roomPrice),
                                         style: GoogleFonts.poppins(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),

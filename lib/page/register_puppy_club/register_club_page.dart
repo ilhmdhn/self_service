@@ -15,8 +15,6 @@ class RegisterClubPage extends StatelessWidget {
   Widget build(BuildContext context) {
     OrderArgs orderArgs =
         ModalRoute.of(context)!.settings.arguments as OrderArgs;
-    orderArgs.memberName = 'Ilham Dohaan';
-    orderArgs.memberCode = '000022061122';
     return WillPopScope(
         child: Scaffold(
           body: Stack(
@@ -40,8 +38,10 @@ class RegisterClubPage extends StatelessWidget {
                     children: [
                       ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, ScanClubPage.nameRoute, arguments: orderArgs);
+                            Navigator.pushNamed(context, ScanClubPage.nameRoute,
+                                    arguments: orderArgs)
+                                .then(
+                                    (value) => orderArgs = value as OrderArgs);
                           },
                           style:
                               CustomButtonStyle.buttonStyleRoundedBlueTrans(),
