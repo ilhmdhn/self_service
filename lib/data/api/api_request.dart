@@ -4,12 +4,12 @@ import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
+import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import '../shared_pref/preferences_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
-  
   Future<String> baseUrl() async {
     final url = await PreferencesData.getBaseUrl();
     return 'http://$url/';
@@ -171,8 +171,21 @@ class ApiService {
       final convertedResult = json.decode(apiResponse.body);
       return MemberResult.fromJson(convertedResult);
     } catch (err) {
-      print('ERROR APA ' + err.toString());
       return MemberResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<RoomPriceResult> getRoomPrice(String category, int duration) async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse(
+          '${serverUrl}room-price?room_category=$category&checkin_duration=$duration');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return RoomPriceResult.fromJson(convertedResult);
+    } catch (err) {
+      return RoomPriceResult(
           isLoading: false, state: false, message: err.toString());
     }
   }

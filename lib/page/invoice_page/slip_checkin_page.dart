@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/util/tools.dart';
 
@@ -22,32 +24,32 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
   bool agreement = false;
 
   final SlipCheckinCubit slipCheckinCubit = SlipCheckinCubit();
+  OrderArgs orderArgs = OrderArgs();
   @override
   void initState() {
-    slipCheckinCubit.setData('LARGE', 2);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    OrderArgs orderArgs =
-        ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    slipCheckinCubit.setData(orderArgs.roomCategory, orderArgs.checkinDuration);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, orderArgs);
         return true;
       },
       child: Scaffold(
-        body: BlocBuilder<SlipCheckinCubit, SlipCheckinResult>(
+        body: BlocBuilder<SlipCheckinCubit, RoomPriceResult>(
             bloc: slipCheckinCubit,
-            builder: (context, slipCheckinState) {
-              if (slipCheckinState.isLoading) {
+            builder: (context, roomPriceState) {
+              if (roomPriceState.isLoading) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (slipCheckinState.state == false) {
+              } else if (roomPriceState.state == false) {
                 return Center(
-                  child: Text(slipCheckinState.message.toString()),
+                  child: Text(roomPriceState.message.toString()),
                 );
               }
               return Container(
@@ -123,37 +125,37 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 20,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    'Kode Reservasi',
-                                    style: GoogleFonts.poppins(fontSize: 12),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
-                                  child: Text(
-                                    ':',
-                                    style: GoogleFonts.poppins(fontSize: 14),
-                                  ),
-                                ),
-                                Expanded(
-                                    flex: 4,
-                                    child: Text(
-                                      'RSV-12312312345678',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                    ))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            // Row(
+                            // mainAxisAlignment: MainAxisAlignment.start,
+                            // children: [
+                            // Expanded(
+                            //   flex: 2,
+                            //   child: Text(
+                            //     'Kode Reservasi',
+                            //     style: GoogleFonts.poppins(fontSize: 12),
+                            //   ),
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(
+                            //       horizontal: 10),
+                            //   child: Text(
+                            //     ':',
+                            //     style: GoogleFonts.poppins(fontSize: 14),
+                            //   ),
+                            // ),
+                            //   Expanded(
+                            //       flex: 4,
+                            //       child: Text(
+                            //         'RSV-12312312345678',
+                            //         style: GoogleFonts.poppins(
+                            //             fontSize: 14,
+                            //             fontWeight: FontWeight.w600),
+                            //       ))
+                            // ],
+                            // ),
+                            // const SizedBox(
+                            //   height: 5,
+                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -175,7 +177,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '000022061122',
+                                      orderArgs.memberCode,
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -206,7 +208,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      'Ilham Dohaan',
+                                      orderArgs.memberName,
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -216,6 +218,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 5,
                             ),
+/*
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -247,6 +250,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 5,
                             ),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -278,13 +282,15 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 5,
                             ),
+
+*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    'Jenis Kamar',
+                                    'Tipe Room',
                                     style: GoogleFonts.poppins(fontSize: 12),
                                   ),
                                 ),
@@ -299,7 +305,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      'LARGE',
+                                      orderArgs.roomCategory,
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -315,7 +321,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    'Durasi Reservasi',
+                                    'Durasi Checkin',
                                     style: GoogleFonts.poppins(fontSize: 12),
                                   ),
                                 ),
@@ -330,7 +336,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '2 Jam',
+                                      orderArgs.checkinDuration.toString(),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -346,7 +352,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    'Harga Kamar',
+                                    'Harga Room',
                                     style: GoogleFonts.poppins(fontSize: 12),
                                   ),
                                 ),
@@ -361,7 +367,8 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '500.000',
+                                      Currency.toRupiah(
+                                          roomPriceState.data?.roomPrice ?? 0),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -371,6 +378,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 5,
                             ),
+                            /*
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -408,7 +416,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                   flex: 2,
                                   child: Text(
-                                    'Jumlah Ruangan',
+                                    'Total Room',
                                     style: GoogleFonts.poppins(fontSize: 12),
                                   ),
                                 ),
@@ -432,7 +440,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             ),
                             const SizedBox(
                               height: 5,
-                            ),
+                            ),*/
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -454,7 +462,9 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '40.000',
+                                      Currency.toRupiah(
+                                          roomPriceState.data?.serviceRoom ??
+                                              0),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -485,7 +495,8 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '44.000',
+                                      Currency.toRupiah(
+                                          roomPriceState.data?.taxRoom ?? 0),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -495,6 +506,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 20,
                             ),
+/*
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -526,6 +538,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                             const SizedBox(
                               height: 5,
                             ),
+                            */
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -547,7 +560,8 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                 Expanded(
                                     flex: 4,
                                     child: Text(
-                                      '383.000',
+                                      Currency.toRupiah(
+                                          roomPriceState.data?.priceTotal ?? 0),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),
@@ -571,14 +585,14 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                     return AlertDialog(
                                       title: const Center(
                                           child: Text('PERNYATAAN')),
-                                      content: const HtmlWidget('''
+                                      content: HtmlWidget('''
                                   <p align="justify">Saya dan rekan tidak akan membawa masuk dan atau mengkonsumsi makanan/ minuman yang bukan berasal
                                       dari outlet
                                       <strong>HAPPY PUPPY</strong> ini, Apabila terbukti kemudian, saya bersedia dikenakan denda sesuai dengan
                                       daftar denda yang berlaku.
                                   </p>
-                                  <p>(Ilham)</p>
-                                  <p>081345748098</p>
+                                  <p>(${orderArgs.memberName})</p>
+                                  <p>${orderArgs.memberCode}</p>
                                   '''),
                                       actions: [
                                         Center(
@@ -652,9 +666,9 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                                         orderArgs = argumenKembali as OrderArgs;
                                       })
                                     : {
-  showToastWarning(
+                                        showToastWarning(
                                             "Setujui syarat dan ketentuan")
-                                    };
+                                      };
                               },
                               style: agreement == true
                                   ? CustomButtonStyle.buttonStyleDarkBlue()

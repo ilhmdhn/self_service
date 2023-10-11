@@ -1,21 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/api/api_test.dart';
+import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/data/shared_pref/preferences_data.dart';
 
-class SlipCheckinCubit extends Cubit<SlipCheckinResult> {
-  SlipCheckinCubit() : super(SlipCheckinResult());
+class SlipCheckinCubit extends Cubit<RoomPriceResult> {
+  SlipCheckinCubit() : super(RoomPriceResult());
 
   void setData(String roomType, int duration) async {
-    final isTestMode = await PreferencesData.getTestMode();
-    if (isTestMode) {
-      final response = await ApiTest().slipCheckin();
-      emit(response);
-    } else {
-      final response = await ApiTest().slipCheckin();
-      emit(response);
-    }
+    final response = await ApiService().getRoomPrice(roomType, duration);
+    emit(response);
   }
 }
 
