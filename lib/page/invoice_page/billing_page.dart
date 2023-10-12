@@ -43,13 +43,13 @@ class BillingPage extends StatelessWidget {
               }
 
               checkinArgs.orderArgs?.fnb.servicePercent =
-                  taxServiceState.detail?.serviceFnb??0;
+                  taxServiceState.detail?.serviceFnb ?? 0;
               checkinArgs.orderArgs?.fnb.taxPercent =
-                  taxServiceState.detail?.taxFnb??0;
+                  taxServiceState.detail?.taxFnb ?? 0;
               checkinArgs.roomPrice?.servicePercent =
-                  taxServiceState.detail?.serviceRoom??0;
+                  taxServiceState.detail?.serviceRoom ?? 0;
               checkinArgs.roomPrice?.taxPercent =
-                  taxServiceState.detail?.taxRoom??0;
+                  taxServiceState.detail?.taxRoom ?? 0;
               checkinArgs = calculateOrder(checkinArgs);
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -396,7 +396,11 @@ class BillingPage extends StatelessWidget {
                                         Expanded(
                                             flex: 2,
                                             child: Text(
-                                                Currency.toRupiah(1210000),
+                                                Currency.toRupiah(checkinArgs
+                                                        .orderArgs
+                                                        ?.fnb
+                                                        .fnbService ??
+                                                    0),
                                                 style:
                                                     FontBilling.textBilling())),
                                       ],
@@ -420,7 +424,11 @@ class BillingPage extends StatelessWidget {
                                         Expanded(
                                             flex: 2,
                                             child: Text(
-                                                Currency.toRupiah(12100000),
+                                                Currency.toRupiah(checkinArgs
+                                                        .orderArgs
+                                                        ?.fnb
+                                                        .fnbTax ??
+                                                    0),
                                                 style:
                                                     FontBilling.textBilling())),
                                       ],
@@ -444,7 +452,11 @@ class BillingPage extends StatelessWidget {
                                         Expanded(
                                             flex: 2,
                                             child: Text(
-                                                Currency.toRupiah(12100000),
+                                                Currency.toRupiah(checkinArgs
+                                                        .orderArgs
+                                                        ?.fnb
+                                                        .totalAll ??
+                                                    0),
                                                 style:
                                                     FontBilling.textBilling())),
                                       ],
@@ -602,7 +614,10 @@ class BillingPage extends StatelessWidget {
                                     fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                '296.000',
+                                Currency.toRupiah(
+                                    (checkinArgs.roomPrice?.priceTotal ?? 0) +
+                                        (checkinArgs.orderArgs?.fnb.totalAll ??
+                                            0)),
                                 style: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w700),
                               )

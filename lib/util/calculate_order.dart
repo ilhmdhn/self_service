@@ -10,14 +10,31 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num serviceFnb = 0;
   num taxFnb = 0;
   num fnbTotal = 0;
+
   dataCheckin.roomPrice?.detail?.forEach((element) {
     roomPrice = roomPrice + (element.roomTotal ?? 0);
   });
-  dataCheckin.orderArgs?.fnb.fnbList.forEach((element) {
-    if (element.isService == 1) {
-      print('DEBUGGING adaaa');
+
+  if (dataCheckin.orderArgs?.fnb.fnbList != [] &&
+      dataCheckin.orderArgs?.fnb.fnbList != null) {
+    for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
+      num service = 0;
+      if (element.isService == 1) {
+        service = (element.price *
+            (dataCheckin.orderArgs?.fnb.servicePercent ?? 0) /
+            100);
+      }
+      if (element.isTax == 1) {
+        taxFnb = taxFnb +
+            ((element.price + service) *
+                (dataCheckin.orderArgs?.fnb.taxPercent ?? 0) /
+                100);
+      }
+
+      serviceFnb = serviceFnb + service;
+      fnbPrice = fnbPrice + element.price;
     }
-  });
+  }
 
   roomPrice = roomPrice.round();
   serviceRoom = roomPrice * (dataCheckin.roomPrice?.servicePercent ?? 0) / 100;
@@ -26,10 +43,17 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       100;
   roomTotal = roomPrice + serviceRoom + taxRoom;
 
+  fnbTotal = fnbPrice + serviceFnb + taxFnb;
+
   dataCheckin.roomPrice?.roomPrice = roomPrice;
   dataCheckin.roomPrice?.serviceRoom = serviceRoom;
   dataCheckin.roomPrice?.taxRoom = taxRoom;
   dataCheckin.roomPrice?.priceTotal = roomTotal;
+
+  dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice;
+  dataCheckin.orderArgs?.fnb.fnbService = serviceFnb;
+  dataCheckin.orderArgs?.fnb.fnbTax = taxFnb;
+  dataCheckin.orderArgs?.fnb.totalAll = fnbTotal;
 
   return dataCheckin;
 }
