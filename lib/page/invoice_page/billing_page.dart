@@ -18,11 +18,12 @@ class BillingPage extends StatelessWidget {
   static const nameRoute = '/billing-page';
   @override
   Widget build(BuildContext context) {
-    final orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    final checkinArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinArgs;
     final ScrollController scrollController = ScrollController();
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, orderArgs);
+        Navigator.pop(context, checkinArgs.orderArgs);
         return true;
       },
       child: Scaffold(
@@ -37,7 +38,7 @@ class BillingPage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context, orderArgs);
+                      Navigator.pop(context, checkinArgs);
                     },
                     icon: const Icon(Icons.arrow_back),
                     iconSize: 29,
@@ -117,7 +118,8 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text('Party A',
+                                child: Text(
+                                    checkinArgs.orderArgs?.roomCode ?? '',
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -139,7 +141,8 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text('Ilham Dohaan',
+                                child: Text(
+                                    checkinArgs.orderArgs?.memberName ?? '',
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -161,7 +164,8 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text('2 Jam',
+                                child: Text(
+                                    '${checkinArgs.orderArgs?.checkinDuration} JAM',
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -173,7 +177,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Tarif',
+                                child: Text('Harga Room',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -183,7 +187,9 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text(Currency.toRupiah(1000000),
+                                child: Text(
+                                    Currency.toRupiah(
+                                        checkinArgs.roomPrice?.roomPrice),
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -195,7 +201,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Service Ruangan',
+                                child: Text('Service Room',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -205,7 +211,9 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text(Currency.toRupiah(100000),
+                                child: Text(
+                                    Currency.toRupiah(
+                                        checkinArgs.roomPrice?.serviceRoom),
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -217,7 +225,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Tax Ruangan',
+                                child: Text('Tax Room',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -227,7 +235,9 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text(Currency.toRupiah(110000),
+                                child: Text(
+                                    Currency.toRupiah(
+                                        checkinArgs.roomPrice?.taxRoom ?? 0),
                                     style: FontBilling.textBilling())),
                           ],
                         ),
@@ -239,7 +249,7 @@ class BillingPage extends StatelessWidget {
                           children: [
                             Expanded(
                                 flex: 4,
-                                child: Text('Total Ruangan',
+                                child: Text('Total harga room',
                                     style: FontBilling.textBilling())),
                             Padding(
                               padding:
@@ -249,14 +259,16 @@ class BillingPage extends StatelessWidget {
                             ),
                             Expanded(
                                 flex: 2,
-                                child: Text(Currency.toRupiah(1210000),
+                                child: Text(
+                                    Currency.toRupiah(
+                                        checkinArgs.roomPrice?.priceTotal ?? 0),
                                     style: FontBilling.textBilling())),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  orderArgs.fnb.isNotEmpty
+                  (checkinArgs.orderArgs?.fnb.fnbList ?? []).isNotEmpty
                       ? Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -281,7 +293,9 @@ class BillingPage extends StatelessWidget {
                                   child: ListView.builder(
                                       // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
                                       controller: scrollController,
-                                      itemCount: orderArgs.fnb.length,
+                                      itemCount:
+                                          checkinArgs.orderArgs?.fnb.fnbList.length ??
+                                              0,
                                       itemBuilder: (context, index) => Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 1.8),
@@ -293,11 +307,13 @@ class BillingPage extends StatelessWidget {
                                                 Expanded(
                                                     flex: 4,
                                                     child: Text(
-                                                        orderArgs.fnb[index]
+                                                        checkinArgs
+                                                                    .orderArgs
+                                                                    ?.fnb.fnbList[index]
                                                                     .qty ==
                                                                 1
-                                                            ? '${orderArgs.fnb[index].itemName}'
-                                                            : '${orderArgs.fnb[index].qty}x ${orderArgs.fnb[index].itemName}',
+                                                            ? '${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}'
+                                                            : '${checkinArgs.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}',
                                                         style: FontBilling
                                                             .textBilling())),
                                                 Padding(
@@ -310,12 +326,17 @@ class BillingPage extends StatelessWidget {
                                                 Expanded(
                                                     flex: 2,
                                                     child: Text(
-                                                        Currency.toRupiah(
-                                                            orderArgs.fnb[index]
-                                                                    .price *
-                                                                orderArgs
-                                                                    .fnb[index]
-                                                                    .qty),
+                                                        Currency.toRupiah(checkinArgs
+                                                                .orderArgs
+                                                                ?.fnb.fnbList[index]
+                                                                .price ??
+                                                            0 *
+                                                                (checkinArgs
+                                                                        .orderArgs
+                                                                        ?.fnb.fnbList[
+                                                                            index]
+                                                                        .qty ??
+                                                                    0)),
                                                         style: FontBilling
                                                             .textBilling())),
                                               ],

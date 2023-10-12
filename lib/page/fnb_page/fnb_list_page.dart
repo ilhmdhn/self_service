@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/bloc/universal_bloc.dart';
-import 'package:self_service/data/api/api_test.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/page/invoice_page/billing_page.dart';
@@ -30,13 +30,14 @@ class _FnbListPageState extends State<FnbListPage> {
   final FnBCubit fnbCubit = FnBCubit();
   final PagingController<int, FnB> _pagingController =
       PagingController(firstPageKey: 1);
-  static const pageSize = 20;
+  static const pageSize = 10;
   TextEditingController orderNoteController = TextEditingController();
   String stateFnbCategory = '';
-  List<FnBOrder> fnbOrderData = [];
-  FnBOrder orderItem = FnBOrder();
+  List<FnBDetail> fnbOrderData = [];
+  FnBDetail orderItem = FnBDetail();
   num totalBayar = 0;
   late CheckinArgs checkinArgs;
+  String searchFnbController = '';
 
   @override
   void initState() {
@@ -48,21 +49,26 @@ class _FnbListPageState extends State<FnbListPage> {
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    final getFnB = await ApiTest().getFnB(stateFnbCategory, pageKey);
-    _pagingController.refresh();
-    if (getFnB.state != true) {
-      _pagingController.error = getFnB.message;
-    } else if ((getFnB.data?.length ?? 0) < pageSize) {
-      _pagingController.appendLastPage(getFnB.data ?? List.empty());
-    } else {
-      _pagingController.appendPage(getFnB.data!, pageKey + 1);
+    try {
+      final getFnB = await ApiService()
+          .getInventory(pageKey, stateFnbCategory, searchFnbController);
+      if (getFnB.state != true) {
+        _pagingController.error = getFnB.message;
+      } else if ((getFnB.data?.length ?? 0) < pageSize) {
+        _pagingController.appendLastPage(getFnB.data ?? List.empty());
+      } else {
+        int nextPage = pageKey + 1;
+        _pagingController.appendPage(getFnB.data!, nextPage);
+      }
+    } catch (err) {
+      _pagingController.error = err.toString();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     checkinArgs = ModalRoute.of(context)!.settings.arguments as CheckinArgs;
-    checkinArgs.orderArgs?.fnb = fnbOrderData;
+    checkinArgs.orderArgs?.fnb.fnbList = fnbOrderData;
     String listItem = '';
     totalBayar = 0;
     for (var order in fnbOrderData) {
@@ -91,8 +97,6 @@ class _FnbListPageState extends State<FnbListPage> {
                   if (chooseCategoryState != '' &&
                       stateFnbCategory != chooseCategoryState) {
                     stateFnbCategory = chooseCategoryState;
-                    // setState(() {
-                    // });
                   }
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -135,7 +139,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                           return InkWell(
                                             onTap: () {
                                               setState(() {
-                                                // _pagingController.refresh();
+                                                _pagingController.refresh();
                                                 stateFnbCategory =
                                                     fnbCategoryState
                                                             .data?[index]
@@ -145,7 +149,6 @@ class _FnbListPageState extends State<FnbListPage> {
                                               chooseCategorCubit.getData(
                                                   fnbCategoryState.data?[index]
                                                       .categoryName);
-                                              _fetchPage(1);
                                             },
                                             child: Padding(
                                               padding:
@@ -188,15 +191,6 @@ class _FnbListPageState extends State<FnbListPage> {
                                                                       .clip,
                                                             ),
                                                           ),
-                                                          // const SizedBox(
-                                                          //   width: 5,
-                                                          // ),
-                                                          // const Icon(
-                                                          //   Icons.circle,
-                                                          //   color: Colors.white,
-                                                          //   size:
-                                                          //       12, // Ganti dengan ukuran yang Anda inginkan
-                                                          // )
                                                         ],
                                                       )
                                                     : Text(
@@ -258,7 +252,8 @@ class _FnbListPageState extends State<FnbListPage> {
                                     child: TextField(
                                       onChanged: (value) {
                                         setState(() {
-                                          // searchText = value;
+                                          searchFnbController = value;
+                                          _pagingController.refresh();
                                         });
                                       },
                                       decoration: InputDecoration(
@@ -886,7 +881,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                         onPressed: () {
                                           isHave != true
                                               ? setState(() {
-                                                  fnbOrderData.add(FnBOrder(
+                                                  fnbOrderData.add(FnBDetail(
                                                       idGlobal: fnb.idGlobal,
                                                       itemName: fnb.fnbName,
                                                       note: orderNoteController

@@ -7,19 +7,39 @@ class OrderArgs {
   String memberName = '';
   int checkinDuration = 1;
   int pax = 1;
-  List<FnBOrder> fnb = [];
+  FnBOrder fnb = FnBOrder();
 
   OrderArgs(
       {this.roomCategory = '',
       this.roomCode = '',
-      this.fnb = const [],
+      FnBOrder? fnb,
       this.memberCode = '',
       this.checkinDuration = 1,
       this.pax = 1,
-      this.memberName = ''});
+      this.memberName = ''}): fnb = fnb??FnBOrder();
 }
 
 class FnBOrder {
+  num fnbTotal;
+  num fnbService;
+  num fnbTax;
+  num totalAll;  
+  num servicePercent;
+  num taxPercent;
+  List<FnBDetail> fnbList = [];
+
+  FnBOrder({
+    this.fnbList = const [],
+    this.fnbTotal = 0,
+    this.fnbService = 0,
+    this.fnbTax = 0,
+    this.servicePercent = 0,
+    this.taxPercent = 0,
+    this.totalAll = 0,
+    });
+}
+
+class FnBDetail {
   String? idGlobal = '';
   String? itemName = '';
   String? note = '';
@@ -28,7 +48,7 @@ class FnBOrder {
   String category = '';
   String image = '';
 
-  FnBOrder(
+  FnBDetail(
       {this.idGlobal,
       this.itemName,
       this.note,

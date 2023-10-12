@@ -23,12 +23,15 @@ class FnBCategoryCubit extends Cubit<FnBCategoryResult> {
 class FnBCubit extends Cubit<FnBResultModel> {
   FnBCubit() : super(FnBResultModel());
 
-  void setData(String category, int startIndex) async {
-    // final isTestMode = await PreferencesData.getTestMode();
-    // if (isTestMode) {
-    final response = await ApiTest().getFnB(category, startIndex);
+  void setData(int page, String category, String search) async {
+    final isTestMode = await PreferencesData.getTestMode();
+    FnBResultModel response = FnBResultModel();
+    if (isTestMode) {
+      response = await ApiTest().getFnB(category, page);
+    } else {
+      response = await ApiService().getInventory(page, category, search);
+    }
     emit(response);
-    // }
   }
 }
 

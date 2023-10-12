@@ -4,6 +4,7 @@ import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/new_room_model.dart';
+import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
@@ -68,7 +69,6 @@ class ApiService {
     }
   }
 
-
   Future<FnBCategoryResult> getFnBCategory() async {
     try {
       final serverUrl = await baseUrl();
@@ -82,11 +82,11 @@ class ApiService {
   }
 
   Future<FnBResultModel> getInventory(
-      int page, int size, String category, String search) async {
+      int page, String category, String search) async {
     try {
       final serverUrl = await baseUrl();
       Uri url = Uri.parse(
-          '${serverUrl}fnb?page=$page&size=$size&category=$category&search=$search');
+          '${serverUrl}fnb-list?page=$page&category=$category&search=$search');
       final apiResponse = await http.get(url);
       return FnBResultModel.fromJson(json.decode(apiResponse.body));
     } catch (err) {
@@ -189,6 +189,14 @@ class ApiService {
     } catch (err) {
       return RoomPriceResult(
           isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<ServiceTaxResult> getTaxService()async{
+    try{
+
+    }catch(err){
+      
     }
   }
 }
