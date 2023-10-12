@@ -2,16 +2,13 @@ class ServiceTaxResult {
   bool isLoading;
   bool? state;
   String? message;
-  ServiceTax detail = ServiceTax();
+  ServiceTax? detail;
 
   ServiceTaxResult(
-      {this.isLoading = true,
-      this.state,
-      this.message,
-      ServiceTax? serviceTax});
+      {this.isLoading = true, this.state, this.message, this.detail});
 
   factory ServiceTaxResult.fromJson(Map<String, dynamic> json) {
-    if (json['state'] != true) {
+    if (json['state'] == false) {
       throw json['message'];
     }
 
@@ -19,7 +16,7 @@ class ServiceTaxResult {
       isLoading: false,
       state: true,
       message: json['message'],
-      serviceTax: ServiceTax.fromJson(json['data'])
+      detail: ServiceTax.fromJson(json['data'])
     );
   }
 }

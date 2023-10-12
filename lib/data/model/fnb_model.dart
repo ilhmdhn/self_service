@@ -25,6 +25,8 @@ class FnB {
   String? idGlobal;
   String? image;
   num? priceFnb;
+  num? isService;
+  num? isTax;
   int? state;
 
   FnB(
@@ -33,6 +35,8 @@ class FnB {
       this.idGlobal,
       this.image,
       this.priceFnb,
+      this.isService,
+      this.isTax,
       this.state});
 
   factory FnB.fromJson(Map<String, dynamic> json) => FnB(
@@ -40,6 +44,8 @@ class FnB {
       categoryFnb: json['category_name'],
       idGlobal: json['id_global'],
       image: json['image'],
+      isService: json['is_service'],
+      isTax: json['is_tax'],
       priceFnb: json['price'],
       state: json['state']);
 }

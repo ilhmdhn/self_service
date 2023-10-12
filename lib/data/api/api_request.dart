@@ -192,11 +192,20 @@ class ApiService {
     }
   }
 
-  Future<ServiceTaxResult> getTaxService()async{
-    try{
-
-    }catch(err){
-      
+  Future<ServiceTaxResult> getTaxService() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}service-tax');
+      print('DEBUGGING 1 ');
+      final apiResponse = await http.get(url);
+      print('DEBUGGING 2 ' + apiResponse.body);
+      final convertedResult = json.decode(apiResponse.body);
+      print('DEBUGGING CEK ISI ' + convertedResult['state'].toString());
+      return ServiceTaxResult.fromJson(convertedResult);
+    } catch (err) {
+      print('DEBUGGING kok error' + err.toString());
+      return ServiceTaxResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 }
