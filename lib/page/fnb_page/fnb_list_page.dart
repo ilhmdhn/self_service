@@ -890,6 +890,8 @@ class _FnbListPageState extends State<FnbListPage> {
                                                       price: fnb.priceFnb ?? 0,
                                                       category:
                                                           fnb.categoryFnb ?? '',
+                                                          isService: fnb.isService,
+                                                          isTax: fnb.isTax,
                                                       image: fnb.image ?? ''));
                                                 })
                                               : setState(() {

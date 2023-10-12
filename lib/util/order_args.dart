@@ -44,7 +44,9 @@ class FnBDetail {
   String? itemName = '';
   String? note = '';
   num qty;
-  num price;
+  num price;  
+  num? isService;
+  num? isTax;
   String category = '';
   String image = '';
 
@@ -53,7 +55,9 @@ class FnBDetail {
       this.itemName,
       this.note,
       this.qty = 0,
-      this.price = 0,
+      this.price = 0,  
+      this.isService,
+      this.isTax,
       this.category = '',
       this.image = ''});
 }
