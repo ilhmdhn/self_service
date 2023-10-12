@@ -12,11 +12,11 @@ class FnBCategoryResult {
       throw json['message'];
     }
     return FnBCategoryResult(
-      isLoading: false,
-      state: true,
-      message: json['message'],
-      data: List<FnBCategoryData>.from((json['data'] as List).map((x) => FnBCategoryData.fromJson(x)))
-    );
+        isLoading: false,
+        state: true,
+        message: json['message'],
+        data: List<FnBCategoryData>.from(
+            (json['data'] as List).map((x) => FnBCategoryData.fromJson(x))));
   }
 }
 
@@ -26,5 +26,5 @@ class FnBCategoryData {
   FnBCategoryData({this.categoryName});
 
   factory FnBCategoryData.fromJson(Map<String, dynamic> json) =>
-      FnBCategoryData(categoryName: json['category_name']);
+      FnBCategoryData(categoryName: json['category']);
 }

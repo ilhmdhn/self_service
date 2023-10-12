@@ -12,10 +12,10 @@ class FnBOrderOfferingPage extends StatelessWidget {
   static const nameRoute = '/fnb-offering-page';
   @override
   Widget build(BuildContext context) {
-  OrderArgs orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
+    CheckinArgs checkinArgs =ModalRoute.of(context)!.settings.arguments as CheckinArgs;
     return WillPopScope(
-      onWillPop: () async{
-        Navigator.pop(context, orderArgs);
+      onWillPop: () async {
+        Navigator.pop(context, checkinArgs);
         return true;
       },
       child: Scaffold(
@@ -40,7 +40,7 @@ class FnBOrderOfferingPage extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context, orderArgs);
+                      Navigator.pop(context, checkinArgs);
                     },
                     icon: const Icon(Icons.arrow_back),
                     iconSize: 29,
@@ -96,9 +96,11 @@ class FnBOrderOfferingPage extends StatelessWidget {
                 child: Center(
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, FnbListPage.nameRoute, arguments: orderArgs).then((argumenKembali) {
-                        orderArgs = argumenKembali as OrderArgs;
-                      });
+                        Navigator.pushNamed(context, FnbListPage.nameRoute,
+                                arguments: checkinArgs)
+                            .then((argumenKembali) {
+                          checkinArgs = argumenKembali as CheckinArgs;
+                        });
                       },
                       style: CustomButtonStyle.buttonStyleDarkBlue(),
                       child: Padding(
@@ -120,9 +122,11 @@ class FnBOrderOfferingPage extends StatelessWidget {
                 bottom: 28,
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, BillingPage.nameRoute, arguments: orderArgs).then((argumenKembali) {
-                        orderArgs = argumenKembali as OrderArgs;
-                      });
+                    Navigator.pushNamed(context, BillingPage.nameRoute,
+                            arguments: checkinArgs)
+                        .then((argumenKembali) {
+                      checkinArgs = argumenKembali as CheckinArgs;
+                    });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

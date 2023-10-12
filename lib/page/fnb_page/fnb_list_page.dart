@@ -36,7 +36,7 @@ class _FnbListPageState extends State<FnbListPage> {
   List<FnBOrder> fnbOrderData = [];
   FnBOrder orderItem = FnBOrder();
   num totalBayar = 0;
-  late OrderArgs orderArgs;
+  late CheckinArgs checkinArgs;
 
   @override
   void initState() {
@@ -61,8 +61,8 @@ class _FnbListPageState extends State<FnbListPage> {
 
   @override
   Widget build(BuildContext context) {
-    orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
-    orderArgs.fnb = fnbOrderData;
+    checkinArgs = ModalRoute.of(context)!.settings.arguments as CheckinArgs;
+    checkinArgs.orderArgs?.fnb = fnbOrderData;
     String listItem = '';
     totalBayar = 0;
     for (var order in fnbOrderData) {
@@ -79,7 +79,7 @@ class _FnbListPageState extends State<FnbListPage> {
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, OrderArgs);
+        Navigator.pop(context, checkinArgs);
         return true;
       },
       child: Scaffold(
@@ -339,8 +339,10 @@ class _FnbListPageState extends State<FnbListPage> {
                                                 (context, item, index) =>
                                                     InkWell(
                                                         onTap: () {
-                                                          showDialogDetailFnB(
-                                                              context, item);
+                                                          if (item.state == 1) {
+                                                            showDialogDetailFnB(
+                                                                context, item);
+                                                          }
                                                         },
                                                         child: Column(
                                                           mainAxisAlignment:
@@ -354,29 +356,22 @@ class _FnbListPageState extends State<FnbListPage> {
                                                               AspectRatio(
                                                                 aspectRatio:
                                                                     1 / 1,
-                                                                child:
-                                                                    ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15),
-                                                                  child: CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}',
-                                                                      errorWidget: (context,
-                                                                              url,
-                                                                              error) =>
-                                                                          const Icon(Icons
-                                                                              .error),
-                                                                      progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(
-                                                                          scale:
-                                                                              0.3,
-                                                                          child: CircularProgressIndicator(
-                                                                              value: downloadProgress
-                                                                                  .progress)),
-                                                                      fit: BoxFit
-                                                                          .cover),
-                                                                ),
+                                                                child: ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(15),
+                                                                    child: item.state == 1
+                                                                        ? CachedNetworkImage(imageUrl: 'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}', errorWidget: (context, url, error) => const Icon(Icons.error), progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(scale: 0.3, child: CircularProgressIndicator(value: downloadProgress.progress)), fit: BoxFit.cover)
+                                                                        : Stack(
+                                                                            children: [
+                                                                              Positioned(
+                                                                                top: 0,
+                                                                                right: 0,
+                                                                                bottom: 0,
+                                                                                left: 0,
+                                                                                child: CachedNetworkImage(imageUrl: 'https://adm.happypuppy.id/${item.image ?? '/uploads/Empty.jpg'}', errorWidget: (context, url, error) => const Icon(Icons.error), progressIndicatorBuilder: (context, url, downloadProgress) => Transform.scale(scale: 0.3, child: CircularProgressIndicator(value: downloadProgress.progress)), fit: BoxFit.cover),
+                                                                              ),
+                                                                              Positioned(top: 0, right: 0, bottom: 0, left: 0, child: Center(child: Image.asset('assets/images/sold.png')))
+                                                                            ],
+                                                                          )),
                                                               ),
                                                               Positioned(
                                                                 bottom: 5,
@@ -484,7 +479,7 @@ class _FnbListPageState extends State<FnbListPage> {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.pop(context, orderArgs);
+                      Navigator.pop(context, checkinArgs);
                     },
                     icon: const Icon(Icons.arrow_back),
                     iconSize: 29,
@@ -1187,9 +1182,9 @@ class _FnbListPageState extends State<FnbListPage> {
                                         onPressed: () {
                                           Navigator.pushNamed(context,
                                                   BillingPage.nameRoute,
-                                                  arguments: orderArgs)
-                                              .then((value) => orderArgs =
-                                                  value as OrderArgs);
+                                                  arguments: checkinArgs)
+                                              .then((value) => checkinArgs =
+                                                  value as CheckinArgs);
                                         },
                                         style: CustomButtonStyle
                                             .buttonStyleDarkBlue(),

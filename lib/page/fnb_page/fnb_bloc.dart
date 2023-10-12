@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
@@ -9,10 +10,13 @@ class FnBCategoryCubit extends Cubit<FnBCategoryResult> {
 
   void setData() async {
     final isTestMode = await PreferencesData.getTestMode();
+    FnBCategoryResult response;
     if (isTestMode) {
-      final response = await ApiTest().fnbCategory();
-      emit(response);
+      response = await ApiTest().fnbCategory();
+    } else {
+      response = await ApiService().getFnBCategory();
     }
+    emit(response);
   }
 }
 
@@ -20,11 +24,11 @@ class FnBCubit extends Cubit<FnBResultModel> {
   FnBCubit() : super(FnBResultModel());
 
   void setData(String category, int startIndex) async {
-    final isTestMode = await PreferencesData.getTestMode();
-    if (isTestMode) {
-      final response = await ApiTest().getFnB(category, startIndex);
-      emit(response);
-    }
+    // final isTestMode = await PreferencesData.getTestMode();
+    // if (isTestMode) {
+    final response = await ApiTest().getFnB(category, startIndex);
+    emit(response);
+    // }
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:self_service/data/model/room_price_model.dart';
+
 class OrderArgs {
   String roomCategory = '';
   String roomCode = '';
@@ -5,7 +7,7 @@ class OrderArgs {
   String memberName = '';
   int checkinDuration = 1;
   int pax = 1;
-  List<FnBOrder> fnb = List.empty();
+  List<FnBOrder> fnb = [];
 
   OrderArgs(
       {this.roomCategory = '',
@@ -34,4 +36,11 @@ class FnBOrder {
       this.price = 0,
       this.category = '',
       this.image = ''});
+}
+
+class CheckinArgs {
+  OrderArgs? orderArgs;
+  RoomPriceData? roomPrice;
+
+  CheckinArgs({this.orderArgs, this.roomPrice});
 }

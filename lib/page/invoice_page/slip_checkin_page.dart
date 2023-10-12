@@ -24,6 +24,7 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
 
   final SlipCheckinCubit slipCheckinCubit = SlipCheckinCubit();
   OrderArgs orderArgs = OrderArgs();
+  CheckinArgs checkinArgs = CheckinArgs();
   @override
   void initState() {
     super.initState();
@@ -667,12 +668,17 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                           ),
                           ElevatedButton(
                               onPressed: () {
+                                checkinArgs = CheckinArgs(
+                                    orderArgs: orderArgs,
+                                    roomPrice: roomPriceState.data);
                                 agreement == true
                                     ? Navigator.pushNamed(context,
                                             FnBOrderOfferingPage.nameRoute,
-                                            arguments: orderArgs)
+                                            arguments: checkinArgs)
                                         .then((argumenKembali) {
-                                        orderArgs = argumenKembali as OrderArgs;
+                                        checkinArgs =
+                                            argumenKembali as CheckinArgs;
+                                        orderArgs = checkinArgs.orderArgs??OrderArgs();
                                       })
                                     : {
                                         showToastWarning(
