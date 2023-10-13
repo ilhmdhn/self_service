@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
@@ -13,6 +14,7 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/data/model/voucher_model.dart';
+import 'package:self_service/util/tools.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -632,6 +634,7 @@ class BillingPage extends StatelessWidget {
                                 ElevatedButton(
                                   onPressed: () {
                                     // Navigator.pushNamed(context, BillingPage.nameRoute);
+                                    choosePaymentMethod(context, checkinArgs);
                                   },
                                   style:
                                       CustomButtonStyle.buttonStyleDarkBlue(),
@@ -801,6 +804,43 @@ class BillingPage extends StatelessWidget {
                                         )),
                     );
                   }));
+        });
+  }
+
+  void choosePaymentMethod(
+      BuildContext contextParent, CheckinArgs dataCheckin) {
+    showDialog(
+        context: contextParent,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Center(
+              child: Text('Pilih metode pembayaran'),
+            ),
+            content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        final responseCheckin =
+                            await ApiService().postCheckinPayLater(dataCheckin);
+                        if (responseCheckin.state != true) {
+                          showToastWarning(responseCheckin.message.toString());
+                        } else {
+                          if (contextParent.mounted) {
+                            Navigator.pop(context);
+                            // Navigator.pushNamedAndRemoveUntil(
+                            //     contextParent, SplashPage.nameRoute, (route) => false);
+                          }
+                        }
+                      },
+                      child: const Text('Bayar di Kasir')),
+                  const SizedBox(
+                    width: 23,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {}, child: const Text('Digital')),
+                ]),
+          );
         });
   }
 }

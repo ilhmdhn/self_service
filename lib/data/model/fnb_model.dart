@@ -23,6 +23,7 @@ class FnB {
   String? fnbName;
   String? categoryFnb;
   String? idGlobal;
+  String? idLocal;
   String? image;
   num? priceFnb;
   num? isService;
@@ -33,6 +34,7 @@ class FnB {
       {this.fnbName,
       this.categoryFnb,
       this.idGlobal,
+      this.idLocal,
       this.image,
       this.priceFnb,
       this.isService,
@@ -44,6 +46,7 @@ class FnB {
       categoryFnb: json['category_name'],
       idGlobal: json['id_global'],
       image: json['image'],
+      idLocal: json['id_item'],
       isService: json['is_service'],
       isTax: json['is_tax'],
       priceFnb: json['price'],

@@ -41,6 +41,7 @@ class FnBOrder {
 
 class FnBDetail {
   String? idGlobal = '';
+  String? idLocal = '';
   String? itemName = '';
   String? note = '';
   num qty;
@@ -52,6 +53,7 @@ class FnBDetail {
 
   FnBDetail(
       {this.idGlobal,
+      this.idLocal,
       this.itemName,
       this.note,
       this.qty = 0,

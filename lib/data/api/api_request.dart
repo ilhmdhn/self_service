@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:self_service/data/model/base_response.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/member_model.dart';
@@ -9,6 +10,7 @@ import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
+import 'package:self_service/util/order_args.dart';
 import '../shared_pref/preferences_data.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -17,33 +19,6 @@ class ApiService {
     final url = await PreferencesData.getBaseUrl();
     return 'http://$url/';
   }
-
-  // Future<RoomCategoryResult> getRoomCategory() async {
-  //   try {
-  //     final serverUrl = await baseUrl();
-  //     Uri url = Uri.parse('${serverUrl}room-category');
-  //     final apiResponse = await http.get(url);
-  //     return RoomCategoryResult.fromJson(json.decode(apiResponse.body));
-  //   } catch (e) {
-  //     return RoomCategoryResult(
-  //         isLoading: false,
-  //         state: false,
-  //         message: e.toString(),
-  //         category: List.empty());
-  //   }
-  // }
-
-  // Future<RoomListResult> getRoomList(String roomCategory) async {
-  //   try {
-  //     final serverUrl = await baseUrl();
-  //     Uri url = Uri.parse('${serverUrl}room?category=$roomCategory');
-  //     final apiResponse = await http.get(url);
-  //     return RoomListResult.fromJson(json.decode(apiResponse.body));
-  //   } catch (e) {
-  //     return RoomListResult(
-  //         isLoading: false, state: false, message: e.toString(), room: []);
-  //   }
-  // }
 
   Future<NewListRoomModel> getListRoom() async {
     try {
@@ -95,35 +70,6 @@ class ApiService {
     }
   }
 
-/*
-  Future<MemberResult> getMember(String memberCode) async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}member?member_code=$memberCode');
-      final apiResponse = await http.get(url);
-      return MemberResult.fromJson(json.decode(apiResponse.body));
-    } catch (err) {
-      return MemberResult(
-          isLoading: false, state: false, data: null, message: err.toString());
-    }
-  }
-*/
-/*
-  Future<InventorySingleResult> getFnBSingle(String inventoryCode) async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}fnb-id?kode_inventory=$inventoryCode');
-      final apiResponse = await http.get(url);
-      return InventorySingleResult.fromJson(json.decode(apiResponse.body));
-    } catch (err) {
-      return InventorySingleResult(
-          isLoading: false,
-          state: false,
-          inventory: null,
-          message: err.toString());
-    }
-  }
-*/
   Future<PromoDataResult> getPromoRoom() async {
     try {
       final serverUrl = await baseUrl();
@@ -201,6 +147,41 @@ class ApiService {
       return ServiceTaxResult.fromJson(convertedResult);
     } catch (err) {
       return ServiceTaxResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<BaseResponse> postCheckinPayLater(CheckinArgs dataCheckin) async {
+    try {
+      List<Map<String, dynamic>> listFnb = [];
+
+      if (dataCheckin.orderArgs!.fnb.fnbList.isNotEmpty) {
+        for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
+          listFnb.add({
+            'id_global':element.idGlobal,
+            'id_local':element.idLocal,
+            'item_name':element.itemName,
+            'note':element.note,
+            'qty':element.qty,
+            'price':element.price,
+          });
+        }
+      }
+
+      // final bodyParams = {
+      //   'member_name':dataCheckin.orderArgs?.memberCode,
+      //   'memberCode':dataCheckin.orderArgs?.memberName,
+      //   ''
+      // };
+
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}checkin-paylater');
+      final apiResponse =
+          await http.post(url, headers: {"Content-Type": "application/json"});
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    } catch (err) {
+      return BaseResponse(
           isLoading: false, state: false, message: err.toString());
     }
   }

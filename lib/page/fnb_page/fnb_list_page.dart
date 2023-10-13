@@ -139,12 +139,12 @@ class _FnbListPageState extends State<FnbListPage> {
                                           return InkWell(
                                             onTap: () {
                                               setState(() {
-                                                _pagingController.refresh();
                                                 stateFnbCategory =
                                                     fnbCategoryState
                                                             .data?[index]
                                                             .categoryName ??
                                                         '';
+                                                _pagingController.refresh();
                                               });
                                               chooseCategorCubit.getData(
                                                   fnbCategoryState.data?[index]
@@ -883,6 +883,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                               ? setState(() {
                                                   fnbOrderData.add(FnBDetail(
                                                       idGlobal: fnb.idGlobal,
+                                                      idLocal: fnb.idLocal,
                                                       itemName: fnb.fnbName,
                                                       note: orderNoteController
                                                           .text,
@@ -890,8 +891,8 @@ class _FnbListPageState extends State<FnbListPage> {
                                                       price: fnb.priceFnb ?? 0,
                                                       category:
                                                           fnb.categoryFnb ?? '',
-                                                          isService: fnb.isService,
-                                                          isTax: fnb.isTax,
+                                                      isService: fnb.isService,
+                                                      isTax: fnb.isTax,
                                                       image: fnb.image ?? ''));
                                                 })
                                               : setState(() {
