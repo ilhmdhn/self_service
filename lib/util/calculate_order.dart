@@ -20,19 +20,19 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
       num service = 0;
       if (element.isService == 1) {
-        service = (element.price *
+        service = ((element.price * element.qty) *
             (dataCheckin.orderArgs?.fnb.servicePercent ?? 0) /
             100);
       }
       if (element.isTax == 1) {
         taxFnb = taxFnb +
-            ((element.price + service) *
+            (((element.price * element.qty) + service) *
                 (dataCheckin.orderArgs?.fnb.taxPercent ?? 0) /
                 100);
       }
 
       serviceFnb = serviceFnb + service;
-      fnbPrice = fnbPrice + element.price;
+      fnbPrice = fnbPrice + (element.price * element.qty);
     }
   }
 

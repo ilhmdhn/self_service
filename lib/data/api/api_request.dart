@@ -154,30 +154,59 @@ class ApiService {
   Future<BaseResponse> postCheckinPayLater(CheckinArgs dataCheckin) async {
     try {
       List<Map<String, dynamic>> listFnb = [];
+      List<Map<String, dynamic>> listRoomPrice = [];
 
       if (dataCheckin.orderArgs!.fnb.fnbList.isNotEmpty) {
         for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
           listFnb.add({
-            'id_global':element.idGlobal,
-            'id_local':element.idLocal,
-            'item_name':element.itemName,
-            'note':element.note,
-            'qty':element.qty,
-            'price':element.price,
+            'id_global': element.idGlobal,
+            'id_local': element.idLocal,
+            'item_name': element.itemName,
+            'note': element.note,
+            'qty': element.qty,
+            'price': element.price,
           });
         }
       }
-
-      // final bodyParams = {
-      //   'member_name':dataCheckin.orderArgs?.memberCode,
-      //   'memberCode':dataCheckin.orderArgs?.memberName,
-      //   ''
-      // };
-
+      if ((dataCheckin.roomPrice?.detail ?? []).isNotEmpty) {
+        dataCheckin.roomPrice?.detail?.forEach((element) {
+          listRoomPrice.add({
+            'room': element.room,
+            'day': element.day,
+            'start_time': element.startTime,
+            'finish_time': element.finishTime,
+            'price': element.price,
+            'price_per_minute': element.pricePerMinute,
+            'used_minute': element.usedMinute,
+            'room_total': element.roomTotal,
+            'price_total': element.priceTotal
+          });
+        });
+      }
+      final Map<String, dynamic> bodyParams = {
+        'member_code': dataCheckin.orderArgs?.memberCode,
+        'member_name': dataCheckin.orderArgs?.memberName,
+        'pax': dataCheckin.orderArgs?.pax,
+        'room_category': dataCheckin.orderArgs?.roomCategory,
+        'room_code': dataCheckin.orderArgs?.roomCode,
+        'checkin_duration': dataCheckin.orderArgs?.checkinDuration,
+        'room_price': dataCheckin.roomPrice?.roomPrice,
+        'room_service': dataCheckin.roomPrice?.serviceRoom,
+        'room_tax': dataCheckin.roomPrice?.taxRoom,
+        'room_total': dataCheckin.roomPrice?.priceTotal,
+        'room_detail': listRoomPrice,
+        'fnb_price': dataCheckin.orderArgs?.fnb.fnbTotal,
+        'fnb_service': dataCheckin.orderArgs?.fnb.fnbService,
+        'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTax,
+        'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
+        'fnb_detail': listFnb
+      };
+      
       final serverUrl = await baseUrl();
       Uri url = Uri.parse('${serverUrl}checkin-paylater');
-      final apiResponse =
-          await http.post(url, headers: {"Content-Type": "application/json"});
+      final convertedParams = jsonEncode(bodyParams);
+      final apiResponse = await http.post(url,
+          body: convertedParams, headers: {'Content-Type': 'application/json'});
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     } catch (err) {

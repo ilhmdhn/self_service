@@ -326,57 +326,60 @@ class BillingPage extends StatelessWidget {
                                             itemCount: checkinArgs.orderArgs
                                                     ?.fnb.fnbList.length ??
                                                 0,
-                                            itemBuilder:
-                                                (context, index) => Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 1.8),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Expanded(
-                                                              flex: 4,
-                                                              child: Text(
-                                                                  checkinArgs
-                                                                              .orderArgs
-                                                                              ?.fnb
-                                                                              .fnbList[
-                                                                                  index]
-                                                                              .qty ==
-                                                                          1
-                                                                      ? '${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}'
-                                                                      : '${checkinArgs.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}',
-                                                                  style: FontBilling
-                                                                      .textBilling())),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        4),
-                                                            child: Text(':',
-                                                                style: FontBilling
-                                                                    .textBilling()),
-                                                          ),
-                                                          Expanded(
-                                                              flex: 2,
-                                                              child: Text(
-                                                                  Currency.toRupiah(checkinArgs
+                                            itemBuilder: (context, index) =>
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 1.8),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Expanded(
+                                                          flex: 4,
+                                                          child: Text(
+                                                              checkinArgs
+                                                                          .orderArgs
+                                                                          ?.fnb
+                                                                          .fnbList[
+                                                                              index]
+                                                                          .qty ==
+                                                                      1
+                                                                  ? '${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}'
+                                                                  : '${checkinArgs.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}',
+                                                              style: FontBilling
+                                                                  .textBilling())),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 4),
+                                                        child: Text(':',
+                                                            style: FontBilling
+                                                                .textBilling()),
+                                                      ),
+                                                      Expanded(
+                                                          flex: 2,
+                                                          child: Text(
+                                                              Currency.toRupiah((checkinArgs
                                                                           .orderArgs
                                                                           ?.fnb
                                                                           .fnbList[
                                                                               index]
                                                                           .price ??
-                                                                      0 *
-                                                                          (checkinArgs.orderArgs?.fnb.fnbList[index].qty ??
-                                                                              0)),
-                                                                  style: FontBilling
-                                                                      .textBilling())),
-                                                        ],
-                                                      ),
-                                                    )),
+                                                                      0) *
+                                                                  (checkinArgs
+                                                                          .orderArgs
+                                                                          ?.fnb
+                                                                          .fnbList[
+                                                                              index]
+                                                                          .qty ??
+                                                                      0)),
+                                                              style: FontBilling
+                                                                  .textBilling())),
+                                                    ],
+                                                  ),
+                                                )),
                                       ),
                                     ),
                                     const SizedBox(
