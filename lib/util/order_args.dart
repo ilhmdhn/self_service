@@ -16,14 +16,15 @@ class OrderArgs {
       this.memberCode = '',
       this.checkinDuration = 1,
       this.pax = 1,
-      this.memberName = ''}): fnb = fnb??FnBOrder();
+      this.memberName = ''})
+      : fnb = fnb ?? FnBOrder();
 }
 
 class FnBOrder {
   num fnbTotal;
   num fnbService;
   num fnbTax;
-  num totalAll;  
+  num totalAll;
   num servicePercent;
   num taxPercent;
   List<FnBDetail> fnbList = [];
@@ -36,7 +37,7 @@ class FnBOrder {
     this.servicePercent = 0,
     this.taxPercent = 0,
     this.totalAll = 0,
-    });
+  });
 }
 
 class FnBDetail {
@@ -45,7 +46,8 @@ class FnBDetail {
   String? itemName = '';
   String? note = '';
   num qty;
-  num price;  
+  num? location = 0;
+  num price;
   num? isService;
   num? isTax;
   String category = '';
@@ -54,10 +56,11 @@ class FnBDetail {
   FnBDetail(
       {this.idGlobal,
       this.idLocal,
+      this.location,
       this.itemName,
       this.note,
       this.qty = 0,
-      this.price = 0,  
+      this.price = 0,
       this.isService,
       this.isTax,
       this.category = '',

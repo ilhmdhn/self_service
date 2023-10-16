@@ -163,6 +163,7 @@ class ApiService {
             'id_local': element.idLocal,
             'item_name': element.itemName,
             'note': element.note,
+            'location': element.location,
             'qty': element.qty,
             'price': element.price,
           });
@@ -201,7 +202,7 @@ class ApiService {
         'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
         'fnb_detail': listFnb
       };
-      
+
       final serverUrl = await baseUrl();
       Uri url = Uri.parse('${serverUrl}checkin-paylater');
       final convertedParams = jsonEncode(bodyParams);

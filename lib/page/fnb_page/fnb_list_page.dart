@@ -892,6 +892,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                                       category:
                                                           fnb.categoryFnb ?? '',
                                                       isService: fnb.isService,
+                                                      location: fnb.location,
                                                       isTax: fnb.isTax,
                                                       image: fnb.image ?? ''));
                                                 })
