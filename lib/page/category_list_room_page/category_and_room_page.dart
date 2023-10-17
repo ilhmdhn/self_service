@@ -503,20 +503,23 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                                             FontWeight.w600),
                                                                   ),
                                                                   Container(
-                                                                    child: roomState[indexRoom].roomReady ==
-                                                                            true
-                                                                        ? const SizedBox(
-                                                                            width:
-                                                                                0,
-                                                                            height:
-                                                                                0,
-                                                                          )
-                                                                        : const Text(
-                                                                            'digunakan',
-                                                                            style:
-                                                                                TextStyle(fontSize: 10),
-                                                                          ),
-                                                                  ),
+                                                                      child: roomState[indexRoom].roomReady ==
+                                                                              true
+                                                                          ? const SizedBox(
+                                                                              width: 0,
+                                                                              height: 0,
+                                                                            )
+                                                                          : const Icon(
+                                                                              Icons.running_with_errors,
+                                                                              size: 16,
+                                                                              color: Colors.blue,
+                                                                            )
+                                                                      // const Text(
+                                                                      //     'digunakan',
+                                                                      //     style:
+                                                                      //         TextStyle(fontSize: 10),
+                                                                      //   ),
+                                                                      ),
                                                                 ],
                                                               ),
                                                             ]),

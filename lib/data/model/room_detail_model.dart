@@ -22,6 +22,7 @@ class RoomDetailResult {
 class RoomDetail {
   String? roomCode;
   String? roomCategory;
+  String? roomMessage;
   String? roomTvDetail;
   int? roomPax;
   bool? roomToilet;
@@ -36,6 +37,7 @@ class RoomDetail {
       this.roomPax,
       this.roomToilet,
       this.roomReady,
+      this.roomMessage,
       this.roomPrice,
       this.roomImageList});
 
@@ -46,6 +48,7 @@ class RoomDetail {
       roomPax: json['pax'],
       roomToilet: json['toilet'],
       roomReady: json['room_ready'],
+      roomMessage: json['room_message'],
       roomPrice: json['price'],
       roomImageList: List<String>.from(json['room_galery']));
 }

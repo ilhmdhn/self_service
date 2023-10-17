@@ -434,7 +434,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                   : ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 34),
+                                              horizontal: 12),
                                           backgroundColor: Colors.grey.shade300,
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -451,9 +451,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                         //     fontSize: 16.0);
                                       },
                                       child: Text(
-                                        'SEDANG DIGUNAKAN',
+                                        roomDetailState.data?.roomMessage ??
+                                            'SEDANG DIGUNAKAN',
                                         style: GoogleFonts.poppins(
-                                            fontSize: 18,
+                                            fontSize: 14,
                                             color: CustomColorStyle.blackText(),
                                             fontWeight: FontWeight.w600),
                                       ),
