@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
@@ -12,28 +13,21 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/util/tools.dart';
 
-class SlipCheckinPage extends StatefulWidget {
+class SlipCheckinPage extends StatelessWidget {
   const SlipCheckinPage({super.key});
   static const nameRoute = '/slip-checkin-page';
   @override
-  State<SlipCheckinPage> createState() => _SlipCheckinPageState();
-}
-
-class _SlipCheckinPageState extends State<SlipCheckinPage> {
-  bool agreement = false;
-
-  final SlipCheckinCubit slipCheckinCubit = SlipCheckinCubit();
-  OrderArgs orderArgs = OrderArgs();
-  CheckinArgs checkinArgs = CheckinArgs();
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final SlipCheckinCubit slipCheckinCubit = SlipCheckinCubit();
+
+    final BoolCubit agreementCubit = BoolCubit();
+
+    OrderArgs orderArgs = OrderArgs();
+
+    CheckinArgs checkinArgs = CheckinArgs();
     orderArgs = ModalRoute.of(context)!.settings.arguments as OrderArgs;
     slipCheckinCubit.setData(orderArgs.roomCategory, orderArgs.checkinDuration);
+    agreementCubit.setData(false);
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, orderArgs);
@@ -584,127 +578,138 @@ class _SlipCheckinPageState extends State<SlipCheckinPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Center(
-                                          child: Text('PERNYATAAN')),
-                                      content: HtmlWidget('''
-                                  <p align="justify">Saya dan rekan tidak akan membawa masuk dan atau mengkonsumsi makanan/ minuman yang bukan berasal
-                                      dari outlet
-                                      <strong>HAPPY PUPPY</strong> ini, Apabila terbukti kemudian, saya bersedia dikenakan denda sesuai dengan
-                                      daftar denda yang berlaku.
-                                  </p>
-                                  <p>(${orderArgs.memberName})</p>
-                                  <p>${orderArgs.memberCode}</p>
-                                  '''),
-                                      actions: [
-                                        Center(
-                                          child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('Selesai')),
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.red, width: 2),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                'SYARAT DAN KETENTUAN',
-                                style: GoogleFonts.poppins(
-                                    color: CustomColorStyle.darkRed(),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            children: [
-                              Transform.scale(
-                                scale: 1.1,
-                                child: Switch(
-                                    value: agreement,
-                                    inactiveThumbImage: const AssetImage(
-                                        'assets/icon/togle_switch_off.png'),
-                                    activeThumbImage: const AssetImage(
-                                        'assets/icon/togle_switch_on.png'),
-                                    onChanged: (state) {
-                                      setState(() {
-                                        agreement = !agreement;
-                                      });
-                                    }),
-                              ),
-                              const SizedBox(
-                                width: 3,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'Saya telah membaca dan menyetujui persyaratan dan kebijakan dari pihak manejemen Happy Puppy',
-                                  style: GoogleFonts.poppins(fontSize: 10),
-                                  textAlign: TextAlign.justify,
+                      child: BlocBuilder<BoolCubit, bool?>(
+                          bloc: agreementCubit,
+                          builder: (context, agreementState) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Center(
+                                                child: Text('PERNYATAAN')),
+                                            content: HtmlWidget('''
+                                    <p align="justify">Saya dan rekan tidak akan membawa masuk dan atau mengkonsumsi makanan/ minuman yang bukan berasal
+                                        dari outlet
+                                        <strong>HAPPY PUPPY</strong> ini, Apabila terbukti kemudian, saya bersedia dikenakan denda sesuai dengan
+                                        daftar denda yang berlaku.
+                                    </p>
+                                    <p>(${orderArgs.memberName})</p>
+                                    <p>${orderArgs.memberCode}</p>
+                                    '''),
+                                            actions: [
+                                              Center(
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child:
+                                                        const Text('Selesai')),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.red, width: 2),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Text(
+                                      'SYARAT DAN KETENTUAN',
+                                      style: GoogleFonts.poppins(
+                                          color: CustomColorStyle.darkRed(),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          ElevatedButton(
-                              onPressed: () {
-                                checkinArgs = CheckinArgs(
-                                    orderArgs: orderArgs,
-                                    roomPrice: roomPriceState.data);
-                                agreement == true
-                                    ? Navigator.pushNamed(context,
-                                            FnBOrderOfferingPage.nameRoute,
-                                            arguments: checkinArgs)
-                                        .then((argumenKembali) {
-                                        checkinArgs =
-                                            argumenKembali as CheckinArgs;
-                                        orderArgs = checkinArgs.orderArgs??OrderArgs();
-                                      })
-                                    : {
-                                        showToastWarning(
-                                            "Setujui syarat dan ketentuan")
-                                      };
-                              },
-                              style: agreement == true
-                                  ? CustomButtonStyle.buttonStyleDarkBlue()
-                                  : CustomButtonStyle
-                                      .buttonStyleDarkBlueDisable(),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
-                                child: Text(
-                                  "LANJUT",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
+                                const SizedBox(
+                                  height: 30,
                                 ),
-                              )),
-                          const SizedBox(
-                            height: 31,
-                          ),
-                        ],
-                      ),
+                                Row(
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.1,
+                                      child: Switch(
+                                          value: agreementState ?? false,
+                                          inactiveThumbImage: const AssetImage(
+                                              'assets/icon/togle_switch_off.png'),
+                                          activeThumbImage: const AssetImage(
+                                              'assets/icon/togle_switch_on.png'),
+                                          onChanged: (state) {
+                                            agreementCubit.setData(state);
+                                          }),
+                                    ),
+                                    const SizedBox(
+                                      width: 3,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        'Saya telah membaca dan menyetujui persyaratan dan kebijakan dari pihak manejemen Happy Puppy',
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 10),
+                                        textAlign: TextAlign.justify,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      checkinArgs = CheckinArgs(
+                                          orderArgs: orderArgs,
+                                          roomPrice: roomPriceState.data);
+                                      agreementState == true
+                                          ? Navigator.pushNamed(
+                                                  context,
+                                                  FnBOrderOfferingPage
+                                                      .nameRoute,
+                                                  arguments: checkinArgs)
+                                              .then((argumenKembali) {
+                                              checkinArgs =
+                                                  argumenKembali as CheckinArgs;
+                                              orderArgs =
+                                                  checkinArgs.orderArgs ??
+                                                      OrderArgs();
+                                            })
+                                          : {
+                                              showToastWarning(
+                                                  "Setujui syarat dan ketentuan")
+                                            };
+                                    },
+                                    style: agreementState == true
+                                        ? CustomButtonStyle
+                                            .buttonStyleDarkBlue()
+                                        : CustomButtonStyle
+                                            .buttonStyleDarkBlueDisable(),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      child: Text(
+                                        "LANJUT",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    )),
+                                const SizedBox(
+                                  height: 31,
+                                ),
+                              ],
+                            );
+                          }),
                     )
                   ],
                 ),

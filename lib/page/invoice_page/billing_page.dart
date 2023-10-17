@@ -53,6 +53,7 @@ class BillingPage extends StatelessWidget {
               checkinArgs.roomPrice?.taxPercent =
                   taxServiceState.detail?.taxRoom ?? 0;
               checkinArgs = calculateOrder(checkinArgs);
+              
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
