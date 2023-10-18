@@ -228,10 +228,7 @@ class ScanClubPageState extends State<ScanClubPage> {
                                                     });
                                                     if (memberData.state ==
                                                         true) {
-                                                      orderArgs.memberName =
-                                                          memberData.data
-                                                                  ?.memberName ??
-                                                              '';
+                                                      orderArgs.memberName = (memberData.data?.memberName ??'').toUpperCase();
                                                       orderArgs.memberCode =
                                                           memberData.data
                                                                   ?.memberCode ??
@@ -306,10 +303,8 @@ class ScanClubPageState extends State<ScanClubPage> {
                         isLoading = false;
                       });
                       if (memberData.state == true) {
-                        orderArgs.memberName =
-                            memberData.data?.memberName ?? '';
-                        orderArgs.memberCode =
-                            memberData.data?.memberCode ?? '';
+                        orderArgs.memberName = (memberData.data?.memberName ?? '').toUpperCase();
+                        orderArgs.memberCode = memberData.data?.memberCode ?? '';
                         if (context.mounted) {
                           Navigator.pushNamed(
                                   context, SlipCheckinPage.nameRoute,

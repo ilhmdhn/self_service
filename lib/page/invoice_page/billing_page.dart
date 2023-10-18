@@ -831,9 +831,8 @@ class BillingPage extends StatelessWidget {
                           showToastWarning(responseCheckin.message.toString());
                         } else {
                           if (contextParent.mounted) {
-                            Navigator.pop(context);
-                            // Navigator.pushNamedAndRemoveUntil(
-                            //     contextParent, SplashPage.nameRoute, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                                contextParent, SplashPage.nameRoute, (route) => false);
                           }
                         }
                       },

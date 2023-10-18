@@ -114,7 +114,7 @@ class RegisterClubPage extends StatelessWidget {
                                                   'Nama tidak boleh kosong');
                                             } else {
                                               orderArgs.memberName =
-                                                  tfNameController.text;
+                                                  tfNameController.text.toUpperCase();
                                               orderArgs.memberCode =
                                                   tfNameController.text;
                                               Navigator.pop(context, true);
