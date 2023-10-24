@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
+import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/slip_checkin_model.dart';
@@ -143,6 +144,20 @@ class ApiTest {
     } catch (err) {
       return VoucherDataResult(
           isLoading: false, message: err.toString(), voucherData: []);
+    }
+  }
+
+  Future<ListPaymentResult> getPaymentMethod() async {
+    try {
+      final response =
+          await rootBundle.loadString('assets/data_test/list_payment.json');
+      final convertedResult = await json.decode(response);
+      print(response);
+      final parseResult = ListPaymentResult.fromJson(convertedResult);
+      return parseResult;
+    } catch (err) {
+      return ListPaymentResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 }

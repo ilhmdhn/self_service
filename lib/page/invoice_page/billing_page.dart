@@ -5,6 +5,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/pricing_model.dart';
+import 'package:self_service/page/payment_page/payment_list_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
@@ -637,8 +638,8 @@ class BillingPage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Navigator.pushNamed(context, BillingPage.nameRoute);
-                                    choosePaymentMethod(context, checkinArgs);
+                                    Navigator.pushNamed(context, PaymentMethodListPage.nameRoute);
+                                    // choosePaymentMethod(context, checkinArgs);
                                   },
                                   style:
                                       CustomButtonStyle.buttonStyleDarkBlue(),
