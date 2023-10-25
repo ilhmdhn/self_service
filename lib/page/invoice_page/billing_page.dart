@@ -54,7 +54,7 @@ class BillingPage extends StatelessWidget {
               checkinArgs.roomPrice?.taxPercent =
                   taxServiceState.detail?.taxRoom ?? 0;
               checkinArgs = calculateOrder(checkinArgs);
-              
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -354,7 +354,7 @@ class BillingPage extends StatelessWidget {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .symmetric(
+                                                                .symmetric(
                                                                 horizontal: 4),
                                                         child: Text(':',
                                                             style: FontBilling
@@ -610,7 +610,42 @@ class BillingPage extends StatelessWidget {
                             color: Colors.grey,
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, PaymentMethodListPage.nameRoute);
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Icon(Icons.monetization_on_outlined,
+                                      color: Colors.red, size: 19),
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                            child: Text('Metode Pembayaran')),
+                                        Expanded(child: Text(''))
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_outlined,
+                                    size: 14,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -638,7 +673,8 @@ class BillingPage extends StatelessWidget {
                               children: [
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, PaymentMethodListPage.nameRoute);
+                                    Navigator.pushNamed(context,
+                                        PaymentMethodListPage.nameRoute);
                                     // choosePaymentMethod(context, checkinArgs);
                                   },
                                   style:
@@ -749,7 +785,7 @@ class BillingPage extends StatelessWidget {
                                                                         context) {
                                                                   return AlertDialog(
                                                                     contentPadding: const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         left: 6,
                                                                         right:
                                                                             6,
@@ -832,8 +868,8 @@ class BillingPage extends StatelessWidget {
                           showToastWarning(responseCheckin.message.toString());
                         } else {
                           if (contextParent.mounted) {
-                            Navigator.pushNamedAndRemoveUntil(
-                                contextParent, SplashPage.nameRoute, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(contextParent,
+                                SplashPage.nameRoute, (route) => false);
                           }
                         }
                       },

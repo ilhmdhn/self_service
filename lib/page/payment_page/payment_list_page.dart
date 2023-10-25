@@ -1,7 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
+import 'package:self_service/page/style/button_style.dart';
+import 'package:self_service/page/style/color_style.dart';
 
 class PaymentMethodListPage extends StatefulWidget {
   const PaymentMethodListPage({super.key});
@@ -22,59 +26,249 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomColorStyle.lightBlue(),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          BlocBuilder<PaymentListCubit, ListPaymentResult>(
-              bloc: listPaymentCubit,
-              builder: (context, stateListPayment) {
-                List<PaymentMethod> listPayment = stateListPayment.data ?? [];
-                print('CEK JUMLAH DATA' + stateListPayment.state.toString());
-                print('CEK JUMLAH DATA' + stateListPayment.message.toString());
-                print('CEK JUMLAH DATA' + listPayment.length.toString());
-                return ExpansionPanelList(
-                    expansionCallback: (int index, bool isExpanded) {
-                      setState(() {
-                        listPayment[index].isExpanded = !isExpanded;
-                      });
-                    },
-                    children:
-                        listPayment.map<ExpansionPanel>((PaymentMethod item) {
-                      return ExpansionPanel(
-                          headerBuilder:
-                              (BuildContext context, bool isExpanded) {
-                            return ListTile(
-                              title: Text(item.name ?? ''),
-                            );
-                          },
-                          body: ListTile(
-                              title: Text(item.name ?? ''),
-                              subtitle: const Text(
-                                  'To delete this panel, tap the trash can icon'),
-                              trailing: const Icon(Icons.delete),
-                              onTap: () {
-                                setState(() {
-                                  listPayment.removeWhere(
-                                      (PaymentMethod currentItem) =>
-                                          item == currentItem);
-                                });
-                              }),
-                          isExpanded: item.isExpanded);
-                    }).toList());
-              }),
+          SizedBox(
+            height: 42,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                  iconSize: 29,
+                  color: Colors.black,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  'Metode Pembayaran',
+                  style: GoogleFonts.poppins(color: Colors.black, fontSize: 21),
+                ),
+                const SizedBox(
+                  height: 3,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: BlocBuilder<PaymentListCubit, ListPaymentResult>(
+                        bloc: listPaymentCubit,
+                        builder: (context, stateListPayment) {
+                          List<PaymentMethod> listPayment =
+                              stateListPayment.data ?? [];
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 3.0),
+                            child: ExpansionPanelList(
+                                materialGapSize: 0,
+                                expandedHeaderPadding: const EdgeInsets.all(0),
+                                expansionCallback:
+                                    (int index, bool isExpanded) {
+                                  setState(() {
+                                    stateListPayment.data?[index].isExpanded =
+                                        !listPayment[index].isExpanded;
+                                    listPaymentCubit
+                                        .updateData(stateListPayment);
+                                  });
+                                },
+                                children: listPayment
+                                    .map<ExpansionPanel>((PaymentMethod item) {
+                                  return ExpansionPanel(
+                                      headerBuilder: (BuildContext context,
+                                          bool isExpanded) {
+                                        return InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              int index =
+                                                  listPayment.indexOf(item);
+                                              stateListPayment
+                                                      .data?[index].isExpanded =
+                                                  !listPayment[index]
+                                                      .isExpanded;
+                                              listPaymentCubit
+                                                  .updateData(stateListPayment);
+                                            });
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(0),
+                                            child: SizedBox(
+                                              child: ListTile(
+                                                title: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: CachedNetworkImage(
+                                                          imageUrl: item.icon
+                                                              .toString()),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(item.name.toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 16))
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      body: SizedBox(
+                                        height:
+                                            ((item.channel?.length ?? 0) * 48)
+                                                .toDouble(),
+                                        child: ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemCount:
+                                                item.channel?.length ?? 0,
+                                            itemBuilder: (context, index) {
+                                              String percent = '';
+                                              num servicePayment = 0;
+                                              String additionalService = '';
+                                              if ((item.channel?[index].fee
+                                                          ?.actualFee ??
+                                                      0) >
+                                                  0) {
+                                                servicePayment = item
+                                                        .channel?[index]
+                                                        .fee
+                                                        ?.actualFee ??
+                                                    0;
+                                              }
+                                              if (item.channel?[index].fee
+                                                      ?.feeType ==
+                                                  'PERCENT') {
+                                                percent = '%';
+                                              }
+
+                                              if ((item.channel?[index].fee
+                                                          ?.additionalFee ??
+                                                      0) >
+                                                  0) {
+                                                additionalService =
+                                                    ' + ${(item.channel![index].fee!.additionalFee ?? 0)}';
+                                              }
+                                              return SizedBox(
+                                                height: 48,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 25, right: 25),
+                                                  child: Column(children: [
+                                                    InkWell(
+                                                      onTap: () {},
+                                                      child: Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 40,
+                                                            height: 40,
+                                                            child: CachedNetworkImage(
+                                                                imageUrl: item
+                                                                        .channel?[
+                                                                            index]
+                                                                        .icon ??
+                                                                    ''),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  item
+                                                                          .channel?[
+                                                                              index]
+                                                                          .name ??
+                                                                      '',
+                                                                  style: GoogleFonts.poppins(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          14)),
+                                                              Text(
+                                                                'Biaya penanganan $servicePayment$percent$additionalService',
+                                                                style: GoogleFonts.poppins(
+                                                                    color: Colors
+                                                                        .black54,
+                                                                    fontSize:
+                                                                        11),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    index ==
+                                                            ((item.channel
+                                                                        ?.length ??
+                                                                    0) -
+                                                                1)
+                                                        ? const SizedBox()
+                                                        : Column(
+                                                            children: [
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 0.5,
+                                                                color:
+                                                                    Colors.grey,
+                                                              )
+                                                            ],
+                                                          )
+                                                  ]),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                      isExpanded: item.isExpanded);
+                                }).toList()),
+                          );
+                        }),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      style: CustomButtonStyle.styleDarkBlueButton(),
+                      onPressed: () {},
+                      child: Text(
+                        'KONFIRMASI',
+                        style: GoogleFonts.poppins(fontSize: 16),
+                      )),
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
   }
-}
-
-class Item {
-  Item({
-    required this.expandedValue,
-    required this.headerValue,
-    this.isExpanded = false,
-  });
-
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
 }

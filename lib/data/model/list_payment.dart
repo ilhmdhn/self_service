@@ -63,12 +63,6 @@ class PaymentChannel {
   });
 
   factory PaymentChannel.fromJson(Map<String, dynamic> json) {
-    print('aaaa' + json.toString());
-    print('aaa' + json['TransactionFee'].toString());
-    print('aaa' + json['Code'].toString());
-    print('aaa' + json['Name'].toString());
-    print('aaa' + json['icon'].toString());
-    print('aaa' + json['Description'].toString());
     return PaymentChannel(
         code: json['Code'],
         name: json['Name'],
@@ -91,8 +85,8 @@ class PaymentFee {
 
   factory PaymentFee.fromJson(Map<String, dynamic> json) {
     return PaymentFee(
-        actualFee: json['actualFee'],
-        feeType: json['feeType'],
-        additionalFee: json['additionalFee']);
+        actualFee: json['ActualFee'],
+        feeType: json['ActualFeeType'],
+        additionalFee: json['AdditionalFee']);
   }
 }

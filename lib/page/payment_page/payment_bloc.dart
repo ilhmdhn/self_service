@@ -9,4 +9,8 @@ class PaymentListCubit extends Cubit<ListPaymentResult> {
     final response = await ApiTest().getPaymentMethod();
     emit(response);
   }
+
+  void updateData(ListPaymentResult data) {
+    emit(data);
+  }
 }
