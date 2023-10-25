@@ -6,6 +6,7 @@ import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 
 class PaymentMethodListPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class PaymentMethodListPage extends StatefulWidget {
 
 class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
   PaymentListCubit listPaymentCubit = PaymentListCubit();
-
+  num totalBill = 0;
   PaymentMethodArgs? choosePaymentMethod;
 
   @override
@@ -28,6 +29,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
 
   @override
   Widget build(BuildContext context) {
+    totalBill = ModalRoute.of(context)!.settings.arguments as num;
     return Scaffold(
       backgroundColor: CustomColorStyle.lightBlue(),
       body: Column(
@@ -176,6 +178,38 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                     InkWell(
                                                       onTap: () {
                                                         setState(() {
+                                                          num feeFix = 0;
+                                                          num actualFee = (item
+                                                                  .channel?[
+                                                                      index]
+                                                                  .fee
+                                                                  ?.actualFee ??
+                                                              0);
+                                                          num additionalFee = (item
+                                                                  .channel?[
+                                                                      index]
+                                                                  .fee
+                                                                  ?.additionalFee ??
+                                                              0);
+                                                          String feeType = (item
+                                                                  .channel?[
+                                                                      index]
+                                                                  .fee
+                                                                  ?.feeType ??
+                                                              '');
+
+                                                          if (feeType ==
+                                                              'FLAT') {
+                                                            feeFix = actualFee +
+                                                                additionalFee;
+                                                          } else if (feeType ==
+                                                              'PERCENT') {
+                                                            feeFix = (actualFee *
+                                                                    totalBill /
+                                                                    100) +
+                                                                additionalFee;
+                                                          }
+
                                                           choosePaymentMethod =
                                                               PaymentMethodArgs(
                                                                   paymentMethod:
@@ -186,7 +220,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                                       .code,
                                                                   name:
                                                                       '${item.name}, ${item.channel?[index].name}',
-                                                                  fee: 0);
+                                                                  fee: feeFix);
                                                         });
                                                       },
                                                       child: Row(
@@ -267,24 +301,47 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
               ],
             ),
           ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      style: CustomButtonStyle.styleDarkBlueButton(),
-                      onPressed: () {
-                        Navigator.pop(context, choosePaymentMethod);
-                      },
-                      child: Text(
-                        'KONFIRMASI',
-                        style: GoogleFonts.poppins(fontSize: 16),
-                      )),
-                ),
-              )
-            ],
+          Container(
+            color: Colors.white,
+            child: Column(
+              children: [
+                choosePaymentMethod != null
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Biaya penanganan',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: Colors.black),
+                            ),
+                            Text(
+                              Currency.toRupiah(choosePaymentMethod?.fee),
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: Colors.black),
+                            )
+                          ],
+                        ),
+                      )
+                    : const SizedBox(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        style: CustomButtonStyle.styleDarkBlueButton(),
+                        onPressed: () {
+                          Navigator.pop(context, choosePaymentMethod);
+                        },
+                        child: Text(
+                          'KONFIRMASI',
+                          style: GoogleFonts.poppins(fontSize: 16),
+                        )),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
