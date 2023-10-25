@@ -153,11 +153,6 @@ class ApiTest {
           await rootBundle.loadString('assets/data_test/list_payment.json');
       final convertedResult = await json.decode(response);
       final parseResult = ListPaymentResult.fromJson(convertedResult);
-      parseResult.data?.forEach((element) {
-        element.channel?.forEach((elements) {
-          print('actual fee ${elements.fee?.actualFee.toString()} ');
-        });
-      });
       return parseResult;
     } catch (err) {
       return ListPaymentResult(

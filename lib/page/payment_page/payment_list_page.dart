@@ -6,6 +6,7 @@ import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/util/order_args.dart';
 
 class PaymentMethodListPage extends StatefulWidget {
   const PaymentMethodListPage({super.key});
@@ -16,6 +17,8 @@ class PaymentMethodListPage extends StatefulWidget {
 
 class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
   PaymentListCubit listPaymentCubit = PaymentListCubit();
+
+  PaymentMethodArgs? choosePaymentMethod;
 
   @override
   void initState() {
@@ -31,7 +34,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            height: 42,
+            height: 32,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -119,7 +122,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                             GoogleFonts.poppins(
                                                                 color: Colors
                                                                     .black,
-                                                                fontSize: 16))
+                                                                fontSize: 14))
                                                   ],
                                                 ),
                                               ),
@@ -171,7 +174,21 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                           left: 25, right: 25),
                                                   child: Column(children: [
                                                     InkWell(
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        setState(() {
+                                                          choosePaymentMethod =
+                                                              PaymentMethodArgs(
+                                                                  paymentMethod:
+                                                                      item.code,
+                                                                  paymentChannel: item
+                                                                      .channel?[
+                                                                          index]
+                                                                      .code,
+                                                                  name:
+                                                                      '${item.name}, ${item.channel?[index].name}',
+                                                                  fee: 0);
+                                                        });
+                                                      },
                                                       child: Row(
                                                         children: [
                                                           SizedBox(
@@ -202,7 +219,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                                       color: Colors
                                                                           .black,
                                                                       fontSize:
-                                                                          14)),
+                                                                          13)),
                                                               Text(
                                                                 'Biaya penanganan $servicePayment$percent$additionalService',
                                                                 style: GoogleFonts.poppins(
@@ -258,7 +275,9 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                       style: CustomButtonStyle.styleDarkBlueButton(),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context, choosePaymentMethod);
+                      },
                       child: Text(
                         'KONFIRMASI',
                         style: GoogleFonts.poppins(fontSize: 16),

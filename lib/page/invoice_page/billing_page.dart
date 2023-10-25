@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +16,6 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/data/model/voucher_model.dart';
-import 'package:self_service/util/tools.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -26,9 +26,10 @@ class BillingPage extends StatelessWidget {
     CheckinArgs checkinArgs =
         ModalRoute.of(context)!.settings.arguments as CheckinArgs;
     final ScrollController scrollController = ScrollController();
-
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
+    final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
     taxServiceCubit.getData();
+
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, checkinArgs);
@@ -597,103 +598,135 @@ class BillingPage extends StatelessWidget {
                       ],
                     ),
                   )),
-                  SizedBox(
-                    height: 115,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 1,
-                            width: double.infinity,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, PaymentMethodListPage.nameRoute);
-                              },
-                              child: Row(
+                  BlocBuilder<PaymentMethodCubit, PaymentMethodArgs>(
+                    bloc: paymentMethodCubit,
+                    builder: (context, paymentMethodState) {
+                      return SizedBox(
+                        height: 121,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(context,
+                                            PaymentMethodListPage.nameRoute,
+                                            arguments: (checkinArgs.roomPrice
+                                                        ?.priceTotal ??
+                                                    0) +
+                                                (checkinArgs.orderArgs?.fnb
+                                                        .totalAll ??
+                                                    0))
+                                        .then((value) {
+                                      if (value != null) {
+                                        paymentMethodCubit.setData(
+                                            value as PaymentMethodArgs);
+                                      }
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Icon(Icons.monetization_on_outlined,
+                                          color: Colors.red, size: 19),
+                                      Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const SizedBox(
+                                              width: 3,
+                                            ),
+                                            Expanded(
+                                                child: Text(
+                                              'Metode Pembayaran',
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.black,
+                                                  fontSize: 13),
+                                            )),
+                                            Expanded(
+                                                child: AutoSizeText(
+                                              paymentMethodState.name != null
+                                                  ? paymentMethodState.name!
+                                                  : '',
+                                              textAlign: TextAlign.end,
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            ))
+                                          ],
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_outlined,
+                                        size: 14,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Icon(Icons.monetization_on_outlined,
-                                      color: Colors.red, size: 19),
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                            child: Text('Metode Pembayaran')),
-                                        Expanded(child: Text(''))
-                                      ],
-                                    ),
+                                  Text(
+                                    'Total',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500),
                                   ),
-                                  const Icon(
-                                    Icons.arrow_forward_ios_outlined,
-                                    size: 14,
+                                  Text(
+                                    Currency.toRupiah((checkinArgs
+                                                .roomPrice?.priceTotal ??
+                                            0) +
+                                        (checkinArgs.orderArgs?.fnb.totalAll ??
+                                            0)),
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w700),
                                   )
                                 ],
                               ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500),
+                              const SizedBox(
+                                height: 12,
                               ),
-                              Text(
-                                Currency.toRupiah(
-                                    (checkinArgs.roomPrice?.priceTotal ?? 0) +
-                                        (checkinArgs.orderArgs?.fnb.totalAll ??
-                                            0)),
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w700),
-                              )
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {},
+                                      style: CustomButtonStyle
+                                          .buttonStyleDarkBlue(),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 31, vertical: 5),
+                                        child: Text(
+                                          'BAYAR',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ),
+                                  ])
                             ],
                           ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(context,
-                                        PaymentMethodListPage.nameRoute);
-                                    // choosePaymentMethod(context, checkinArgs);
-                                  },
-                                  style:
-                                      CustomButtonStyle.buttonStyleDarkBlue(),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 31, vertical: 5),
-                                    child: Text(
-                                      'BAYAR',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
-                              ])
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   )
                 ],
               );
@@ -845,42 +878,6 @@ class BillingPage extends StatelessWidget {
                                         )),
                     );
                   }));
-        });
-  }
-
-  void choosePaymentMethod(
-      BuildContext contextParent, CheckinArgs dataCheckin) {
-    showDialog(
-        context: contextParent,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Center(
-              child: Text('Pilih metode pembayaran'),
-            ),
-            content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      onPressed: () async {
-                        final responseCheckin =
-                            await ApiService().postCheckinPayLater(dataCheckin);
-                        if (responseCheckin.state != true) {
-                          showToastWarning(responseCheckin.message.toString());
-                        } else {
-                          if (contextParent.mounted) {
-                            Navigator.pushNamedAndRemoveUntil(contextParent,
-                                SplashPage.nameRoute, (route) => false);
-                          }
-                        }
-                      },
-                      child: const Text('Bayar di Kasir')),
-                  const SizedBox(
-                    width: 23,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text('Digital')),
-                ]),
-          );
         });
   }
 }

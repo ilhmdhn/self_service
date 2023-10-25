@@ -73,3 +73,17 @@ class CheckinArgs {
 
   CheckinArgs({this.orderArgs, this.roomPrice});
 }
+
+class PaymentMethodArgs {
+  String? paymentMethod;
+  String? paymentChannel;
+  String? name;
+  num? fee;
+
+  PaymentMethodArgs({
+    this.paymentMethod,
+    this.paymentChannel,
+    this.name,
+    this.fee
+  });
+}

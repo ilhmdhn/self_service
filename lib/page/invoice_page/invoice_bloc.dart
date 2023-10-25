@@ -5,6 +5,7 @@ import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/data/shared_pref/preferences_data.dart';
+import 'package:self_service/util/order_args.dart';
 
 class SlipCheckinCubit extends Cubit<RoomPriceResult> {
   SlipCheckinCubit() : super(RoomPriceResult());
@@ -36,5 +37,13 @@ class VoucherCubit extends Cubit<VoucherDataResult> {
       final response = await ApiTest().voucher();
       emit(response);
     }
+  }
+}
+
+class PaymentMethodCubit extends Cubit<PaymentMethodArgs> {
+  PaymentMethodCubit() : super(PaymentMethodArgs());
+
+  void setData(PaymentMethodArgs data) {
+    emit(data);
   }
 }
