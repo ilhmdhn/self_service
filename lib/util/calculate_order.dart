@@ -11,6 +11,14 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num taxFnb = 0;
   num fnbTotal = 0;
 
+  num itemCount = 0;
+  dataCheckin.orderArgs?.fnb.fnbList.forEach((element) {
+    print('${element.itemName} service ${element.isService}');
+    itemCount += element.price;
+  });
+
+  print('DEBUGGING ' + itemCount.toString());
+
   dataCheckin.roomPrice?.detail?.forEach((element) {
     roomPrice = roomPrice + (element.roomTotal ?? 0);
   });

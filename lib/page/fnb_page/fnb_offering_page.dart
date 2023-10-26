@@ -12,7 +12,8 @@ class FnBOrderOfferingPage extends StatelessWidget {
   static const nameRoute = '/fnb-offering-page';
   @override
   Widget build(BuildContext context) {
-    CheckinArgs checkinArgs =ModalRoute.of(context)!.settings.arguments as CheckinArgs;
+    CheckinArgs checkinArgs =
+        ModalRoute.of(context)!.settings.arguments as CheckinArgs;
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, checkinArgs);
@@ -122,6 +123,10 @@ class FnBOrderOfferingPage extends StatelessWidget {
                 bottom: 28,
                 child: InkWell(
                   onTap: () {
+                    if ((checkinArgs.orderArgs?.fnb.fnbList ?? []).isNotEmpty) {
+                      checkinArgs.orderArgs!.fnb.fnbList.clear();
+                    }
+
                     Navigator.pushNamed(context, BillingPage.nameRoute,
                             arguments: checkinArgs)
                         .then((argumenKembali) {

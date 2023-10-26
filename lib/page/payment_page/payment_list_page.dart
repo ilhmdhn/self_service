@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
-import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 
@@ -31,7 +30,8 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
   Widget build(BuildContext context) {
     totalBill = ModalRoute.of(context)!.settings.arguments as num;
     return Scaffold(
-      backgroundColor: CustomColorStyle.lightBlue(),
+      // backgroundColor: CustomColorStyle.lightBlue(),
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -119,12 +119,48 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                                                     const SizedBox(
                                                       width: 10,
                                                     ),
-                                                    Text(item.name.toString(),
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 14))
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            item.name
+                                                                .toString(),
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14)),
+                                                        choosePaymentMethod !=
+                                                                    null &&
+                                                                choosePaymentMethod
+                                                                        ?.paymentMethod ==
+                                                                    item.code
+                                                            ? Column(
+                                                                children: [
+                                                                  const SizedBox(
+                                                                    height: 3,
+                                                                  ),
+                                                                  Text(
+                                                                    (choosePaymentMethod
+                                                                            ?.name ??
+                                                                        ''),
+                                                                    style: GoogleFonts.poppins(
+                                                                        fontSize:
+                                                                            11,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  )
+                                                                ],
+                                                              )
+                                                            : const SizedBox()
+                                                      ],
+                                                    )
                                                   ],
                                                 ),
                                               ),
