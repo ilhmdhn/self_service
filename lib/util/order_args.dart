@@ -70,8 +70,8 @@ class FnBDetail {
 class CheckinArgs {
   OrderArgs? orderArgs;
   RoomPriceData? roomPrice;
-
-  CheckinArgs({this.orderArgs, this.roomPrice});
+  PaymentMethodArgs? payment;
+  CheckinArgs({this.orderArgs, this.roomPrice, this.payment});
 }
 
 class PaymentMethodArgs {
@@ -80,10 +80,6 @@ class PaymentMethodArgs {
   String? name;
   num? fee;
 
-  PaymentMethodArgs({
-    this.paymentMethod,
-    this.paymentChannel,
-    this.name,
-    this.fee
-  });
+  PaymentMethodArgs(
+      {this.paymentMethod, this.paymentChannel, this.name, this.fee});
 }

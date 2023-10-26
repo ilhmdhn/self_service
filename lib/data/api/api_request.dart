@@ -184,6 +184,7 @@ class ApiService {
           });
         });
       }
+
       final Map<String, dynamic> bodyParams = {
         'member_code': dataCheckin.orderArgs?.memberCode,
         'member_name': dataCheckin.orderArgs?.memberName,
@@ -200,14 +201,15 @@ class ApiService {
         'fnb_service': dataCheckin.orderArgs?.fnb.fnbService,
         'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTax,
         'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
-        'fnb_detail': listFnb
+        'fnb_detail': listFnb,
+        'payment_method':dataCheckin.payment?.paymentMethod,
+        'payment_channel': dataCheckin.payment?.paymentChannel
       };
 
       final serverUrl = await baseUrl();
       Uri url = Uri.parse('${serverUrl}checkin-paylater');
       final convertedParams = jsonEncode(bodyParams);
-      final apiResponse = await http.post(url,
-          body: convertedParams, headers: {'Content-Type': 'application/json'});
+      final apiResponse = await http.post(url, body: convertedParams, headers: {'Content-Type': 'application/json'});
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     } catch (err) {
