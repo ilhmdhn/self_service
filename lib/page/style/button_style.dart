@@ -38,6 +38,15 @@ class CustomButtonStyle {
         side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0));
   }
 
+  static flutter.ButtonStyle buttonBlueLight() {
+    return flutter.ElevatedButton.styleFrom(
+        backgroundColor: CustomColorStyle.lightBlue3(),
+        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
+        side: BorderSide(width: 0, color: CustomColorStyle.lightBlue3())
+        // side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0)
+        );
+  }
+
   static flutter.ButtonStyle buttonStyleDarkBlueDisable() {
     return flutter.ElevatedButton.styleFrom(
         backgroundColor: Colors.grey.shade600,

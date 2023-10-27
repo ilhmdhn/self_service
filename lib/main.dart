@@ -5,6 +5,7 @@ import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/billing_page.dart';
 import 'package:self_service/page/payment_page/payment_list_page.dart';
+import 'package:self_service/page/payment_page/payment_page.dart';
 import 'package:self_service/page/register_puppy_club/login_club_page.dart';
 import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/reservation_code_page/reservation_input_page.dart';
@@ -59,7 +60,8 @@ class SelfService extends StatelessWidget {
         },
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashPage.nameRoute,
+      // initialRoute: SplashPage.nameRoute,
+      initialRoute: PaymentPage.nameRoute,
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),
@@ -67,13 +69,17 @@ class SelfService extends StatelessWidget {
         CategoryAndRoomPage.nameRoute: (context) => CategoryAndRoomPage(),
         RoomDetailPage.nameRoute: (context) => const RoomDetailPage(),
         RegisterClubPage.nameRoute: (context) => const RegisterClubPage(),
-        ScanClubPage.nameRoute: (context)=> const ScanClubPage(),
-        ReservationInputPage.nameRoute: (context) => const ReservationInputPage(),
-        FnBOrderOfferingPage.nameRoute: (context) => const FnBOrderOfferingPage(),
+        ScanClubPage.nameRoute: (context) => const ScanClubPage(),
+        ReservationInputPage.nameRoute: (context) =>
+            const ReservationInputPage(),
+        FnBOrderOfferingPage.nameRoute: (context) =>
+            const FnBOrderOfferingPage(),
         SlipCheckinPage.nameRoute: (context) => const SlipCheckinPage(),
         FnbListPage.nameRoute: (context) => const FnbListPage(),
         BillingPage.nameRoute: (context) => const BillingPage(),
-        PaymentMethodListPage.nameRoute: (context) => const PaymentMethodListPage(),
+        PaymentMethodListPage.nameRoute: (context) =>
+            const PaymentMethodListPage(),
+        PaymentPage.nameRoute: (context) => const PaymentPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
       },
     );

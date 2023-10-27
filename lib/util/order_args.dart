@@ -77,9 +77,10 @@ class CheckinArgs {
 class PaymentMethodArgs {
   String? paymentMethod;
   String? paymentChannel;
+  String? icon;
   String? name;
   num? fee;
 
   PaymentMethodArgs(
-      {this.paymentMethod, this.paymentChannel, this.name, this.fee});
+      {this.paymentMethod, this.paymentChannel, this.name, this.fee, this.icon});
 }

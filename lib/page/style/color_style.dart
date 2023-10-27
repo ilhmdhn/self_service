@@ -9,12 +9,20 @@ class CustomColorStyle {
     return CustomColorStyle().hexToColor('#F5FBFF');
   }
 
-  // static Color lightBlue() {
-  //   return const Color(0xfff6fbff);
-  // }
+  static Color lightBlue2() {
+    return CustomColorStyle().hexToColor('#e6f2ff');
+  }
+
+  static Color lightBlue3() {
+    return CustomColorStyle().hexToColor('#e6f2ff');
+  }
 
   static Color darkBlue() {
     return CustomColorStyle().hexToColor('#3C7FB4');
+  }
+
+  static Color blueQrisBg() {
+    return CustomColorStyle().hexToColor('#0577fe');
   }
 
   static Color lightGrey() {
