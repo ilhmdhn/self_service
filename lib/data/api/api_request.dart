@@ -161,18 +161,27 @@ class ApiService {
     String phone,
     String email,
   ) async {
-    final serverUrl = await baseUrl();
-    final url = Uri.parse('${serverUrl}generate-payment');
-    final apiResponse = await http.post(url, body: {
-      'payment_method': paymentMethod,
-      'payment_channel': paymentChannel,
-      'amount': amount,
-      'customer': customer,
-      'phone': phone,
-      'email': email
-    });
-    final convertedResult = json.decode(apiResponse.body);
-    return QrisPaymentResult.fromJson(convertedResult);
+    try {
+      final Map<String, dynamic> bodyParams = {
+        'payment_method': paymentMethod,
+        'payment_channel': paymentChannel,
+        'amount': amount,
+        'customer': customer,
+        'phone': phone,
+        'email': email
+      };
+      final serverUrl = await baseUrl();
+      final url = Uri.parse('${serverUrl}generate-payment');
+      final apiResponse = await http.post(url, body: bodyParams);
+      final convertedResult = json.decode(apiResponse.body);
+      return QrisPaymentResult.fromJson(convertedResult);
+    } catch (err) {
+      return QrisPaymentResult(
+        isLoading: false,
+        state: false,
+        message: err.toString(),
+      );
+    }
   }
 
   Future<PaymentVaResult> getVaPayment(

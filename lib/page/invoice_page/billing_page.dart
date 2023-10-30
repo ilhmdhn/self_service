@@ -6,6 +6,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:google_fonts/google_fonts.dart';
 import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/page/payment_page/payment_list_page.dart';
+import 'package:self_service/page/payment_page/payment_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
@@ -24,6 +25,7 @@ class BillingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     CheckinArgs checkinArgs =
         ModalRoute.of(context)!.settings.arguments as CheckinArgs;
+
     final ScrollController scrollController = ScrollController();
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
     final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
@@ -412,6 +414,7 @@ class BillingPage extends StatelessWidget {
                     builder: (context, paymentMethodState) {
                       paymentPrice = paymentMethodState.fee ?? 0;
                       priceTotal = checkinPrice + paymentPrice;
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Column(
@@ -520,8 +523,16 @@ class BillingPage extends StatelessWidget {
                                           arguments: checkinPrice)
                                       .then((value) {
                                     if (value != null) {
-                                      paymentMethodCubit
-                                          .setData(value as PaymentMethodArgs);
+                                      value as PaymentMethodArgs;
+
+                                      paymentMethodCubit.setData(value);
+                                      checkinArgs.payment = PaymentMethodArgs(
+                                        paymentMethod: value.paymentMethod,
+                                        paymentChannel: value.paymentChannel,
+                                        name: value.name,
+                                        fee: value.fee,
+                                        icon: value.icon,
+                                      );
                                     }
                                   });
                                 },
@@ -617,7 +628,11 @@ class BillingPage extends StatelessWidget {
                             Align(
                               alignment: Alignment.bottomRight,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, PaymentPage.nameRoute,
+                                      arguments: checkinArgs);
+                                },
                                 style: CustomButtonStyle.buttonStyleDarkBlue(),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(

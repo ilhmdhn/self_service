@@ -214,7 +214,8 @@ class ScanClubPageState extends State<ScanClubPage> {
                                                   style: CustomButtonStyle
                                                       .styleDarkBlueButton(),
                                                   onPressed: () async {
-                                                    Navigator.pop(contextDialog);
+                                                    Navigator.pop(
+                                                        contextDialog);
                                                     setState(() {
                                                       isLoading = true;
                                                     });
@@ -228,14 +229,27 @@ class ScanClubPageState extends State<ScanClubPage> {
                                                     });
                                                     if (memberData.state ==
                                                         true) {
-                                                      orderArgs.memberName = (memberData.data?.memberName ??'').toUpperCase();
+                                                      orderArgs
+                                                          .memberName = (memberData
+                                                                  .data
+                                                                  ?.memberName ??
+                                                              '')
+                                                          .toUpperCase();
                                                       orderArgs.memberCode =
                                                           memberData.data
                                                                   ?.memberCode ??
                                                               '';
 
                                                       if (context.mounted) {
-                                                        Navigator.pushNamed(context, SlipCheckinPage.nameRoute, arguments: orderArgs).then((value) =>orderArgs = value as OrderArgs);
+                                                        Navigator.pushNamed(
+                                                                context,
+                                                                SlipCheckinPage
+                                                                    .nameRoute,
+                                                                arguments:
+                                                                    orderArgs)
+                                                            .then((value) =>
+                                                                orderArgs = value
+                                                                    as OrderArgs);
                                                       }
                                                     } else {
                                                       showToastWarning(
@@ -303,8 +317,14 @@ class ScanClubPageState extends State<ScanClubPage> {
                         isLoading = false;
                       });
                       if (memberData.state == true) {
-                        orderArgs.memberName = (memberData.data?.memberName ?? '').toUpperCase();
-                        orderArgs.memberCode = memberData.data?.memberCode ?? '';
+                        orderArgs.memberName =
+                            (memberData.data?.memberName ?? '').toUpperCase();
+                        orderArgs.memberCode =
+                            memberData.data?.memberCode ?? '';
+                        orderArgs.memberPhone =
+                            memberData.data?.memberPhone ?? '';
+                        orderArgs.memberEmail =
+                            memberData.data?.memberEmail ?? '';
                         if (context.mounted) {
                           Navigator.pushNamed(
                                   context, SlipCheckinPage.nameRoute,

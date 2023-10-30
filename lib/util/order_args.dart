@@ -5,6 +5,8 @@ class OrderArgs {
   String roomCode = '';
   String memberCode = '';
   String memberName = '';
+  String memberPhone = '';
+  String memberEmail = '';
   int checkinDuration = 1;
   int pax = 1;
   FnBOrder fnb = FnBOrder();

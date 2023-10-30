@@ -21,11 +21,15 @@ class MemberResult {
 class MemberData {
   String? memberCode;
   String? memberName;
+  String? memberPhone;
+  String? memberEmail;
 
-  MemberData({this.memberCode, this.memberName});
+  MemberData({this.memberCode, this.memberName, this.memberPhone, this.memberEmail});
 
   factory MemberData.fromJson(Map<String, dynamic> json) => MemberData(
         memberCode: json['member_code'],
         memberName: json['member_name'],
+        memberPhone: json['member_phone'],
+        memberEmail: json['member_email'],
       );
 }
