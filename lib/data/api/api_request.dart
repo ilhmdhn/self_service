@@ -5,6 +5,8 @@ import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/new_room_model.dart';
+import 'package:self_service/data/model/payment_qris.dart';
+import 'package:self_service/data/model/payment_va.dart';
 import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
@@ -151,6 +153,50 @@ class ApiService {
     }
   }
 
+  Future<QrisPaymentResult> getQrisPayment(
+    String paymentMethod,
+    String paymentChannel,
+    num amount,
+    String customer,
+    String phone,
+    String email,
+  ) async {
+    final serverUrl = await baseUrl();
+    final url = Uri.parse('${serverUrl}generate-payment');
+    final apiResponse = await http.post(url, body: {
+      'payment_method': paymentMethod,
+      'payment_channel': paymentChannel,
+      'amount': amount,
+      'customer': customer,
+      'phone': phone,
+      'email': email
+    });
+    final convertedResult = json.decode(apiResponse.body);
+    return QrisPaymentResult.fromJson(convertedResult);
+  }
+
+  Future<PaymentVaResult> getVaPayment(
+    String paymentMethod,
+    String paymentChannel,
+    num amount,
+    String customer,
+    String phone,
+    String email,
+  ) async {
+    final serverUrl = await baseUrl();
+    final url = Uri.parse('${serverUrl}generate-payment');
+    final apiResponse = await http.post(url, body: {
+      'payment_method': paymentMethod,
+      'payment_channel': paymentChannel,
+      'amount': amount,
+      'customer': customer,
+      'phone': phone,
+      'email': email
+    });
+    final convertedResult = json.decode(apiResponse.body);
+    return PaymentVaResult.fromJson(convertedResult);
+  }
+
   Future<BaseResponse> postCheckinPayLater(CheckinArgs dataCheckin) async {
     try {
       List<Map<String, dynamic>> listFnb = [];
@@ -202,14 +248,15 @@ class ApiService {
         'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTax,
         'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
         'fnb_detail': listFnb,
-        'payment_method':dataCheckin.payment?.paymentMethod,
+        'payment_method': dataCheckin.payment?.paymentMethod,
         'payment_channel': dataCheckin.payment?.paymentChannel
       };
 
       final serverUrl = await baseUrl();
       Uri url = Uri.parse('${serverUrl}checkin-paylater');
       final convertedParams = jsonEncode(bodyParams);
-      final apiResponse = await http.post(url, body: convertedParams, headers: {'Content-Type': 'application/json'});
+      final apiResponse = await http.post(url,
+          body: convertedParams, headers: {'Content-Type': 'application/json'});
       final convertedResult = json.decode(apiResponse.body);
       return BaseResponse.fromJson(convertedResult);
     } catch (err) {
