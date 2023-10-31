@@ -70,6 +70,8 @@ class LoginPage extends StatelessWidget {
                       memberState.data?.memberCode;
                   checkinData.checkinInfo.memberName =
                       memberState.data?.memberName;
+                  checkinData.checkinInfo.memberPhone = memberState.data?.memberPhone;
+                  checkinData.checkinInfo.memberEmail = memberState.data?.memberEmail;
                   // Navigator.pushNamed(context, RoomCategoryPage.nameRoute,
                   //     arguments: checkinData);
                 } else {

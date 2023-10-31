@@ -13,6 +13,8 @@ class CheckinData {
 class CheckinInfo {
   String? memberCode;
   String? memberName;
+  String? memberPhone;
+  String? memberEmail;
   String? roomCode;
   String? roomDuration;
   String? roomType;
@@ -30,6 +32,8 @@ class CheckinInfo {
   CheckinInfo(
       {this.memberCode,
       this.memberName,
+      this.memberPhone,
+      this.memberEmail,
       this.roomCode,
       this.roomDuration,
       this.roomType,

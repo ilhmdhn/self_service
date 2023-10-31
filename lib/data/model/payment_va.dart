@@ -1,5 +1,5 @@
 class PaymentVaResult {
-    bool isLoading;
+  bool isLoading;
   bool? state;
   VirtualAccountData? data;
   String? message;
@@ -17,11 +17,10 @@ class PaymentVaResult {
     }
 
     return PaymentVaResult(
-      isLoading: false,
-      state: true,
-      message: json['message'],
-      data: VirtualAccountData.fromJson(json['data'])
-    );
+        isLoading: false,
+        state: true,
+        message: json['message'],
+        data: VirtualAccountData.fromJson(json['data']));
   }
 }
 
@@ -38,6 +37,7 @@ class VirtualAccountData {
   num? total;
   String? feeDirection;
   String? expired;
+  String? expiredTime;
 
   VirtualAccountData(
       {this.sessionId,
@@ -51,21 +51,22 @@ class VirtualAccountData {
       this.fee,
       this.total,
       this.feeDirection,
-      this.expired});
+      this.expired,
+      this.expiredTime});
 
   factory VirtualAccountData.fromJson(Map<String, dynamic> json) =>
       VirtualAccountData(
-        sessionId: json['SessionId'],
-        transactionId: json['TransactionId'],
-        referenceId: json['ReferenceId'],
-        via: json['Via'],
-        channel: json['Channel'],
-        paymentNo: json['PaymentNo'],
-        paymentName: json['PaymentName'],
-        subTotal: json['SubTotal'],
-        fee: json['Fee'],
-        total: json['Total'],
-        feeDirection: json['FeeDirection'],
-        expired: json['Expired'],
-      );
+          sessionId: json['SessionId'],
+          transactionId: json['TransactionId'],
+          referenceId: json['ReferenceId'],
+          via: json['Via'],
+          channel: json['Channel'],
+          paymentNo: json['PaymentNo'],
+          paymentName: json['PaymentName'],
+          subTotal: json['SubTotal'],
+          fee: json['Fee'],
+          total: json['Total'],
+          feeDirection: json['FeeDirection'],
+          expired: json['Expired'],
+          expiredTime: json['expired_time']);
 }

@@ -29,8 +29,14 @@ class BillingPage extends StatelessWidget {
     final ScrollController scrollController = ScrollController();
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
     final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
-    taxServiceCubit.getData();
+    paymentMethodCubit.setData(PaymentMethodArgs(
+      paymentMethod: checkinArgs.payment?.paymentMethod,
+      paymentChannel: checkinArgs.payment?.paymentChannel,
+      fee: checkinArgs.payment?.fee,
+      name: checkinArgs.payment?.name
+    ));
 
+    taxServiceCubit.getData();
     num roomPrice = 0;
     num fnbPrice = 0;
     num servicePrice = 0;
@@ -55,6 +61,13 @@ class BillingPage extends StatelessWidget {
                 );
               }
 
+              if (taxServiceState.state != true ||
+                  taxServiceState.detail == null) {
+                return Center(
+                  child: Text(taxServiceState.message ?? ''),
+                );
+              }
+
               checkinArgs.orderArgs?.fnb.servicePercent =
                   taxServiceState.detail?.serviceFnb ?? 0;
               checkinArgs.orderArgs?.fnb.taxPercent =
@@ -63,6 +76,7 @@ class BillingPage extends StatelessWidget {
                   taxServiceState.detail?.serviceRoom ?? 0;
               checkinArgs.roomPrice?.taxPercent =
                   taxServiceState.detail?.taxRoom ?? 0;
+
               checkinArgs = calculateOrder(checkinArgs);
 
               roomPrice = checkinArgs.roomPrice?.roomPrice ?? 0;
@@ -71,8 +85,8 @@ class BillingPage extends StatelessWidget {
                   (checkinArgs.orderArgs?.fnb.fnbService ?? 0);
               taxPrice = (checkinArgs.roomPrice?.taxRoom ?? 0) +
                   (checkinArgs.orderArgs?.fnb.fnbTax ?? 0);
-
               checkinPrice = roomPrice + fnbPrice + servicePrice + taxPrice;
+
               return Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -630,8 +644,10 @@ class BillingPage extends StatelessWidget {
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.pushNamed(
-                                      context, PaymentPage.nameRoute,
-                                      arguments: checkinArgs);
+                                          context, PaymentPage.nameRoute,
+                                          arguments: checkinArgs)
+                                      .then((value) =>
+                                          checkinArgs = value as CheckinArgs);
                                 },
                                 style: CustomButtonStyle.buttonStyleDarkBlue(),
                                 child: Padding(

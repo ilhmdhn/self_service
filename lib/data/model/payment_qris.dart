@@ -17,11 +17,10 @@ class QrisPaymentResult {
     }
 
     return QrisPaymentResult(
-      isLoading: false,
-      state: true,
-      message: json['message'],
-      data: QrisData.fromJson(json['data'])
-    );
+        isLoading: false,
+        state: true,
+        message: json['message'],
+        data: QrisData.fromJson(json['data']));
   }
 }
 
@@ -43,26 +42,27 @@ class QrisData {
   String? qrTemplate;
   String? terminal;
   String? nNSCode;
+  String? expiredTime;
 
-  QrisData({
-    this.sessionId,
-    this.transactionId,
-    this.referenceId,
-    this.via,
-    this.channel,
-    this.paymentNo,
-    this.qrString,
-    this.paymentName,
-    this.subTotal,
-    this.fee,
-    this.total,
-    this.feeDirection,
-    this.expired,
-    this.qrImage,
-    this.qrTemplate,
-    this.terminal,
-    this.nNSCode
-  });
+  QrisData(
+      {this.sessionId,
+      this.transactionId,
+      this.referenceId,
+      this.via,
+      this.channel,
+      this.paymentNo,
+      this.qrString,
+      this.paymentName,
+      this.subTotal,
+      this.fee,
+      this.total,
+      this.feeDirection,
+      this.expired,
+      this.qrImage,
+      this.qrTemplate,
+      this.terminal,
+      this.nNSCode,
+      this.expiredTime});
 
   factory QrisData.fromJson(Map<String, dynamic> json) => QrisData(
         sessionId: json['SessionId'],
@@ -82,5 +82,6 @@ class QrisData {
         qrTemplate: json['QrTemplate'],
         terminal: json['Terminal'],
         nNSCode: json['NNSCode'],
+        expiredTime: json['expired_time'],
       );
 }

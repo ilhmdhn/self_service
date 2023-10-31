@@ -239,6 +239,14 @@ class ScanClubPageState extends State<ScanClubPage> {
                                                           memberData.data
                                                                   ?.memberCode ??
                                                               '';
+                                                      orderArgs.memberPhone =
+                                                          memberData.data
+                                                                  ?.memberPhone ??
+                                                              '';
+                                                      orderArgs.memberEmail =
+                                                          memberData.data
+                                                                  ?.memberEmail ??
+                                                              '';
 
                                                       if (context.mounted) {
                                                         Navigator.pushNamed(
