@@ -154,21 +154,24 @@ class ApiService {
   }
 
   Future<QrisPaymentResult> getQrisPayment(
-    String paymentMethod,
-    String paymentChannel,
-    num amount,
-    String customer,
-    String phone,
-    String email,
-  ) async {
+      String paymentMethod,
+      String paymentChannel,
+      num amount,
+      String customer,
+      String phone,
+      String email,
+      CheckinArgs checkinData) async {
     try {
+      final dataCheckin = GenerateJsonParams().convert(checkinData);
+      final dataJson = jsonEncode(dataCheckin);
       final Map<String, dynamic> bodyParams = {
         'payment_method': paymentMethod,
         'payment_channel': paymentChannel,
         'amount': amount.toString(),
         'customer': customer,
         'phone': phone,
-        'email': email
+        'email': email,
+        'data_checkin': dataJson
       };
       final serverUrl = await baseUrl();
       final url = Uri.parse('${serverUrl}generate-payment');
@@ -185,27 +188,30 @@ class ApiService {
   }
 
   Future<PaymentVaResult> getVaPayment(
-    String paymentMethod,
-    String paymentChannel,
-    num amount,
-    String customer,
-    String phone,
-    String email,
-  ) async {
+      String paymentMethod,
+      String paymentChannel,
+      num amount,
+      String customer,
+      String phone,
+      String email,
+      CheckinArgs checkinData) async {
     try {
+      final dataCheckin = GenerateJsonParams().convert(checkinData);
+      final dataJson = jsonEncode(dataCheckin);
+
       Map<String, dynamic> bodyParams = {
         'payment_method': paymentMethod,
         'payment_channel': paymentChannel,
         'amount': amount.toString(),
         'customer': customer,
         'phone': phone,
-        'email': email
+        'email': email,
+        'data_checkin': dataJson
       };
 
       final serverUrl = await baseUrl();
       final url = Uri.parse('${serverUrl}generate-payment');
       final apiResponse = await http.post(url, body: bodyParams);
-      print('DEBUGGING PARAMS ' + bodyParams.toString());
       final convertedResult = json.decode(apiResponse.body);
       return PaymentVaResult.fromJson(convertedResult);
     } catch (err) {
@@ -278,6 +284,27 @@ class ApiService {
     } catch (err) {
       return BaseResponse(
           isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<BaseResponse> checkin(CheckinArgs checkinArgs, String idTransaction) async {
+    try {
+      final dataCheckin = GenerateJsonParams().convert(checkinArgs);
+
+      Map<String, dynamic> bodyParams = {
+        'transaction_id': idTransaction,
+        'payment_method': checkinArgs.payment?.paymentMethod,
+        'payment_channel': checkinArgs.payment?.paymentChannel,
+        'data_checkin': json.encode(dataCheckin),
+      };
+
+      final serverUrl = await baseUrl();
+      final url = Uri.parse('${serverUrl}checkin');
+      final apiResponse = await http.post(url, body: bodyParams);
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    } catch (err) {
+      return BaseResponse(state: false, message: err.toString());
     }
   }
 }

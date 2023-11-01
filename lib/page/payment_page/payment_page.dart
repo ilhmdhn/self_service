@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:self_service/bloc/universal_bloc.dart';
-import 'package:self_service/data/model/list_payment.dart';
+import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/payment_qris.dart';
 import 'package:self_service/data/model/payment_va.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
@@ -11,6 +11,7 @@ import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
+import 'package:self_service/util/tools.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 class PaymentPage extends StatefulWidget {
@@ -45,10 +46,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
     if (paymentMethod == 'va') {
       paymentVaCubit.getData(paymentMethod, paymentChannel, totalCheckin,
-          memberName, memberPhone, memberEmail);
+          memberName, memberPhone, memberEmail, checkinData);
     } else if (paymentMethod == 'qris') {
       paymentQrisCubit.getData(paymentMethod, paymentChannel, totalCheckin,
-          memberName, memberPhone, memberEmail);
+          memberName, memberPhone, memberEmail, checkinData);
     }
 
     return Scaffold(
@@ -375,7 +376,14 @@ class _PaymentPageState extends State<PaymentPage> {
                                                     child: ElevatedButton(
                                                         style: CustomButtonStyle
                                                             .buttonStyleDarkBlue(),
-                                                        onPressed: () {},
+                                                        onPressed: () async {
+                                                          final checkinResponse =
+                                                              await ApiService().checkin(
+                                                                  checkinData,
+                                                                  dataVa
+                                                                      .transactionId
+                                                                      .toString());
+                                                        },
                                                         child: Text(
                                                           'Selesai',
                                                           style: GoogleFonts
@@ -419,6 +427,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             QrisData? dataQris = paymentQrisState.data;
                             expiredTimeCubit
                                 .getData(dataQris?.expiredTime ?? '');
+
                             return Container(
                               width: double.infinity,
                               decoration: BoxDecoration(
@@ -669,7 +678,23 @@ class _PaymentPageState extends State<PaymentPage> {
                                                 child: ElevatedButton(
                                                     style: CustomButtonStyle
                                                         .buttonStyleDarkBlue(),
-                                                    onPressed: () {},
+                                                    onPressed: () async {
+                                                      final response =
+                                                          await ApiService().checkin(
+                                                              checkinData,
+                                                              (dataQris?.referenceId ??
+                                                                      0)
+                                                                  .toString());
+                                                      if (response.state !=
+                                                          true) {
+                                                        showToastWarning(
+                                                            response.message ??
+                                                                '');
+                                                      } else {
+                                                        showToastWarning(
+                                                            'Berhasil');
+                                                      }
+                                                    },
                                                     child: Text(
                                                       'Selesai',
                                                       style:
