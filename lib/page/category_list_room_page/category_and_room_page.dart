@@ -83,7 +83,7 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                   ),
                                                   Padding(
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 8),
                                                     child: Container(
                                                       width: double.infinity,
@@ -148,7 +148,7 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                                   ),
                                                                   Padding(
                                                                     padding: const EdgeInsets
-                                                                            .symmetric(
+                                                                        .symmetric(
                                                                         horizontal:
                                                                             8.0),
                                                                     child:
@@ -204,7 +204,7 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                         Container(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .symmetric(
+                                                                  .symmetric(
                                                                   horizontal:
                                                                       9),
                                                           constraints:
@@ -481,8 +481,20 @@ class CategoryAndRoomPage extends StatelessWidget {
                                                                               top: 0,
                                                                               right: 0,
                                                                               bottom: 0,
-                                                                              child: CachedNetworkImage(fit: BoxFit.cover, imageUrl: roomState[indexRoom].roomImage ?? ''),
-                                                                            ),
+                                                                              child: CachedNetworkImage(
+                                                                                fit: BoxFit.cover,
+                                                                                imageUrl: roomState[indexRoom].roomImage ?? '',
+                                                                                placeholder: (context, url) => const Padding(padding: EdgeInsets.all(80), child: CircularProgressIndicator()),
+                                                                                errorWidget: (context, url, error) {
+                                                                                  return Container(
+                                                                                    color: Colors.blue,
+                                                                                    child: const Center(
+                                                                                      child: Text('NO IMAGE'),
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                              ),
+                                                                            )
                                                                           ]),
                                                                     ),
                                                                   ),

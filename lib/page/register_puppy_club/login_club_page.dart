@@ -49,6 +49,7 @@ class ScanClubPageState extends State<ScanClubPage> {
         return false;
       },
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: CustomColorStyle.lightBlue(),
           body: Stack(children: [
             Positioned(

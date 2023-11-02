@@ -123,7 +123,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           bloc: paymentVaCubit,
                           builder: (context, paymmentVaState) {
                             if (paymmentVaState.isLoading) {
-                              const Center(
+                              return const Center(
                                 child: CircularProgressIndicator(),
                               );
                             }
