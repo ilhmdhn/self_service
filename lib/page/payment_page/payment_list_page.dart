@@ -66,6 +66,18 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                     child: BlocBuilder<PaymentListCubit, ListPaymentResult>(
                         bloc: listPaymentCubit,
                         builder: (context, stateListPayment) {
+                          if (stateListPayment.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (stateListPayment.state == false) {
+                            print('HOALAH ERROR');
+                            Center(
+                              child: Text(stateListPayment.message ?? 'error'),
+                            );
+                          }
                           List<PaymentMethod> listPayment =
                               stateListPayment.data ?? [];
                           return Padding(

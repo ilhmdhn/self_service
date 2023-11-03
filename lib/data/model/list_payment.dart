@@ -17,7 +17,7 @@ class ListPaymentResult {
         state: true,
         message: json['Message'],
         data: List<PaymentMethod>.from(
-            (json['Data'] as List).map((e) => PaymentMethod.fromJson(e))));
+            (json['data'] as List).map((e) => PaymentMethod.fromJson(e))));
   }
 }
 

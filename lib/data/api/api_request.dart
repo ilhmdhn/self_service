@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:self_service/data/model/base_response.dart';
 import 'package:self_service/data/model/fnb_category.dart';
 import 'package:self_service/data/model/fnb_model.dart';
+import 'package:self_service/data/model/list_payment.dart';
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/payment_qris.dart';
@@ -153,6 +154,20 @@ class ApiService {
     }
   }
 
+  Future<ListPaymentResult> listPaymentMethod() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}payment-list');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return ListPaymentResult.fromJson(convertedResult);
+    } catch (err) {
+      print('ERRORNYA ' + err.toString());
+      return ListPaymentResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
   Future<QrisPaymentResult> getQrisPayment(
       String paymentMethod,
       String paymentChannel,
@@ -287,7 +302,8 @@ class ApiService {
     }
   }
 
-  Future<BaseResponse> checkin(CheckinArgs checkinArgs, String idTransaction) async {
+  Future<BaseResponse> checkin(
+      CheckinArgs checkinArgs, String idTransaction) async {
     try {
       final dataCheckin = GenerateJsonParams().convert(checkinArgs);
 

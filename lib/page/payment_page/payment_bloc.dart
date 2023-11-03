@@ -11,7 +11,8 @@ class PaymentListCubit extends Cubit<ListPaymentResult> {
   PaymentListCubit() : super(ListPaymentResult());
 
   void getData() async {
-    final response = await ApiTest().getPaymentMethod();
+    // final response = await ApiTest().getPaymentMethod();
+    final response = await ApiService().listPaymentMethod();
     emit(response);
   }
 
