@@ -377,12 +377,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                                         style: CustomButtonStyle
                                                             .buttonStyleDarkBlue(),
                                                         onPressed: () async {
-                                                          final checkinResponse =
-                                                              await ApiService().checkin(
-                                                                  checkinData,
-                                                                  dataVa
-                                                                      .transactionId
-                                                                      .toString());
+                                                          final checkinResponse = await ApiService().checkin(checkinData, dataVa.transactionId.toString());
                                                         },
                                                         child: Text(
                                                           'Selesai',

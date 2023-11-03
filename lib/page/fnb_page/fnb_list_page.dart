@@ -155,61 +155,83 @@ class _FnbListPageState extends State<FnbListPage> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 10,
                                                       horizontal: 5),
-                                              child: Center(
-                                                child: fnbCategoryState
-                                                            .data?[index]
-                                                            .categoryName ==
-                                                        chooseCategoryState
-                                                    ? Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .end,
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Flexible(
-                                                            child: Text(
-                                                              fnbCategoryState
-                                                                      .data?[
-                                                                          index]
-                                                                      .categoryName ??
-                                                                  '',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: GoogleFonts
-                                                                  .poppins(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .clip,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : Text(
-                                                        fnbCategoryState
+                                              child: Column(
+                                                children: [
+                                                  Center(
+                                                    child: fnbCategoryState
                                                                 .data?[index]
-                                                                .categoryName ??
-                                                            '',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                          color: Colors.white,
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                        overflow:
-                                                            TextOverflow.clip,
-                                                      ),
+                                                                .categoryName ==
+                                                            chooseCategoryState
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Flexible(
+                                                                child: Text(
+                                                                  fnbCategoryState
+                                                                          .data?[
+                                                                              index]
+                                                                          .categoryName ??
+                                                                      '',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: GoogleFonts
+                                                                      .poppins(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        13,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .clip,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : Text(
+                                                            fnbCategoryState
+                                                                    .data?[
+                                                                        index]
+                                                                    .categoryName ??
+                                                                '',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                          ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 3,
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 0),
+                                                    child: Container(
+                                                      height: 0.7,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
                                           );
@@ -403,10 +425,11 @@ class _FnbListPageState extends State<FnbListPage> {
                                                               )
                                                             ]),
                                                             Padding(
-                                                              padding: const EdgeInsets
+                                                              padding:
+                                                                  const EdgeInsets
                                                                       .symmetric(
-                                                                  horizontal:
-                                                                      10),
+                                                                      horizontal:
+                                                                          10),
                                                               child: SizedBox(
                                                                 width: double
                                                                     .infinity,
@@ -435,10 +458,11 @@ class _FnbListPageState extends State<FnbListPage> {
                                                               ),
                                                             ),
                                                             Padding(
-                                                              padding: const EdgeInsets
+                                                              padding:
+                                                                  const EdgeInsets
                                                                       .symmetric(
-                                                                  horizontal:
-                                                                      10),
+                                                                      horizontal:
+                                                                          10),
                                                               child: Text(
                                                                   Currency.toRupiah(item
                                                                       .priceFnb),
