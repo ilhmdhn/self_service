@@ -483,7 +483,8 @@ class BillingPage extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            checkinArgs.orderArgs?.memberCode != checkinArgs.orderArgs?.memberName
+                            checkinArgs.orderArgs?.memberCode !=
+                                    checkinArgs.orderArgs?.memberName
                                 ? Column(
                                     children: [
                                       SizedBox(
@@ -703,8 +704,7 @@ class BillingPage extends StatelessWidget {
                   bloc: voucherCubit,
                   builder: (context, voucherResult) {
                     return SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.99,
                       child: Container(
                           decoration: BoxDecoration(
                               color: CustomColorStyle.lightBlue(),
@@ -733,6 +733,7 @@ class BillingPage extends StatelessWidget {
                                           ),
                                         )
                                       : ListView.builder(
+                                          shrinkWrap: true,
                                           itemCount:
                                               voucherResult.voucherData?.length,
                                           itemBuilder: (context, index) {
@@ -747,7 +748,7 @@ class BillingPage extends StatelessWidget {
                                                         .spaceBetween,
                                                 children: [
                                                   CachedNetworkImage(
-                                                      width: 100,
+                                                      width: 90,
                                                       imageUrl:
                                                           'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
                                                   const SizedBox(
@@ -776,8 +777,9 @@ class BillingPage extends StatelessWidget {
                                                   ),
                                                   SizedBox(
                                                     child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .spaceAround,
@@ -786,28 +788,25 @@ class BillingPage extends StatelessWidget {
                                                           child: SizedBox(
                                                             width: 60,
                                                             height: 25,
-                                                            child:
-                                                                ElevatedButton(
-                                                                    onPressed:
-                                                                        () {},
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      minimumSize:
-                                                                          Size.zero, // Set this
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .zero, // and this
-                                                                    ),
-                                                                    child: Text(
-                                                                      'CLAIM',
-                                                                      maxLines:
-                                                                          2,
-                                                                      style: GoogleFonts.poppins(
-                                                                          fontSize:
-                                                                              10,
-                                                                          color:
-                                                                              Colors.white),
-                                                                    )),
+                                                            child: ElevatedButton(
+                                                                onPressed: () {},
+                                                                style: ElevatedButton.styleFrom(
+                                                                    minimumSize: Size.zero, // Set this
+                                                                    padding: EdgeInsets.zero, // and this
+                                                                    backgroundColor: const Color(0xff3c7fb4),
+                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                                                                child: Text(
+                                                                  'CLAIM',
+                                                                  maxLines: 2,
+                                                                  style: GoogleFonts.poppins(
+                                                                      fontSize:
+                                                                          12,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: Colors
+                                                                          .white),
+                                                                )),
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -866,7 +865,7 @@ class BillingPage extends StatelessWidget {
                                                             style: GoogleFonts
                                                                 .poppins(
                                                                     fontSize:
-                                                                        13,
+                                                                        11,
                                                                     color: Colors
                                                                         .redAccent),
                                                           ),
