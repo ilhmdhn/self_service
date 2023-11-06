@@ -328,8 +328,7 @@ class ScanClubPageState extends State<ScanClubPage> {
                       if (memberData.state == true) {
                         orderArgs.memberName =
                             (memberData.data?.memberName ?? '').toUpperCase();
-                        orderArgs.memberCode =
-                            memberData.data?.memberCode ?? '';
+                        orderArgs.memberCode = memberData.data?.memberCode ?? '';
                         orderArgs.memberPhone =
                             memberData.data?.memberPhone ?? '';
                         orderArgs.memberEmail =

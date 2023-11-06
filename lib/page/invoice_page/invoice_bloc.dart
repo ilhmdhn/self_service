@@ -34,7 +34,7 @@ class VoucherCubit extends Cubit<VoucherDataResult> {
       final response = await ApiTest().voucher();
       emit(response);
     } else {
-      final response = await ApiTest().voucher();
+      final response = await ApiService().voucher(memberCode);
       emit(response);
     }
   }

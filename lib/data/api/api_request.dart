@@ -302,6 +302,21 @@ class ApiService {
     }
   }
 
+  Future<VoucherDataResult> voucher(String memberCode) async {
+    try {
+      String? key = dotenv.env['key'] ?? '';
+      Uri url = Uri.parse(
+          'https://ihp-membership.azurewebsites.net/voucher-all?member_code=$memberCode');
+      print('DEBUGGING VOUCHER URL' + url.toString());
+      final apiResponse = await http.get(url, headers: {'Authorization': key});
+      final convertedResult = json.decode(apiResponse.body);
+      return VoucherDataResult.fromJson(convertedResult);
+    } catch (err) {
+      return VoucherDataResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
   Future<BaseResponse> checkin(
       CheckinArgs checkinArgs, String idTransaction) async {
     try {

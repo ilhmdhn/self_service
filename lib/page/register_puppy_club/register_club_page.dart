@@ -114,9 +114,11 @@ class RegisterClubPage extends StatelessWidget {
                                                   'Nama tidak boleh kosong');
                                             } else {
                                               orderArgs.memberName =
-                                                  tfNameController.text.toUpperCase();
+                                                  tfNameController.text
+                                                      .toUpperCase();
                                               orderArgs.memberCode =
-                                                  tfNameController.text;
+                                                  tfNameController.text
+                                                      .toUpperCase();
                                               Navigator.pop(context, true);
                                             }
                                           },

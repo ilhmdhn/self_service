@@ -30,11 +30,10 @@ class BillingPage extends StatelessWidget {
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
     final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
     paymentMethodCubit.setData(PaymentMethodArgs(
-      paymentMethod: checkinArgs.payment?.paymentMethod,
-      paymentChannel: checkinArgs.payment?.paymentChannel,
-      fee: checkinArgs.payment?.fee,
-      name: checkinArgs.payment?.name
-    ));
+        paymentMethod: checkinArgs.payment?.paymentMethod,
+        paymentChannel: checkinArgs.payment?.paymentChannel,
+        fee: checkinArgs.payment?.fee,
+        name: checkinArgs.payment?.name));
 
     taxServiceCubit.getData();
     num roomPrice = 0;
@@ -484,50 +483,65 @@ class BillingPage extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: InkWell(
-                                onTap: () {
-                                  showVoucherDialog(context, '');
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.discount,
-                                        color: CustomColorStyle.darkBlue(),
-                                        size: 19),
-                                    Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const SizedBox(
-                                            width: 3,
+                            checkinArgs.orderArgs?.memberCode != checkinArgs.orderArgs?.memberName
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: InkWell(
+                                          onTap: () {
+                                            showVoucherDialog(
+                                                context,
+                                                checkinArgs.orderArgs
+                                                        ?.memberCode ??
+                                                    '');
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Icon(Icons.discount,
+                                                  color: CustomColorStyle
+                                                      .darkBlue(),
+                                                  size: 19),
+                                              Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 3,
+                                                    ),
+                                                    Expanded(
+                                                        child: Text(
+                                                      'Voucher',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 13),
+                                                    )),
+                                                    const Expanded(
+                                                        child: AutoSizeText(''))
+                                                  ],
+                                                ),
+                                              ),
+                                              const Icon(
+                                                Icons
+                                                    .arrow_forward_ios_outlined,
+                                                size: 14,
+                                              )
+                                            ],
                                           ),
-                                          Expanded(
-                                              child: Text(
-                                            'Voucher',
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.black,
-                                                fontSize: 13),
-                                          )),
-                                          const Expanded(
-                                              child: AutoSizeText(''))
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_outlined,
-                                      size: 14,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
                             SizedBox(
                               width: double.infinity,
                               child: InkWell(
@@ -718,37 +732,86 @@ class BillingPage extends StatelessWidget {
                                                 fontSize: 14),
                                           ),
                                         )
-                                      : Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: ListView.builder(
-                                              itemCount: voucherResult
-                                                  .voucherData?.length,
-                                              itemBuilder: (context, index) {
-                                                return Column(
-                                                  children: [
-                                                    CachedNetworkImage(
-                                                        imageUrl:
-                                                            'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
-                                                    const SizedBox(
-                                                      height: 2,
+                                      : ListView.builder(
+                                          itemCount:
+                                              voucherResult.voucherData?.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  CachedNetworkImage(
+                                                      width: 100,
+                                                      imageUrl:
+                                                          'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
+                                                  const SizedBox(
+                                                    height: 2,
+                                                  ),
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 5),
+                                                      child: Text(
+                                                        voucherResult
+                                                            .voucherData![index]
+                                                            .voucherName
+                                                            .toString(),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 11,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                        overflow:
+                                                            TextOverflow.clip,
+                                                      ),
                                                     ),
-                                                    Row(
+                                                  ),
+                                                  SizedBox(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceBetween,
+                                                              .spaceAround,
                                                       children: [
-                                                        Text(
-                                                          voucherResult
-                                                              .voucherData![
-                                                                  index]
-                                                              .voucherName
-                                                              .toString(),
-                                                          style: GoogleFonts
-                                                              .poppins(
-                                                                  fontSize: 11,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                        SizedBox(
+                                                          child: SizedBox(
+                                                            width: 60,
+                                                            height: 25,
+                                                            child:
+                                                                ElevatedButton(
+                                                                    onPressed:
+                                                                        () {},
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      minimumSize:
+                                                                          Size.zero, // Set this
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero, // and this
+                                                                    ),
+                                                                    child: Text(
+                                                                      'CLAIM',
+                                                                      maxLines:
+                                                                          2,
+                                                                      style: GoogleFonts.poppins(
+                                                                          fontSize:
+                                                                              10,
+                                                                          color:
+                                                                              Colors.white),
+                                                                    )),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10,
                                                         ),
                                                         InkWell(
                                                           onTap: () {
@@ -777,47 +840,47 @@ class BillingPage extends StatelessWidget {
                                                                               .size
                                                                               .height *
                                                                           0.6,
-                                                                      child:
-                                                                          Expanded(
-                                                                        child: Column(
-                                                                            children: [
-                                                                              Align(
-                                                                                alignment: Alignment.topRight,
-                                                                                child: InkWell(
-                                                                                  onTap: () {
-                                                                                    Navigator.pop(context);
-                                                                                  },
-                                                                                  child: const Icon(Icons.close),
-                                                                                ),
+                                                                      child: Column(
+                                                                          children: [
+                                                                            Align(
+                                                                              alignment: Alignment.topRight,
+                                                                              child: InkWell(
+                                                                                onTap: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: const Icon(Icons.close),
                                                                               ),
-                                                                              Expanded(
-                                                                                child: SingleChildScrollView(
-                                                                                  child: HtmlWidget(voucherResult.voucherData?[index].description ?? ''),
-                                                                                ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: SingleChildScrollView(
+                                                                                child: HtmlWidget(voucherResult.voucherData?[index].description ?? ''),
                                                                               ),
-                                                                            ]),
-                                                                      ),
+                                                                            ),
+                                                                          ]),
                                                                     ),
                                                                   );
                                                                 });
                                                           },
-                                                          child: Icon(
-                                                            Icons.info_outline,
-                                                            color:
-                                                                CustomColorStyle
-                                                                    .darkBlue(),
-                                                            size: 20,
+                                                          child: Text(
+                                                            'S&K',
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: Colors
+                                                                        .redAccent),
                                                           ),
-                                                        )
+                                                        ),
                                                       ],
                                                     ),
-                                                    const SizedBox(
-                                                      height: 12,
-                                                    ),
-                                                  ],
-                                                );
-                                              }),
-                                        )),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 12,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          })),
                     );
                   }));
         });
