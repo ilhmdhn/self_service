@@ -11,7 +11,6 @@ import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/style/text_style.dart';
-import 'package:self_service/util/calculate_order.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
@@ -23,18 +22,15 @@ class BillingPage extends StatelessWidget {
   static const nameRoute = '/billing-page';
   @override
   Widget build(BuildContext context) {
-    CheckinArgs checkinArgs =
+    CheckinArgs checkinArgsTemp =
         ModalRoute.of(context)!.settings.arguments as CheckinArgs;
 
     final ScrollController scrollController = ScrollController();
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
     final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
-    paymentMethodCubit.setData(PaymentMethodArgs(
-        paymentMethod: checkinArgs.payment?.paymentMethod,
-        paymentChannel: checkinArgs.payment?.paymentChannel,
-        fee: checkinArgs.payment?.fee,
-        name: checkinArgs.payment?.name));
+    final CheckinArgsCubit checkinArgsCubit = CheckinArgsCubit();
 
+    checkinArgsCubit.setData(checkinArgsTemp);
     taxServiceCubit.getData();
     num roomPrice = 0;
     num fnbPrice = 0;
@@ -44,658 +40,727 @@ class BillingPage extends StatelessWidget {
     num paymentPrice = 0;
     num priceTotal = 0;
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, checkinArgs);
-        return true;
-      },
-      child: Scaffold(
-          backgroundColor: CustomColorStyle.lightBlue(),
-          body: BlocBuilder<TaxServiceCubit, ServiceTaxResult>(
-            bloc: taxServiceCubit,
-            builder: (context, taxServiceState) {
-              if (taxServiceState.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+    return BlocBuilder<CheckinArgsCubit, CheckinArgs>(
+        bloc: checkinArgsCubit,
+        builder: (context, checkinArgsState) {
+          return WillPopScope(
+            onWillPop: () async {
+              Navigator.pop(context, checkinArgsState);
+              return true;
+            },
+            child: Scaffold(
+                backgroundColor: CustomColorStyle.lightBlue(),
+                body: BlocBuilder<TaxServiceCubit, ServiceTaxResult>(
+                  bloc: taxServiceCubit,
+                  builder: (context, taxServiceState) {
+                    if (taxServiceState.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-              if (taxServiceState.state != true ||
-                  taxServiceState.detail == null) {
-                return Center(
-                  child: Text(taxServiceState.message ?? ''),
-                );
-              }
+                    if (taxServiceState.state != true ||
+                        taxServiceState.detail == null) {
+                      return Center(
+                        child: Text(taxServiceState.message ?? ''),
+                      );
+                    }
 
-              checkinArgs.orderArgs?.fnb.servicePercent =
-                  taxServiceState.detail?.serviceFnb ?? 0;
-              checkinArgs.orderArgs?.fnb.taxPercent =
-                  taxServiceState.detail?.taxFnb ?? 0;
-              checkinArgs.roomPrice?.servicePercent =
-                  taxServiceState.detail?.serviceRoom ?? 0;
-              checkinArgs.roomPrice?.taxPercent =
-                  taxServiceState.detail?.taxRoom ?? 0;
+                    paymentMethodCubit.setData(PaymentMethodArgs(
+                        paymentMethod: checkinArgsState.payment?.paymentMethod,
+                        paymentChannel:
+                            checkinArgsState.payment?.paymentChannel,
+                        fee: checkinArgsState.payment?.fee,
+                        name: checkinArgsState.payment?.name));
+                    checkinArgsState.orderArgs?.fnb.servicePercent =
+                        taxServiceState.detail?.serviceFnb ?? 0;
+                    checkinArgsState.orderArgs?.fnb.taxPercent =
+                        taxServiceState.detail?.taxFnb ?? 0;
+                    checkinArgsState.roomPrice?.servicePercent =
+                        taxServiceState.detail?.serviceRoom ?? 0;
+                    checkinArgsState.roomPrice?.taxPercent =
+                        taxServiceState.detail?.taxRoom ?? 0;
 
-              checkinArgs = calculateOrder(checkinArgs);
-
-              roomPrice = checkinArgs.roomPrice?.roomPrice ?? 0;
-              fnbPrice = checkinArgs.orderArgs?.fnb.fnbTotal ?? 0;
-              servicePrice = (checkinArgs.roomPrice?.serviceRoom ?? 0) +
-                  (checkinArgs.orderArgs?.fnb.fnbService ?? 0);
-              taxPrice = (checkinArgs.roomPrice?.taxRoom ?? 0) +
-                  (checkinArgs.orderArgs?.fnb.fnbTax ?? 0);
-              checkinPrice = roomPrice + fnbPrice + servicePrice + taxPrice;
-
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  SizedBox(
-                    height: 42,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    roomPrice = checkinArgsState.roomPrice?.roomPrice ?? 0;
+                    fnbPrice = checkinArgsState.orderArgs?.fnb.fnbTotal ?? 0;
+                    servicePrice =
+                        (checkinArgsState.roomPrice?.serviceRoom ?? 0) +
+                            (checkinArgsState.orderArgs?.fnb.fnbService ?? 0);
+                    taxPrice = (checkinArgsState.roomPrice?.taxRoom ?? 0) +
+                        (checkinArgsState.orderArgs?.fnb.fnbTax ?? 0);
+                    checkinPrice =
+                        roomPrice + fnbPrice + servicePrice + taxPrice;
+                    return Column(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context, checkinArgs);
-                          },
-                          icon: const Icon(Icons.arrow_back),
-                          iconSize: 29,
-                          color: Colors.black,
-                        ),
                         SizedBox(
-                          width: 45,
-                          height: 45,
-                          child: IconButton(
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Center(
-                                          child: Text('Batalkan Transaksi?')),
-                                      actions: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('Tidak')),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator
-                                                      .pushNamedAndRemoveUntil(
-                                                          context,
-                                                          SplashPage.nameRoute,
-                                                          (route) => false);
-                                                },
-                                                child: const Text('Iya'))
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  });
-                            },
-                            icon: Image.asset('assets/icon/home.png'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 36),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Billing',
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          height: 42,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Ruangan',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          checkinArgs.orderArgs?.roomCode ?? '',
-                                          style: FontBilling.textBilling())),
-                                ],
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context, checkinArgsState);
+                                },
+                                icon: const Icon(Icons.arrow_back),
+                                iconSize: 29,
+                                color: Colors.black,
                               ),
-                              //space height
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Member',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          checkinArgs.orderArgs?.memberName ??
-                                              '',
-                                          style: FontBilling.textBilling())),
-                                ],
-                              ),
-                              //space height
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Durasi',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          '${checkinArgs.orderArgs?.checkinDuration} JAM',
-                                          style: FontBilling.textBilling())),
-                                ],
-                              ),
-                              //space height
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Harga Room',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(Currency.toRupiah(roomPrice),
-                                          style: FontBilling.textBilling())),
-                                ],
+                              SizedBox(
+                                width: 45,
+                                height: 45,
+                                child: IconButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Center(
+                                                child: Text(
+                                                    'Batalkan Transaksi?')),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child:
+                                                          const Text('Tidak')),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator
+                                                            .pushNamedAndRemoveUntil(
+                                                                context,
+                                                                SplashPage
+                                                                    .nameRoute,
+                                                                (route) =>
+                                                                    false);
+                                                      },
+                                                      child: const Text('Iya'))
+                                                ],
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  icon: Image.asset('assets/icon/home.png'),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        (checkinArgs.orderArgs?.fnb.fnbList ?? []).isNotEmpty
-                            ? Column(
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 36),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Billing',
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                                textAlign: TextAlign.left,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Ruangan',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                checkinArgsState
+                                                        .orderArgs?.roomCode ??
+                                                    '',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    //space height
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Member',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                checkinArgsState.orderArgs
+                                                        ?.memberName ??
+                                                    '',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    //space height
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Durasi',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                '${checkinArgsState.orderArgs?.checkinDuration} JAM',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    //space height
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Harga Room',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                Currency.toRupiah(roomPrice),
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              (checkinArgsState.orderArgs?.fnb.fnbList ?? [])
+                                      .isNotEmpty
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          'Food and Beverages:',
+                                          style: FontBilling.textBilling(),
+                                        ),
+                                        Container(
+                                          constraints: const BoxConstraints(
+                                              maxHeight: 285),
+                                          child: RawScrollbar(
+                                            // isAlwaysShown: true,
+                                            thumbVisibility: true,
+                                            thickness: 2.5,
+                                            trackVisibility: true,
+                                            trackColor: Colors.grey.shade300,
+                                            thumbColor:
+                                                CustomColorStyle.bluePrimary(),
+                                            controller: scrollController,
+                                            child: ListView.builder(
+                                                // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
+                                                controller: scrollController,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const ClampingScrollPhysics(),
+                                                itemCount: checkinArgsState
+                                                        .orderArgs
+                                                        ?.fnb
+                                                        .fnbList
+                                                        .length ??
+                                                    0,
+                                                itemBuilder:
+                                                    (context, index) => Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      1.8),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Expanded(
+                                                                  flex: 4,
+                                                                  child: Text(
+                                                                      checkinArgsState.orderArgs?.fnb.fnbList[index].qty ==
+                                                                              1
+                                                                          ? '${checkinArgsState.orderArgs?.fnb.fnbList[index].itemName}'
+                                                                          : '${checkinArgsState.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgsState.orderArgs?.fnb.fnbList[index].itemName}',
+                                                                      style: FontBilling
+                                                                          .textBilling())),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        4),
+                                                                child: Text(':',
+                                                                    style: FontBilling
+                                                                        .textBilling()),
+                                                              ),
+                                                              Expanded(
+                                                                  flex: 2,
+                                                                  child: Text(
+                                                                      Currency.toRupiah((checkinArgsState.orderArgs?.fnb.fnbList[index].price ??
+                                                                              0) *
+                                                                          (checkinArgsState.orderArgs?.fnb.fnbList[index].qty ??
+                                                                              0)),
+                                                                      style: FontBilling
+                                                                          .textBilling())),
+                                                            ],
+                                                          ),
+                                                        )),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+
+                                  //fnb empty
+                                  : const SizedBox(),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Service',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                Currency.toRupiah(servicePrice),
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Tax',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                Currency.toRupiah(taxPrice),
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Total',
+                                                style:
+                                                    FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(':',
+                                              style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                Currency.toRupiah(checkinPrice),
+                                                style:
+                                                    FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                        BlocBuilder<PaymentMethodCubit, PaymentMethodArgs>(
+                          bloc: paymentMethodCubit,
+                          builder: (context, paymentMethodState) {
+                            paymentPrice = paymentMethodState.fee ?? 0;
+                            priceTotal = checkinPrice + paymentPrice;
+
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Container(
+                                    height: 1,
+                                    width: double.infinity,
+                                    color: Colors.grey,
+                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
-                                    'Food and Beverages:',
-                                    style: FontBilling.textBilling(),
-                                  ),
-                                  Container(
-                                    constraints:
-                                        const BoxConstraints(maxHeight: 285),
-                                    child: RawScrollbar(
-                                      // isAlwaysShown: true,
-                                      thumbVisibility: true,
-                                      thickness: 2.5,
-                                      trackVisibility: true,
-                                      trackColor: Colors.grey.shade300,
-                                      thumbColor:
-                                          CustomColorStyle.bluePrimary(),
-                                      controller: scrollController,
-                                      child: ListView.builder(
-                                          // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
-                                          controller: scrollController,
-                                          shrinkWrap: true,
-                                          physics:
-                                              const ClampingScrollPhysics(),
-                                          itemCount: checkinArgs.orderArgs?.fnb
-                                                  .fnbList.length ??
-                                              0,
-                                          itemBuilder: (context, index) =>
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 1.8),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Expanded(
-                                                        flex: 4,
-                                                        child: Text(
-                                                            checkinArgs
-                                                                        .orderArgs
-                                                                        ?.fnb
-                                                                        .fnbList[
-                                                                            index]
-                                                                        .qty ==
-                                                                    1
-                                                                ? '${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}'
-                                                                : '${checkinArgs.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgs.orderArgs?.fnb.fnbList[index].itemName}',
-                                                            style: FontBilling
-                                                                .textBilling())),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 4),
-                                                      child: Text(':',
-                                                          style: FontBilling
-                                                              .textBilling()),
-                                                    ),
-                                                    Expanded(
-                                                        flex: 2,
-                                                        child: Text(
-                                                            Currency.toRupiah((checkinArgs
-                                                                        .orderArgs
-                                                                        ?.fnb
-                                                                        .fnbList[
-                                                                            index]
-                                                                        .price ??
-                                                                    0) *
-                                                                (checkinArgs
-                                                                        .orderArgs
-                                                                        ?.fnb
-                                                                        .fnbList[
-                                                                            index]
-                                                                        .qty ??
-                                                                    0)),
-                                                            style: FontBilling
-                                                                .textBilling())),
-                                                  ],
-                                                ),
-                                              )),
-                                    ),
-                                  ),
-                                ],
-                              )
-
-                            //fnb empty
-                            : const SizedBox(),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Service',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          Currency.toRupiah(servicePrice),
-                                          style: FontBilling.textBilling())),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Tax',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(Currency.toRupiah(taxPrice),
-                                          style: FontBilling.textBilling())),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 3,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                      flex: 4,
-                                      child: Text('Total',
-                                          style: FontBilling.textBilling())),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: Text(':',
-                                        style: FontBilling.textBilling()),
-                                  ),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          Currency.toRupiah(checkinPrice),
-                                          style: FontBilling.textBilling())),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
-                  BlocBuilder<PaymentMethodCubit, PaymentMethodArgs>(
-                    bloc: paymentMethodCubit,
-                    builder: (context, paymentMethodState) {
-                      paymentPrice = paymentMethodState.fee ?? 0;
-                      priceTotal = checkinPrice + paymentPrice;
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 1,
-                              width: double.infinity,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: InkWell(
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.monetization_on_outlined,
-                                        color: CustomColorStyle.darkBlue(),
-                                        size: 19),
-                                    Expanded(
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: InkWell(
+                                      onTap: () {},
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const SizedBox(
-                                            width: 3,
-                                          ),
+                                          Icon(Icons.monetization_on_outlined,
+                                              color:
+                                                  CustomColorStyle.darkBlue(),
+                                              size: 19),
                                           Expanded(
-                                              child: Text(
-                                            'Promo',
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.black,
-                                                fontSize: 13),
-                                          )),
-                                          const Expanded(
-                                              child: AutoSizeText(''))
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Expanded(
+                                                    child: Text(
+                                                  'Promo',
+                                                  style: GoogleFonts.poppins(
+                                                      color: Colors.black,
+                                                      fontSize: 13),
+                                                )),
+                                                const Expanded(
+                                                    child: AutoSizeText(''))
+                                              ],
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_outlined,
+                                            size: 14,
+                                          )
                                         ],
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_outlined,
-                                      size: 14,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            checkinArgs.orderArgs?.memberCode !=
-                                    checkinArgs.orderArgs?.memberName
-                                ? Column(
-                                    children: [
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: InkWell(
-                                          onTap: () {
-                                            showVoucherDialog(
-                                                context,
-                                                checkinArgs.orderArgs
-                                                        ?.memberCode ??
-                                                    '');
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Icon(Icons.discount,
-                                                  color: CustomColorStyle
-                                                      .darkBlue(),
-                                                  size: 19),
-                                              Expanded(
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  checkinArgsState.orderArgs?.memberCode !=
+                                          checkinArgsState.orderArgs?.memberName
+                                      ? Column(
+                                          children: [
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  final vcr =
+                                                      await showVoucherDialog(
+                                                          context,
+                                                          checkinArgsState
+                                                                  .orderArgs
+                                                                  ?.memberCode ??
+                                                              '',
+                                                          checkinArgsState);
+
+                                                  if (vcr != null) {
+                                                    checkinArgsState.voucher =
+                                                        vcr;
+                                                    CheckinArgs? ca = null;
+                                                    ca = checkinArgsState;
+                                                    checkinArgsCubit.setData(
+                                                        checkinArgsState);
+                                                  }
+                                                },
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    const SizedBox(
-                                                      width: 3,
-                                                    ),
+                                                    Icon(Icons.discount,
+                                                        color: CustomColorStyle
+                                                            .darkBlue(),
+                                                        size: 19),
                                                     Expanded(
-                                                        child: Text(
-                                                      'Voucher',
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 13),
-                                                    )),
-                                                    const Expanded(
-                                                        child: AutoSizeText(''))
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          const SizedBox(
+                                                            width: 3,
+                                                          ),
+                                                          Expanded(
+                                                              child: Text(
+                                                            'Voucher',
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        13),
+                                                          )),
+                                                          Expanded(
+                                                              child:
+                                                                  AutoSizeText(
+                                                            (checkinArgsState
+                                                                    .voucher
+                                                                    ?.voucherName ??
+                                                                ''),
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        11),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            maxLines: 1,
+                                                          ))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const Icon(
+                                                      Icons
+                                                          .arrow_forward_ios_outlined,
+                                                      size: 14,
+                                                    )
                                                   ],
                                                 ),
                                               ),
-                                              const Icon(
-                                                Icons
-                                                    .arrow_forward_ios_outlined,
-                                                size: 14,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox(),
-                            SizedBox(
-                              width: double.infinity,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(context,
-                                          PaymentMethodListPage.nameRoute,
-                                          arguments: checkinPrice)
-                                      .then((value) {
-                                    if (value != null) {
-                                      value as PaymentMethodArgs;
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(context,
+                                                PaymentMethodListPage.nameRoute,
+                                                arguments: checkinPrice)
+                                            .then((value) {
+                                          if (value != null) {
+                                            value as PaymentMethodArgs;
 
-                                      paymentMethodCubit.setData(value);
-                                      checkinArgs.payment = PaymentMethodArgs(
-                                        paymentMethod: value.paymentMethod,
-                                        paymentChannel: value.paymentChannel,
-                                        name: value.name,
-                                        fee: value.fee,
-                                        icon: value.icon,
-                                      );
-                                    }
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Icon(Icons.payment,
-                                        color: CustomColorStyle.darkBlue(),
-                                        size: 19),
-                                    Expanded(
+                                            paymentMethodCubit.setData(value);
+                                            checkinArgsState.payment =
+                                                PaymentMethodArgs(
+                                              paymentMethod:
+                                                  value.paymentMethod,
+                                              paymentChannel:
+                                                  value.paymentChannel,
+                                              name: value.name,
+                                              fee: value.fee,
+                                              icon: value.icon,
+                                            );
+                                          }
+                                        });
+                                      },
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const SizedBox(
-                                            width: 3,
-                                          ),
+                                          Icon(Icons.payment,
+                                              color:
+                                                  CustomColorStyle.darkBlue(),
+                                              size: 19),
                                           Expanded(
-                                              child: Text(
-                                            'Metode Pembayaran',
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.black,
-                                                fontSize: 13),
-                                          )),
-                                          Expanded(
-                                              child: AutoSizeText(
-                                            paymentMethodState.name != null
-                                                ? paymentMethodState.name!
-                                                : '',
-                                            textAlign: TextAlign.end,
-                                            maxLines: 2,
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 12,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Expanded(
+                                                    child: Text(
+                                                  'Metode Pembayaran',
+                                                  style: GoogleFonts.poppins(
+                                                      color: Colors.black,
+                                                      fontSize: 13),
+                                                )),
+                                                Expanded(
+                                                    child: AutoSizeText(
+                                                  paymentMethodState.name !=
+                                                          null
+                                                      ? paymentMethodState.name!
+                                                      : '',
+                                                  textAlign: TextAlign.end,
+                                                  maxLines: 2,
+                                                  style: GoogleFonts.poppins(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                  ),
+                                                ))
+                                              ],
                                             ),
-                                          ))
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_outlined,
+                                            size: 14,
+                                          )
                                         ],
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_outlined,
-                                      size: 14,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            paymentMethodState.fee != null
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  ),
+                                  paymentMethodState.fee != null
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              'Biaya transfer',
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 11,
+                                                  color: Colors.black87),
+                                            ),
+                                            const SizedBox(
+                                              width: 6,
+                                            ),
+                                            Text(
+                                              Currency.toRupiah(
+                                                  paymentMethodState.fee),
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 11,
+                                                  color: Colors.black87),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Biaya transfer',
+                                        'Total',
                                         style: GoogleFonts.poppins(
-                                            fontSize: 11,
-                                            color: Colors.black87),
-                                      ),
-                                      const SizedBox(
-                                        width: 6,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                       Text(
-                                        Currency.toRupiah(
-                                            paymentMethodState.fee),
+                                        Currency.toRupiah(priceTotal),
                                         style: GoogleFonts.poppins(
-                                            fontSize: 11,
-                                            color: Colors.black87),
-                                      ),
+                                            fontWeight: FontWeight.w700),
+                                      )
                                     ],
-                                  )
-                                : const SizedBox(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Total',
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  Currency.toRupiah(priceTotal),
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w700),
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                          context, PaymentPage.nameRoute,
-                                          arguments: checkinArgs)
-                                      .then((value) =>
-                                          checkinArgs = value as CheckinArgs);
-                                },
-                                style: CustomButtonStyle.buttonStyleDarkBlue(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 31, vertical: 5),
-                                  child: Text(
-                                    'BAYAR',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
                                   ),
-                                ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                                context, PaymentPage.nameRoute,
+                                                arguments: checkinArgsState)
+                                            .then((value) => checkinArgsState =
+                                                value as CheckinArgs);
+                                      },
+                                      style: CustomButtonStyle
+                                          .buttonStyleDarkBlue(),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 31, vertical: 5),
+                                        child: Text(
+                                          'BAYAR',
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 9,
+                                  )
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              height: 9,
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  )
-                ],
-              );
-            },
-          )),
-    );
+                            );
+                          },
+                        )
+                      ],
+                    );
+                  },
+                )),
+          );
+        });
   }
 
-  void showVoucherDialog(BuildContext context, String memberCOde) {
+  Future<VoucherData?> showVoucherDialog(
+      BuildContext context, String memberCOde, CheckinArgs dataCheckin) async {
     VoucherCubit voucherCubit = VoucherCubit();
     voucherCubit.setData(memberCOde);
-    showDialog(
+    return await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -706,6 +771,7 @@ class BillingPage extends StatelessWidget {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width * 0.99,
                       child: Container(
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                               color: CustomColorStyle.lightBlue(),
                               borderRadius: BorderRadius.circular(20)),
@@ -737,80 +803,235 @@ class BillingPage extends StatelessWidget {
                                           itemCount:
                                               voucherResult.voucherData?.length,
                                           itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  CachedNetworkImage(
-                                                      width: 90,
-                                                      imageUrl:
-                                                          'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
-                                                  const SizedBox(
-                                                    height: 2,
-                                                  ),
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 5),
-                                                      child: Text(
-                                                        voucherResult
-                                                            .voucherData![index]
-                                                            .voucherName
-                                                            .toString(),
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 11,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                        overflow:
-                                                            TextOverflow.clip,
+                                            VoucherData? dataVoucher =
+                                                voucherResult
+                                                    .voucherData![index];
+
+                                            bool voucherState = true;
+                                            String reason = '';
+                                            num totalPrice = (dataCheckin
+                                                        .orderArgs
+                                                        ?.fnb
+                                                        .totalAll ??
+                                                    0) +
+                                                (dataCheckin.roomPrice
+                                                        ?.priceTotal ??
+                                                    0);
+                                            int checkinHour = dataCheckin
+                                                    .orderArgs
+                                                    ?.checkinDuration ??
+                                                0;
+                                            num roomPrice = dataCheckin
+                                                    .roomPrice?.priceTotal ??
+                                                0;
+
+                                            num fnbPrice = dataCheckin
+                                                    .orderArgs?.fnb.totalAll ??
+                                                0;
+                                            int totalFnb = dataCheckin.orderArgs
+                                                    ?.fnb.fnbList.length ??
+                                                0;
+
+                                            int roomCategory = 0;
+                                            int voucherCategoryCondition = 0;
+
+                                            String category = (dataCheckin
+                                                        .orderArgs
+                                                        ?.roomCategory ??
+                                                    '')
+                                                .toUpperCase();
+                                            String voucherRoomCategory =
+                                                dataVoucher.conditionRoomType ??
+                                                    '';
+
+                                            if (category.contains('SMALL')) {
+                                              roomCategory = 1;
+                                            } else if (category
+                                                .contains('MEDIUM')) {
+                                              roomCategory = 2;
+                                            } else if (category
+                                                .contains('LARGE')) {
+                                              roomCategory = 3;
+                                            } else {
+                                              roomCategory = 3;
+                                            }
+
+                                            if (voucherRoomCategory
+                                                .contains('SMALL')) {
+                                              voucherCategoryCondition = 1;
+                                            } else if (voucherRoomCategory
+                                                .contains('MEDIUM')) {
+                                              voucherCategoryCondition = 2;
+                                            } else if (voucherRoomCategory
+                                                .contains('LARGE')) {
+                                              voucherCategoryCondition = 3;
+                                            } else {
+                                              voucherCategoryCondition = 3;
+                                            }
+
+                                            if (voucherState &&
+                                                (roomCategory >
+                                                    voucherCategoryCondition)) {
+                                              voucherState = false;
+                                              reason = 'Tipe Room Tidak Sesuai';
+                                            }
+
+                                            if (voucherState &&
+                                                (dataVoucher.conditionPrice ??
+                                                        0) >
+                                                    totalPrice) {
+                                              voucherState = false;
+                                              reason = 'Total tarif kurang';
+                                            }
+
+                                            if (voucherState &&
+                                                (dataVoucher.conditionHour ??
+                                                        0) >
+                                                    checkinHour) {
+                                              voucherState = false;
+                                              reason = 'Total tarif kurang';
+                                            }
+
+                                            if (voucherState &&
+                                                (dataVoucher.conditionRoomPrice ??
+                                                        0) >
+                                                    roomPrice) {
+                                              voucherState = false;
+                                              reason = 'Tarif room kurang';
+                                            }
+
+                                            if (voucherState &&
+                                                (dataVoucher.voucherFnbPrice ??
+                                                        0) >
+                                                    fnbPrice) {
+                                              voucherState = false;
+                                              reason = 'Tarif fnb kurang';
+                                            }
+
+                                            if (voucherState &&
+                                                (dataVoucher.conditionItemQty ??
+                                                        0) >
+                                                    totalFnb) {
+                                              voucherState = false;
+                                              reason = 'Jumlah fnb kurang';
+                                            }
+
+                                            return Column(
+                                              children: [
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    CachedNetworkImage(
+                                                        width: 90,
+                                                        imageUrl:
+                                                            'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
+                                                    const SizedBox(
+                                                      height: 2,
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 5),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              voucherResult
+                                                                  .voucherData![
+                                                                      index]
+                                                                  .voucherName
+                                                                  .toString(),
+                                                              style: GoogleFonts.poppins(
+                                                                  fontSize: 11,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .clip,
+                                                            ),
+                                                            Text(
+                                                              reason,
+                                                              style: GoogleFonts
+                                                                  .poppins(
+                                                                      fontSize:
+                                                                          9,
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade800),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    child: Column(
+                                                    Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .end,
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .spaceAround,
+                                                              .spaceEvenly,
                                                       children: [
                                                         SizedBox(
-                                                          child: SizedBox(
-                                                            width: 60,
-                                                            height: 25,
-                                                            child: ElevatedButton(
-                                                                onPressed: () {},
-                                                                style: ElevatedButton.styleFrom(
-                                                                    minimumSize: Size.zero, // Set this
-                                                                    padding: EdgeInsets.zero, // and this
-                                                                    backgroundColor: const Color(0xff3c7fb4),
-                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
-                                                                child: Text(
-                                                                  'CLAIM',
-                                                                  maxLines: 2,
-                                                                  style: GoogleFonts.poppins(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500,
-                                                                      color: Colors
-                                                                          .white),
-                                                                )),
-                                                          ),
+                                                          width: 60,
+                                                          height: 25,
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                if (voucherState) {
+                                                                  VoucherData?
+                                                                      vcrDt =
+                                                                      voucherResult
+                                                                              .voucherData?[
+                                                                          index];
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      vcrDt);
+                                                                }
+                                                              },
+                                                              style: ElevatedButton
+                                                                  .styleFrom(
+                                                                      minimumSize:
+                                                                          Size
+                                                                              .zero, // Set this
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero, // and this
+                                                                      backgroundColor: voucherState
+                                                                          ? const Color(
+                                                                              0xff3c7fb4)
+                                                                          : CustomColorStyle
+                                                                              .darkGrey(),
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(7))),
+                                                              child: Text(
+                                                                'CLAIM',
+                                                                maxLines: 2,
+                                                                style: GoogleFonts.poppins(
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Colors
+                                                                        .white),
+                                                              )),
                                                         ),
                                                         const SizedBox(
-                                                          height: 10,
+                                                          height: 5,
                                                         ),
                                                         InkWell(
                                                           onTap: () {
@@ -872,12 +1093,15 @@ class BillingPage extends StatelessWidget {
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 12,
-                                                  ),
-                                                ],
-                                              ),
+                                                    const SizedBox(
+                                                      height: 12,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  height: 7,
+                                                )
+                                              ],
                                             );
                                           })),
                     );

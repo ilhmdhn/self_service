@@ -5,6 +5,7 @@ import 'package:self_service/data/model/pricing_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/data/shared_pref/preferences_data.dart';
+import 'package:self_service/util/calculate_order.dart';
 import 'package:self_service/util/order_args.dart';
 
 class SlipCheckinCubit extends Cubit<RoomPriceResult> {
@@ -45,5 +46,14 @@ class PaymentMethodCubit extends Cubit<PaymentMethodArgs> {
 
   void setData(PaymentMethodArgs data) {
     emit(data);
+  }
+}
+
+class CheckinArgsCubit extends Cubit<CheckinArgs> {
+  CheckinArgsCubit() : super(CheckinArgs());
+
+  void setData(CheckinArgs checkinArgs) {
+    print(checkinArgs.voucher);
+    emit(calculateOrder(checkinArgs));
   }
 }

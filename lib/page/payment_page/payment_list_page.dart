@@ -73,7 +73,6 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                           }
 
                           if (stateListPayment.state == false) {
-                            print('HOALAH ERROR');
                             Center(
                               child: Text(stateListPayment.message ?? 'error'),
                             );

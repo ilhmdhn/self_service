@@ -1,4 +1,5 @@
 import 'package:self_service/data/model/room_price_model.dart';
+import 'package:self_service/data/model/voucher_model.dart';
 
 class OrderArgs {
   String roomCategory = '';
@@ -73,7 +74,8 @@ class CheckinArgs {
   OrderArgs? orderArgs;
   RoomPriceData? roomPrice;
   PaymentMethodArgs? payment;
-  CheckinArgs({this.orderArgs, this.roomPrice, this.payment});
+  VoucherData? voucher;
+  CheckinArgs({this.orderArgs, this.roomPrice, this.payment, this.voucher});
 }
 
 class PaymentMethodArgs {
@@ -92,12 +94,11 @@ class PaymentMethodArgs {
 }
 
 class GenerateJsonParams {
-  
   Map<String, dynamic> convert(CheckinArgs dataCheckin) {
     List<Map<String, dynamic>> listFnb = [];
     List<Map<String, dynamic>> listRoomPrice = [];
 
-    if ((dataCheckin.orderArgs?.fnb.fnbList??[]).isNotEmpty) {
+    if ((dataCheckin.orderArgs?.fnb.fnbList ?? []).isNotEmpty) {
       for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
         listFnb.add({
           'id_global': element.idGlobal,

@@ -314,7 +314,7 @@ class ScanClubPageState extends State<ScanClubPage> {
               child: RawKeyboardListener(
                 focusNode: _focusNode,
                 onKey: (RawKeyEvent event) async {
-                  if (event.runtimeType == RawKeyUpEvent) {
+                  if (event.runtimeType == RawKeyUpEvent && mounted) {
                     final keyData = event.data;
                     if (keyData is RawKeyEventDataAndroid) {
                       setState(() {

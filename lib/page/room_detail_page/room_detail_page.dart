@@ -220,10 +220,12 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                   (BuildContext context, int indexListImage) {
                                 return InkWell(
                                   onTap: () {
-                                    setState(() {
-                                      _carouselController
-                                          .jumpToPage(indexListImage);
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        _carouselController
+                                            .jumpToPage(indexListImage);
+                                      });
+                                    }
                                     indexCarouselCubit.setData(indexListImage);
                                     imageCarouselUrlCubit.getData(
                                         roomDetailState.data?.roomImageList?[
