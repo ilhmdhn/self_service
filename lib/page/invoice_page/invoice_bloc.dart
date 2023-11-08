@@ -53,7 +53,6 @@ class CheckinArgsCubit extends Cubit<CheckinArgs> {
   CheckinArgsCubit() : super(CheckinArgs());
 
   void setData(CheckinArgs checkinArgs) {
-    print(checkinArgs.voucher);
     emit(calculateOrder(checkinArgs));
   }
 }

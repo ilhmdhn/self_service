@@ -517,22 +517,295 @@ class BillingPage extends StatelessWidget {
                                               width: double.infinity,
                                               child: InkWell(
                                                 onTap: () async {
-                                                  final vcr =
-                                                      await showVoucherDialog(
-                                                          context,
-                                                          checkinArgsState
-                                                                  .orderArgs
-                                                                  ?.memberCode ??
-                                                              '',
-                                                          checkinArgsState);
+                                                  VoucherCubit voucherCubit =
+                                                      VoucherCubit();
+                                                  voucherCubit.setData(
+                                                      checkinArgsState.orderArgs
+                                                              ?.memberCode ??
+                                                          '');
+                                                  final rtnCa =
+                                                      await showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                              context) {
+                                                            return AlertDialog(
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                content: BlocBuilder<
+                                                                        VoucherCubit,
+                                                                        VoucherDataResult>(
+                                                                    bloc:
+                                                                        voucherCubit,
+                                                                    builder:
+                                                                        (context,
+                                                                            voucherResult) {
+                                                                      return SizedBox(
+                                                                        width: MediaQuery.of(context).size.width *
+                                                                            0.99,
+                                                                        child: Container(
+                                                                            padding: const EdgeInsets.all(8),
+                                                                            decoration: BoxDecoration(color: CustomColorStyle.lightBlue(), borderRadius: BorderRadius.circular(20)),
+                                                                            child: voucherResult.isLoading == true
+                                                                                ? const Center(
+                                                                                    child: CircularProgressIndicator(),
+                                                                                  )
+                                                                                : voucherResult.state == false
+                                                                                    ? Center(
+                                                                                        child: Text(
+                                                                                          voucherResult.message.toString(),
+                                                                                          style: GoogleFonts.poppins(fontSize: 14),
+                                                                                        ),
+                                                                                      )
+                                                                                    : voucherResult.voucherData == null || (voucherResult.voucherData ?? List.empty()).isEmpty
+                                                                                        ? Center(
+                                                                                            child: Text(
+                                                                                              'Tidak memiliki voucher',
+                                                                                              style: GoogleFonts.poppins(fontSize: 14),
+                                                                                            ),
+                                                                                          )
+                                                                                        : ListView.builder(
+                                                                                            shrinkWrap: true,
+                                                                                            itemCount: voucherResult.voucherData?.length,
+                                                                                            itemBuilder: (context, index) {
+                                                                                              VoucherData? dataVoucher = voucherResult.voucherData![index];
 
-                                                  if (vcr != null) {
-                                                    checkinArgsState.voucher =
-                                                        vcr;
-                                                    CheckinArgs? ca = null;
-                                                    ca = checkinArgsState;
-                                                    checkinArgsCubit.setData(
-                                                        checkinArgsState);
+                                                                                              bool voucherState = true;
+                                                                                              String reason = '';
+                                                                                              num totalPrice = (checkinArgsState.orderArgs?.fnb.totalAll ?? 0) + (checkinArgsState.roomPrice?.priceTotal ?? 0);
+                                                                                              int checkinHour = checkinArgsState.orderArgs?.checkinDuration ?? 0;
+                                                                                              num roomPrice = checkinArgsState.roomPrice?.priceTotal ?? 0;
+
+                                                                                              num fnbPrice = checkinArgsState.orderArgs?.fnb.totalAll ?? 0;
+                                                                                              int totalFnb = checkinArgsState.orderArgs?.fnb.fnbList.length ?? 0;
+
+                                                                                              int roomCategory = 0;
+                                                                                              int voucherCategoryCondition = 0;
+
+                                                                                              String category = (checkinArgsState.orderArgs?.roomCategory ?? '').toUpperCase();
+                                                                                              String voucherRoomCategory = dataVoucher.conditionRoomType ?? '';
+                                                                                              List<String> itemCondition = (dataVoucher.itemCode ?? '').split('|').map((item) => item.trim()).toList();
+                                                                                              List<String> itemCode = [];
+                                                                                              checkinArgsState.orderArgs?.fnb.fnbList.forEach((element) => itemCode.add(element.idGlobal ?? 'zzz'));
+                                                                                              bool itemOrdered = false;
+                                                                                              for (var i = 0; i < itemCondition.length; i++) {
+                                                                                                if (itemCondition[i] == '') {
+                                                                                                  itemCondition.removeAt(i);
+                                                                                                }
+                                                                                              }
+                                                                                              print('${dataVoucher.voucherName} ${itemCondition.isEmpty}');
+
+                                                                                              for (var element in itemCondition) {
+                                                                                                if (itemCode.contains(element)) {
+                                                                                                  print('kok ada $itemCode $element');
+                                                                                                  itemOrdered = true;
+                                                                                                }
+                                                                                              }
+
+                                                                                              if (category.contains('SMALL')) {
+                                                                                                roomCategory = 1;
+                                                                                              } else if (category.contains('MEDIUM')) {
+                                                                                                roomCategory = 2;
+                                                                                              } else if (category.contains('LARGE')) {
+                                                                                                roomCategory = 3;
+                                                                                              } else {
+                                                                                                roomCategory = 3;
+                                                                                              }
+
+                                                                                              if (voucherRoomCategory.contains('SMALL')) {
+                                                                                                voucherCategoryCondition = 1;
+                                                                                              } else if (voucherRoomCategory.contains('MEDIUM')) {
+                                                                                                voucherCategoryCondition = 2;
+                                                                                              } else if (voucherRoomCategory.contains('LARGE')) {
+                                                                                                voucherCategoryCondition = 3;
+                                                                                              } else {
+                                                                                                voucherCategoryCondition = 3;
+                                                                                              }
+
+                                                                                              if (voucherState && (roomCategory > voucherCategoryCondition)) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Tipe Room Tidak Sesuai';
+                                                                                              }
+
+                                                                                              if (voucherState && (roomCategory > voucherCategoryCondition)) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Tipe Room Tidak Sesuai';
+                                                                                              }
+
+                                                                                              if (voucherState && (dataVoucher.conditionPrice ?? 0) > totalPrice) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Total tarif kurang';
+                                                                                              }
+
+                                                                                              if (voucherState && (dataVoucher.conditionHour ?? 0) > checkinHour) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Total tarif kurang';
+                                                                                              }
+
+                                                                                              if (voucherState && (dataVoucher.conditionRoomPrice ?? 0) > roomPrice) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Tarif room kurang';
+                                                                                              }
+
+                                                                                              if (voucherState && (dataVoucher.conditionFnbPrice ?? 0) > fnbPrice) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'Tarif fnb kurang';
+                                                                                              }
+
+                                                                                              // if (voucherState && (dataVoucher.conditionItemQty ?? 0) > totalFnb) {
+                                                                                              //   voucherState = false;
+                                                                                              //   reason = 'Jumlah fnb kurang';
+                                                                                              // }
+
+                                                                                              print('pocer state ${dataVoucher.voucherName} item condition ${itemCondition}  = ${itemCondition.isNotEmpty}');
+                                                                                              print('$voucherState  ${itemCondition.isNotEmpty} ${itemOrdered == false}))');
+                                                                                              print((voucherState && (itemCondition.isNotEmpty && (itemOrdered == false))));
+                                                                                              if (voucherState && (itemCondition.isNotEmpty && (itemOrdered == false))) {
+                                                                                                voucherState = false;
+                                                                                                reason = 'FnB tidak dibeli';
+                                                                                              }
+
+                                                                                              return Column(
+                                                                                                children: [
+                                                                                                  Row(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                                    children: [
+                                                                                                      CachedNetworkImage(width: 90, imageUrl: 'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
+                                                                                                      const SizedBox(
+                                                                                                        height: 2,
+                                                                                                      ),
+                                                                                                      Expanded(
+                                                                                                        child: Padding(
+                                                                                                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                                                                                                          child: Column(
+                                                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Text(
+                                                                                                                voucherResult.voucherData![index].voucherName.toString(),
+                                                                                                                style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500),
+                                                                                                                overflow: TextOverflow.clip,
+                                                                                                              ),
+                                                                                                              Text(
+                                                                                                                reason,
+                                                                                                                style: GoogleFonts.poppins(fontSize: 9, color: Colors.grey.shade800),
+                                                                                                              )
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Column(
+                                                                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                                        mainAxisSize: MainAxisSize.max,
+                                                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                                        children: [
+                                                                                                          SizedBox(
+                                                                                                            width: 60,
+                                                                                                            height: 25,
+                                                                                                            child: checkinArgsState.voucher?.voucherCode == voucherResult.voucherData![index].voucherCode
+                                                                                                                ? ElevatedButton(
+                                                                                                                    onPressed: () {
+                                                                                                                      checkinArgsState.voucher = null;
+                                                                                                                      Navigator.pop(context, checkinArgsState);
+                                                                                                                    },
+                                                                                                                    style: ElevatedButton.styleFrom(
+                                                                                                                        minimumSize: Size.zero, // Set this
+                                                                                                                        padding: EdgeInsets.zero, // and this
+                                                                                                                        backgroundColor: Colors.redAccent,
+                                                                                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                                                                                                                    child: Text(
+                                                                                                                      'BATAL',
+                                                                                                                      maxLines: 2,
+                                                                                                                      style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white),
+                                                                                                                    ))
+                                                                                                                : ElevatedButton(
+                                                                                                                    onPressed: () {
+                                                                                                                      if (voucherState) {
+                                                                                                                        checkinArgsState.voucher = voucherResult.voucherData?[index];
+                                                                                                                        Navigator.pop(context, checkinArgsState);
+                                                                                                                      }
+                                                                                                                    },
+                                                                                                                    style: ElevatedButton.styleFrom(
+                                                                                                                        minimumSize: Size.zero, // Set this
+                                                                                                                        padding: EdgeInsets.zero, // and this
+                                                                                                                        backgroundColor: voucherState ? const Color(0xff3c7fb4) : CustomColorStyle.darkGrey(),
+                                                                                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7))),
+                                                                                                                    child: Text(
+                                                                                                                      'CLAIM',
+                                                                                                                      maxLines: 2,
+                                                                                                                      style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white),
+                                                                                                                    )),
+                                                                                                          ),
+                                                                                                          const SizedBox(
+                                                                                                            height: 5,
+                                                                                                          ),
+                                                                                                          InkWell(
+                                                                                                            onTap: () {
+                                                                                                              showDialog(
+                                                                                                                  context: context,
+                                                                                                                  builder: (BuildContext context) {
+                                                                                                                    return AlertDialog(
+                                                                                                                      contentPadding: const EdgeInsets.only(left: 6, right: 6, top: 3, bottom: 3),
+                                                                                                                      content: SizedBox(
+                                                                                                                        width: MediaQuery.of(context).size.width * 0.8,
+                                                                                                                        height: MediaQuery.of(context).size.height * 0.6,
+                                                                                                                        child: Column(children: [
+                                                                                                                          Align(
+                                                                                                                            alignment: Alignment.topRight,
+                                                                                                                            child: InkWell(
+                                                                                                                              onTap: () {
+                                                                                                                                Navigator.pop(context);
+                                                                                                                              },
+                                                                                                                              child: const Icon(Icons.close),
+                                                                                                                            ),
+                                                                                                                          ),
+                                                                                                                          Expanded(
+                                                                                                                            child: SingleChildScrollView(
+                                                                                                                              child: HtmlWidget(voucherResult.voucherData?[index].description ?? ''),
+                                                                                                                            ),
+                                                                                                                          ),
+                                                                                                                        ]),
+                                                                                                                      ),
+                                                                                                                    );
+                                                                                                                  });
+                                                                                                            },
+                                                                                                            child: Text(
+                                                                                                              'S&K',
+                                                                                                              style: GoogleFonts.poppins(fontSize: 11, color: Colors.redAccent),
+                                                                                                            ),
+                                                                                                          ),
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                      const SizedBox(
+                                                                                                        height: 12,
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                  const SizedBox(
+                                                                                                    height: 7,
+                                                                                                  )
+                                                                                                ],
+                                                                                              );
+                                                                                            })),
+                                                                      );
+                                                                    }));
+                                                          });
+
+                                                  if (rtnCa != null) {
+                                                    rtnCa as CheckinArgs;
+
+                                                    CheckinArgs? ca =
+                                                        CheckinArgs(
+                                                      orderArgs:
+                                                          rtnCa.orderArgs,
+                                                      roomPrice:
+                                                          rtnCa.roomPrice,
+                                                      payment: rtnCa.payment,
+                                                      voucher: rtnCa.voucher,
+                                                    );
+                                                    checkinArgsCubit
+                                                        .setData(ca);
                                                   }
                                                 },
                                                 child: Row(
@@ -578,6 +851,8 @@ class BillingPage extends StatelessWidget {
                                                                 TextOverflow
                                                                     .ellipsis,
                                                             maxLines: 1,
+                                                            textAlign:
+                                                                TextAlign.end,
                                                           ))
                                                         ],
                                                       ),
@@ -753,359 +1028,6 @@ class BillingPage extends StatelessWidget {
                   },
                 )),
           );
-        });
-  }
-
-  Future<VoucherData?> showVoucherDialog(
-      BuildContext context, String memberCOde, CheckinArgs dataCheckin) async {
-    VoucherCubit voucherCubit = VoucherCubit();
-    voucherCubit.setData(memberCOde);
-    return await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              content: BlocBuilder<VoucherCubit, VoucherDataResult>(
-                  bloc: voucherCubit,
-                  builder: (context, voucherResult) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.99,
-                      child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: CustomColorStyle.lightBlue(),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: voucherResult.isLoading == true
-                              ? const Center(
-                                  child: CircularProgressIndicator(),
-                                )
-                              : voucherResult.state == false
-                                  ? Center(
-                                      child: Text(
-                                        voucherResult.message.toString(),
-                                        style:
-                                            GoogleFonts.poppins(fontSize: 14),
-                                      ),
-                                    )
-                                  : voucherResult.voucherData == null ||
-                                          (voucherResult.voucherData ??
-                                                  List.empty())
-                                              .isEmpty
-                                      ? Center(
-                                          child: Text(
-                                            'Tidak memiliki voucher',
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 14),
-                                          ),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              voucherResult.voucherData?.length,
-                                          itemBuilder: (context, index) {
-                                            VoucherData? dataVoucher =
-                                                voucherResult
-                                                    .voucherData![index];
-
-                                            bool voucherState = true;
-                                            String reason = '';
-                                            num totalPrice = (dataCheckin
-                                                        .orderArgs
-                                                        ?.fnb
-                                                        .totalAll ??
-                                                    0) +
-                                                (dataCheckin.roomPrice
-                                                        ?.priceTotal ??
-                                                    0);
-                                            int checkinHour = dataCheckin
-                                                    .orderArgs
-                                                    ?.checkinDuration ??
-                                                0;
-                                            num roomPrice = dataCheckin
-                                                    .roomPrice?.priceTotal ??
-                                                0;
-
-                                            num fnbPrice = dataCheckin
-                                                    .orderArgs?.fnb.totalAll ??
-                                                0;
-                                            int totalFnb = dataCheckin.orderArgs
-                                                    ?.fnb.fnbList.length ??
-                                                0;
-
-                                            int roomCategory = 0;
-                                            int voucherCategoryCondition = 0;
-
-                                            String category = (dataCheckin
-                                                        .orderArgs
-                                                        ?.roomCategory ??
-                                                    '')
-                                                .toUpperCase();
-                                            String voucherRoomCategory =
-                                                dataVoucher.conditionRoomType ??
-                                                    '';
-
-                                            if (category.contains('SMALL')) {
-                                              roomCategory = 1;
-                                            } else if (category
-                                                .contains('MEDIUM')) {
-                                              roomCategory = 2;
-                                            } else if (category
-                                                .contains('LARGE')) {
-                                              roomCategory = 3;
-                                            } else {
-                                              roomCategory = 3;
-                                            }
-
-                                            if (voucherRoomCategory
-                                                .contains('SMALL')) {
-                                              voucherCategoryCondition = 1;
-                                            } else if (voucherRoomCategory
-                                                .contains('MEDIUM')) {
-                                              voucherCategoryCondition = 2;
-                                            } else if (voucherRoomCategory
-                                                .contains('LARGE')) {
-                                              voucherCategoryCondition = 3;
-                                            } else {
-                                              voucherCategoryCondition = 3;
-                                            }
-
-                                            if (voucherState &&
-                                                (roomCategory >
-                                                    voucherCategoryCondition)) {
-                                              voucherState = false;
-                                              reason = 'Tipe Room Tidak Sesuai';
-                                            }
-
-                                            if (voucherState &&
-                                                (dataVoucher.conditionPrice ??
-                                                        0) >
-                                                    totalPrice) {
-                                              voucherState = false;
-                                              reason = 'Total tarif kurang';
-                                            }
-
-                                            if (voucherState &&
-                                                (dataVoucher.conditionHour ??
-                                                        0) >
-                                                    checkinHour) {
-                                              voucherState = false;
-                                              reason = 'Total tarif kurang';
-                                            }
-
-                                            if (voucherState &&
-                                                (dataVoucher.conditionRoomPrice ??
-                                                        0) >
-                                                    roomPrice) {
-                                              voucherState = false;
-                                              reason = 'Tarif room kurang';
-                                            }
-
-                                            if (voucherState &&
-                                                (dataVoucher.voucherFnbPrice ??
-                                                        0) >
-                                                    fnbPrice) {
-                                              voucherState = false;
-                                              reason = 'Tarif fnb kurang';
-                                            }
-
-                                            if (voucherState &&
-                                                (dataVoucher.conditionItemQty ??
-                                                        0) >
-                                                    totalFnb) {
-                                              voucherState = false;
-                                              reason = 'Jumlah fnb kurang';
-                                            }
-
-                                            return Column(
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    CachedNetworkImage(
-                                                        width: 90,
-                                                        imageUrl:
-                                                            'https://adm.happypuppy.id/${voucherResult.voucherData?[index].image}'),
-                                                    const SizedBox(
-                                                      height: 2,
-                                                    ),
-                                                    Expanded(
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 5),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              voucherResult
-                                                                  .voucherData![
-                                                                      index]
-                                                                  .voucherName
-                                                                  .toString(),
-                                                              style: GoogleFonts.poppins(
-                                                                  fontSize: 11,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .clip,
-                                                            ),
-                                                            Text(
-                                                              reason,
-                                                              style: GoogleFonts
-                                                                  .poppins(
-                                                                      fontSize:
-                                                                          9,
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade800),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 60,
-                                                          height: 25,
-                                                          child: ElevatedButton(
-                                                              onPressed: () {
-                                                                if (voucherState) {
-                                                                  VoucherData?
-                                                                      vcrDt =
-                                                                      voucherResult
-                                                                              .voucherData?[
-                                                                          index];
-                                                                  Navigator.pop(
-                                                                      context,
-                                                                      vcrDt);
-                                                                }
-                                                              },
-                                                              style: ElevatedButton
-                                                                  .styleFrom(
-                                                                      minimumSize:
-                                                                          Size
-                                                                              .zero, // Set this
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .zero, // and this
-                                                                      backgroundColor: voucherState
-                                                                          ? const Color(
-                                                                              0xff3c7fb4)
-                                                                          : CustomColorStyle
-                                                                              .darkGrey(),
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(7))),
-                                                              child: Text(
-                                                                'CLAIM',
-                                                                maxLines: 2,
-                                                                style: GoogleFonts.poppins(
-                                                                    fontSize:
-                                                                        12,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                    color: Colors
-                                                                        .white),
-                                                              )),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  return AlertDialog(
-                                                                    contentPadding: const EdgeInsets
-                                                                        .only(
-                                                                        left: 6,
-                                                                        right:
-                                                                            6,
-                                                                        top: 3,
-                                                                        bottom:
-                                                                            3),
-                                                                    content:
-                                                                        SizedBox(
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width *
-                                                                          0.8,
-                                                                      height: MediaQuery.of(context)
-                                                                              .size
-                                                                              .height *
-                                                                          0.6,
-                                                                      child: Column(
-                                                                          children: [
-                                                                            Align(
-                                                                              alignment: Alignment.topRight,
-                                                                              child: InkWell(
-                                                                                onTap: () {
-                                                                                  Navigator.pop(context);
-                                                                                },
-                                                                                child: const Icon(Icons.close),
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              child: SingleChildScrollView(
-                                                                                child: HtmlWidget(voucherResult.voucherData?[index].description ?? ''),
-                                                                              ),
-                                                                            ),
-                                                                          ]),
-                                                                    ),
-                                                                  );
-                                                                });
-                                                          },
-                                                          child: Text(
-                                                            'S&K',
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                                    fontSize:
-                                                                        11,
-                                                                    color: Colors
-                                                                        .redAccent),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 12,
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 7,
-                                                )
-                                              ],
-                                            );
-                                          })),
-                    );
-                  }));
         });
   }
 }
