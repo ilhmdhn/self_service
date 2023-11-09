@@ -29,12 +29,14 @@ class VoucherData {
   num? voucherFnbDiscount;
   num? voucherFnbPrice;
   String? itemCode;
-  num? voucherPrice;
-  num? voucherDiscount;
+  int? qty;
+
   int? voucherHour;
   num? voucherRoomPrice;
   num? voucherRoomDiscount;
-  int? qty;
+
+  num? voucherPrice;
+  num? voucherDiscount;
 
   num? conditionPrice;
   int? conditionHour;
@@ -46,6 +48,8 @@ class VoucherData {
 
   String? conditionDiscount;
   String? conditionFnbDiscount;
+
+  num? finalValue;
 
   VoucherData(
       {this.voucherCode,
@@ -69,6 +73,7 @@ class VoucherData {
       this.voucherPrice,
       this.conditionPrice,
       this.voucherDiscount,
+      this.finalValue,
       this.conditionDiscount});
 
   factory VoucherData.fromJson(Map<String, dynamic> json) => VoucherData(

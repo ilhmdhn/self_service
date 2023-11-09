@@ -11,7 +11,39 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num taxFnb = 0;
   num fnbTotal = 0;
 
+// voucher room
+  bool isVoucherHour = false;
+  int vcrMinute = 0;
+  num voucherRoomValue = 0;
+  num vcrRoomPrice = (dataCheckin.voucher?.voucherRoomPrice ?? 0);
+  num vcrRoomPercent = (dataCheckin.voucher?.voucherRoomDiscount ?? 0);
+  num vcrRoomPercentResult = 0;
+
+// voucher fnb
+
+  num voucherFnbPercent = (dataCheckin.voucher?.voucherFnbDiscount ?? 0);
+  num vcrFnbPercentResult = 0;
+
+  if ((dataCheckin.voucher?.voucherHour ?? 0) > 0) {
+    isVoucherHour = true;
+    vcrMinute = dataCheckin.voucher!.voucherHour! * 60;
+  }
+
   dataCheckin.roomPrice?.detail?.forEach((element) {
+    if (isVoucherHour && vcrMinute > 0) {
+      int usedMinute = element.usedMinute ?? 0;
+      int cutMinute = 0;
+      if (vcrMinute <= usedMinute) {
+        cutMinute = vcrMinute;
+      } else if (vcrMinute > usedMinute) {
+        cutMinute = usedMinute;
+      }
+
+      voucherRoomValue =
+          voucherRoomValue + (cutMinute * (element.pricePerMinute ?? 0));
+      vcrMinute = vcrMinute - cutMinute;
+    }
+
     roomPrice = roomPrice + (element.roomTotal ?? 0);
   });
 
@@ -36,15 +68,26 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     }
   }
 
+//olah voucher room
+  roomPrice = roomPrice - voucherRoomValue - vcrRoomPrice;
+  if (vcrRoomPercent > 0) {
+    vcrRoomPercentResult = (vcrRoomPercent / 100) * roomPrice;
+    roomPrice = roomPrice - vcrRoomPercentResult;
+  }
+
   roomPrice = roomPrice.round();
+
   serviceRoom = roomPrice * (dataCheckin.roomPrice?.servicePercent ?? 0) / 100;
-  taxRoom = (roomPrice + serviceRoom) *
-      (dataCheckin.roomPrice?.taxPercent ?? 0) /
-      100;
+  taxRoom = (roomPrice + serviceRoom) * ((dataCheckin.roomPrice?.taxPercent ?? 0) / 100);
   roomTotal = roomPrice + serviceRoom + taxRoom;
 
-  fnbTotal = fnbPrice + serviceFnb + taxFnb;
+  if (voucherFnbPercent > 0) {
+    vcrFnbPercentResult = fnbTotal * (voucherFnbPercent / 100);
+    fnbTotal = fnbTotal - vcrFnbPercentResult;
+  }
 
+  fnbTotal = fnbTotal.round();
+  fnbTotal = fnbPrice + serviceFnb + taxFnb;
   dataCheckin.roomPrice?.roomPrice = roomPrice;
   dataCheckin.roomPrice?.serviceRoom = serviceRoom;
   dataCheckin.roomPrice?.taxRoom = taxRoom;

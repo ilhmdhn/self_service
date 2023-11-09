@@ -652,14 +652,6 @@ class BillingPage extends StatelessWidget {
                                                                                                 reason = 'Tarif fnb kurang';
                                                                                               }
 
-                                                                                              // if (voucherState && (dataVoucher.conditionItemQty ?? 0) > totalFnb) {
-                                                                                              //   voucherState = false;
-                                                                                              //   reason = 'Jumlah fnb kurang';
-                                                                                              // }
-
-                                                                                              print('pocer state ${dataVoucher.voucherName} item condition ${itemCondition}  = ${itemCondition.isNotEmpty}');
-                                                                                              print('$voucherState  ${itemCondition.isNotEmpty} ${itemOrdered == false}))');
-                                                                                              print((voucherState && (itemCondition.isNotEmpty && (itemOrdered == false))));
                                                                                               if (voucherState && (itemCondition.isNotEmpty && (itemOrdered == false))) {
                                                                                                 voucherState = false;
                                                                                                 reason = 'FnB tidak dibeli';
