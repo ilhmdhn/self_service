@@ -1,3 +1,4 @@
+import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/util/order_args.dart';
 
 CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
@@ -11,6 +12,12 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num taxFnb = 0;
   num fnbTotal = 0;
 
+  num realRoom;
+  num finalVoucher = 0;
+
+//voucher nilai
+  num voucherPrice = dataCheckin.voucher?.voucherPrice ?? 0;
+  finalVoucher = finalVoucher + voucherPrice;
 // voucher room
   bool isVoucherHour = false;
   int vcrMinute = 0;
@@ -23,11 +30,18 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
 
   num voucherFnbPercent = (dataCheckin.voucher?.voucherFnbDiscount ?? 0);
   num vcrFnbPercentResult = 0;
+  num vcrFnbItemResult = 0;
 
   if ((dataCheckin.voucher?.voucherHour ?? 0) > 0) {
     isVoucherHour = true;
     vcrMinute = dataCheckin.voucher!.voucherHour! * 60;
   }
+
+  VoucherData? dataVoucher = dataCheckin.voucher;
+  List<String> itemCondition = (dataVoucher?.itemCode ?? '')
+      .split('|')
+      .map((item) => item.trim())
+      .toList();
 
   dataCheckin.roomPrice?.detail?.forEach((element) {
     if (isVoucherHour && vcrMinute > 0) {
@@ -69,21 +83,69 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
 //olah voucher room
+  realRoom = roomPrice;
   roomPrice = roomPrice - voucherRoomValue - vcrRoomPrice;
+  finalVoucher = finalVoucher + voucherRoomValue + vcrRoomPrice;
   if (vcrRoomPercent > 0) {
     vcrRoomPercentResult = (vcrRoomPercent / 100) * roomPrice;
     roomPrice = roomPrice - vcrRoomPercentResult;
+    finalVoucher = finalVoucher + vcrRoomPercentResult;
+  }
+
+  if (voucherPrice > 0) {
+    if (roomPrice <= voucherPrice) {
+      voucherPrice = voucherPrice - roomPrice;
+      roomPrice = 0;
+    } else {
+      roomPrice = roomPrice - voucherPrice;
+      voucherPrice = 0;
+    }
+    roomPrice = roomPrice - voucherPrice;
+    finalVoucher = finalVoucher + voucherPrice;
+  }
+  if (roomPrice < 0) {
+    roomPrice = 0;
   }
 
   roomPrice = roomPrice.round();
 
   serviceRoom = roomPrice * (dataCheckin.roomPrice?.servicePercent ?? 0) / 100;
-  taxRoom = (roomPrice + serviceRoom) * ((dataCheckin.roomPrice?.taxPercent ?? 0) / 100);
+  taxRoom = (roomPrice + serviceRoom) *
+      ((dataCheckin.roomPrice?.taxPercent ?? 0) / 100);
   roomTotal = roomPrice + serviceRoom + taxRoom;
 
+  //olah voucher fnb
   if (voucherFnbPercent > 0) {
     vcrFnbPercentResult = fnbTotal * (voucherFnbPercent / 100);
     fnbTotal = fnbTotal - vcrFnbPercentResult;
+    finalVoucher = finalVoucher + vcrFnbPercentResult;
+  }
+
+  if ((dataVoucher != null) && itemCondition.isNotEmpty) {
+    List<FnBDetail> epEnBi = dataCheckin.orderArgs?.fnb.fnbList ?? [];
+    for (int i = 0; i < (dataVoucher.qty ?? 0); i++) {
+      for (int j = 0; j < (epEnBi.length) && (dataVoucher.qty ?? 0) > 0; j++) {
+        if (itemCondition[i] == epEnBi[j].idGlobal &&epEnBi[j].qty > 0 &&(dataVoucher.qty ?? 0) > 0) {
+          vcrFnbItemResult = vcrFnbItemResult + epEnBi[j].price;
+          dataVoucher.qty = (dataVoucher.qty ?? 1) - 1;
+          epEnBi[j].qty--;
+        }
+      }
+    }
+  }
+  finalVoucher = finalVoucher + vcrFnbItemResult;
+  fnbTotal = fnbTotal - vcrFnbItemResult;
+
+  if (voucherPrice > 0) {
+    if (fnbTotal <= voucherPrice) {
+      fnbTotal = 0;
+    } else {
+      fnbTotal = fnbTotal - voucherPrice;
+    }
+  }
+    
+  if (fnbTotal < 0) {
+    fnbTotal = 0;
   }
 
   fnbTotal = fnbTotal.round();
@@ -92,11 +154,16 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   dataCheckin.roomPrice?.serviceRoom = serviceRoom;
   dataCheckin.roomPrice?.taxRoom = taxRoom;
   dataCheckin.roomPrice?.priceTotal = roomTotal;
+  dataCheckin.roomPrice?.realRoom = realRoom;
 
   dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice;
   dataCheckin.orderArgs?.fnb.fnbService = serviceFnb;
   dataCheckin.orderArgs?.fnb.fnbTax = taxFnb;
   dataCheckin.orderArgs?.fnb.totalAll = fnbTotal;
+
+  if (dataCheckin.voucher != null) {
+    dataCheckin.voucher?.finalValue = finalVoucher;
+  }
 
   return dataCheckin;
 }

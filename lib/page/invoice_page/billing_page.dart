@@ -267,7 +267,10 @@ class BillingPage extends StatelessWidget {
                                         Expanded(
                                             flex: 2,
                                             child: Text(
-                                                Currency.toRupiah(roomPrice),
+                                                Currency.toRupiah(
+                                                    checkinArgsState.roomPrice
+                                                            ?.realRoom ??
+                                                        0),
                                                 style:
                                                     FontBilling.textBilling())),
                                       ],
@@ -367,6 +370,44 @@ class BillingPage extends StatelessWidget {
                                 alignment: Alignment.bottomCenter,
                                 child: Column(
                                   children: [
+                                    (checkinArgsState.voucher?.finalValue ??
+                                                0) >
+                                            0
+                                        ? Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                      flex: 4,
+                                                      child: Text('Voucher',
+                                                          style: FontBilling
+                                                              .textBilling())),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 4),
+                                                    child: Text(':',
+                                                        style: FontBilling
+                                                            .textBilling()),
+                                                  ),
+                                                  Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                          Currency.toRupiah(
+                                                              checkinArgsState
+                                                                      .voucher
+                                                                      ?.finalValue ??
+                                                                  0),
+                                                          style: FontBilling
+                                                              .textBilling())),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox(),
                                     const SizedBox(
                                       height: 3,
                                     ),
@@ -577,7 +618,6 @@ class BillingPage extends StatelessWidget {
                                                                                               num roomPrice = checkinArgsState.roomPrice?.priceTotal ?? 0;
 
                                                                                               num fnbPrice = checkinArgsState.orderArgs?.fnb.totalAll ?? 0;
-                                                                                              int totalFnb = checkinArgsState.orderArgs?.fnb.fnbList.length ?? 0;
 
                                                                                               int roomCategory = 0;
                                                                                               int voucherCategoryCondition = 0;
@@ -593,11 +633,9 @@ class BillingPage extends StatelessWidget {
                                                                                                   itemCondition.removeAt(i);
                                                                                                 }
                                                                                               }
-                                                                                              print('${dataVoucher.voucherName} ${itemCondition.isEmpty}');
 
                                                                                               for (var element in itemCondition) {
                                                                                                 if (itemCode.contains(element)) {
-                                                                                                  print('kok ada $itemCode $element');
                                                                                                   itemOrdered = true;
                                                                                                 }
                                                                                               }

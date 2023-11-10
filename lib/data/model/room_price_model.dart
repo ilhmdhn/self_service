@@ -26,6 +26,7 @@ class RoomPriceData {
   num? priceTotal;
   num? servicePercent;
   num? taxPercent;
+  num? realRoom;
   List<RoomPriceDetail>? detail;
 
   RoomPriceData({
@@ -34,6 +35,7 @@ class RoomPriceData {
     this.taxRoom,
     this.priceTotal,
     this.servicePercent,
+    this.realRoom,
     this.taxPercent,
     this.detail = const [],
   });
