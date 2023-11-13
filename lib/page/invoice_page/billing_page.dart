@@ -15,6 +15,7 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/data/model/voucher_model.dart';
+import 'package:self_service/util/tools.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -27,10 +28,9 @@ class BillingPage extends StatelessWidget {
 
     final ScrollController scrollController = ScrollController();
     final TaxServiceCubit taxServiceCubit = TaxServiceCubit();
-    final PaymentMethodCubit paymentMethodCubit = PaymentMethodCubit();
     final CheckinArgsCubit checkinArgsCubit = CheckinArgsCubit();
-
     checkinArgsCubit.setData(checkinArgsTemp);
+
     taxServiceCubit.getData();
     num roomPrice = 0;
     num fnbPrice = 0;
@@ -66,30 +66,18 @@ class BillingPage extends StatelessWidget {
                       );
                     }
 
-                    paymentMethodCubit.setData(PaymentMethodArgs(
-                        paymentMethod: checkinArgsState.payment?.paymentMethod,
-                        paymentChannel:
-                            checkinArgsState.payment?.paymentChannel,
-                        fee: checkinArgsState.payment?.fee,
-                        name: checkinArgsState.payment?.name));
-                    checkinArgsState.orderArgs?.fnb.servicePercent =
-                        taxServiceState.detail?.serviceFnb ?? 0;
-                    checkinArgsState.orderArgs?.fnb.taxPercent =
-                        taxServiceState.detail?.taxFnb ?? 0;
-                    checkinArgsState.roomPrice?.servicePercent =
-                        taxServiceState.detail?.serviceRoom ?? 0;
-                    checkinArgsState.roomPrice?.taxPercent =
-                        taxServiceState.detail?.taxRoom ?? 0;
+                    checkinArgsCubit.setData(CheckinArgs(
+                        orderArgs: checkinArgsState.orderArgs,
+                        roomPrice: checkinArgsState.roomPrice,
+                        payment: checkinArgsState.payment,
+                        voucher: checkinArgsState.voucher));
 
                     roomPrice = checkinArgsState.roomPrice?.roomPrice ?? 0;
                     fnbPrice = checkinArgsState.orderArgs?.fnb.fnbTotal ?? 0;
-                    servicePrice =
-                        (checkinArgsState.roomPrice?.serviceRoom ?? 0) +
-                            (checkinArgsState.orderArgs?.fnb.fnbService ?? 0);
-                    taxPrice = (checkinArgsState.roomPrice?.taxRoom ?? 0) +
-                        (checkinArgsState.orderArgs?.fnb.fnbTax ?? 0);
-                    checkinPrice =
-                        roomPrice + fnbPrice + servicePrice + taxPrice;
+                    servicePrice = (checkinArgsState.roomPrice?.serviceRoom ?? 0) + (checkinArgsState.orderArgs?.fnb.fnbService ?? 0);
+                    taxPrice = (checkinArgsState.roomPrice?.taxRoom ?? 0) + (checkinArgsState.orderArgs?.fnb.fnbTax ?? 0);
+                    checkinPrice = roomPrice + fnbPrice + servicePrice + taxPrice;
+
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -486,13 +474,7 @@ class BillingPage extends StatelessWidget {
                             ],
                           ),
                         )),
-                        BlocBuilder<PaymentMethodCubit, PaymentMethodArgs>(
-                          bloc: paymentMethodCubit,
-                          builder: (context, paymentMethodState) {
-                            paymentPrice = paymentMethodState.fee ?? 0;
-                            priceTotal = checkinPrice + paymentPrice;
-
-                            return Padding(
+                        Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 30),
                               child: Column(
@@ -509,7 +491,10 @@ class BillingPage extends StatelessWidget {
                                   SizedBox(
                                     width: double.infinity,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        //mengerjakan peromo
+                                        showToastWarning('peromo');
+                                      },
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -912,8 +897,6 @@ class BillingPage extends StatelessWidget {
                                             .then((value) {
                                           if (value != null) {
                                             value as PaymentMethodArgs;
-
-                                            paymentMethodCubit.setData(value);
                                             checkinArgsState.payment =
                                                 PaymentMethodArgs(
                                               paymentMethod:
@@ -924,6 +907,16 @@ class BillingPage extends StatelessWidget {
                                               fee: value.fee,
                                               icon: value.icon,
                                             );
+                                            checkinArgsCubit.setData(
+                                                CheckinArgs(
+                                                    orderArgs: checkinArgsState
+                                                        .orderArgs,
+                                                    roomPrice: checkinArgsState
+                                                        .roomPrice,
+                                                    payment: checkinArgsState
+                                                        .payment,
+                                                    voucher: checkinArgsState
+                                                        .voucher));
                                           }
                                         });
                                       },
@@ -953,10 +946,8 @@ class BillingPage extends StatelessWidget {
                                                 )),
                                                 Expanded(
                                                     child: AutoSizeText(
-                                                  paymentMethodState.name !=
-                                                          null
-                                                      ? paymentMethodState.name!
-                                                      : '',
+                                                  checkinArgsState.payment?.name !=null? 
+                                                  (checkinArgsState.payment?.name??''): '',
                                                   textAlign: TextAlign.end,
                                                   maxLines: 2,
                                                   style: GoogleFonts.poppins(
@@ -975,7 +966,7 @@ class BillingPage extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  paymentMethodState.fee != null
+                                  checkinArgsState.payment?.fee != null
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -991,7 +982,7 @@ class BillingPage extends StatelessWidget {
                                             ),
                                             Text(
                                               Currency.toRupiah(
-                                                  paymentMethodState.fee),
+                                                  checkinArgsState.payment?.fee),
                                               style: GoogleFonts.poppins(
                                                   fontSize: 11,
                                                   color: Colors.black87),
@@ -1050,9 +1041,7 @@ class BillingPage extends StatelessWidget {
                                   )
                                 ],
                               ),
-                            );
-                          },
-                        )
+                            )
                       ],
                     );
                   },

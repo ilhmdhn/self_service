@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/api/api_test.dart';
 import 'package:self_service/data/model/pricing_model.dart';
+import 'package:self_service/data/model/promo_food_model.dart';
+import 'package:self_service/data/model/promo_room_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 import 'package:self_service/data/shared_pref/preferences_data.dart';
@@ -38,6 +40,24 @@ class VoucherCubit extends Cubit<VoucherDataResult> {
       final response = await ApiService().voucher(memberCode);
       emit(response);
     }
+  }
+}
+
+class PromoRoomCubit extends Cubit<PromoRoomResult> {
+  PromoRoomCubit() : super(PromoRoomResult());
+
+  void getData() async {
+    final response = await ApiService().promoRoom();
+    emit(response);
+  }
+}
+
+class PromoFoodCubit extends Cubit<PromoFoodResult> {
+  PromoFoodCubit() : super(PromoFoodResult());
+
+  void getData() async {
+    final response = await ApiService().promoFood();
+    emit(response);
   }
 }
 
