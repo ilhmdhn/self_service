@@ -9,7 +9,9 @@ import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/data/model/payment_qris.dart';
 import 'package:self_service/data/model/payment_va.dart';
 import 'package:self_service/data/model/pricing_model.dart';
+import 'package:self_service/data/model/promo_food_model.dart';
 import 'package:self_service/data/model/promo_model.dart';
+import 'package:self_service/data/model/promo_room_model.dart';
 import 'package:self_service/data/model/room_detail_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
@@ -334,6 +336,32 @@ class ApiService {
       return BaseResponse.fromJson(convertedResult);
     } catch (err) {
       return BaseResponse(state: false, message: err.toString());
+    }
+  }
+
+  Future<PromoRoomResult> promoRoom() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo-room');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoRoomResult.fromJson(convertedResult);
+    } catch (err) {
+      return PromoRoomResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<PromoFoodResult> promoFood() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo-food');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoFoodResult.fromJson(convertedResult);
+    } catch (err) {
+      return PromoFoodResult(
+          isLoading: false, state: false, message: err.toString());
     }
   }
 }
