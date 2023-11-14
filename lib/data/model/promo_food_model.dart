@@ -22,9 +22,9 @@ class PromoFoodResult {
 
 class PromoFoodData {
   String? promoFood;
-  String? syaratKamar;
+  int? syaratKamar;
   String? kamar;
-  String? syaratJeniskamar;
+  int? syaratJeniskamar;
   String? jenisKamar;
   int? syaratDurasi;
   int? durasi;

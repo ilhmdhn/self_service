@@ -24,9 +24,9 @@ class PromoRoomData {
   String? promoRoom;
   int? hari;
   String? room;
-  String? dateStart;
+  int? dateStart;
   String? timeStart;
-  String? dateFinish;
+  int? dateFinish;
   String? timeFinish;
   num? diskonPersen;
   num? diskonRp;

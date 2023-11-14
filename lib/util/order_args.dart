@@ -75,6 +75,7 @@ class CheckinArgs {
   RoomPriceData? roomPrice;
   PaymentMethodArgs? payment;
   VoucherData? voucher;
+  
   CheckinArgs({this.orderArgs, this.roomPrice, this.payment, this.voucher});
 }
 

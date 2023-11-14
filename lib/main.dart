@@ -4,6 +4,7 @@ import 'package:self_service/page/category_list_room_page/category_and_room_page
 import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/billing_page.dart';
+import 'package:self_service/page/invoice_page/promo_page.dart';
 import 'package:self_service/page/payment_page/payment_list_page.dart';
 import 'package:self_service/page/payment_page/payment_page.dart';
 import 'package:self_service/page/register_puppy_club/login_club_page.dart';
@@ -76,6 +77,7 @@ class SelfService extends StatelessWidget {
         FnbListPage.nameRoute: (context) => const FnbListPage(),
         BillingPage.nameRoute: (context) => const BillingPage(),
         PaymentMethodListPage.nameRoute: (context) => const PaymentMethodListPage(),
+        PromoPage.nameRoute: (context)=> const PromoPage(),
         PaymentPage.nameRoute: (context) => const PaymentPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
       },
