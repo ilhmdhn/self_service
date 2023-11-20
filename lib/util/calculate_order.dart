@@ -32,10 +32,14 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num promoRoomRupiah = dataCheckin.promoRoom?.diskonRp ?? 0;
 
 // voucher fnb
-
   num voucherFnbPercent = (dataCheckin.voucher?.voucherFnbDiscount ?? 0);
   num vcrFnbPercentResult = 0;
   num vcrFnbItemResult = 0;
+
+// promo fnb
+  num promoFoodPercent = (dataCheckin.promoFood?.diskonPersen ?? 0);
+  num promoFoodPercentResult = 0;
+  num promoFoodRupiah = (dataCheckin.promoFood?.diskonRp ?? 0);
 
   if ((dataCheckin.voucher?.voucherHour ?? 0) > 0) {
     isVoucherHour = true;
@@ -98,13 +102,17 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
           num totalRoom = (value.pricePerMinute ?? 0) *
               ((value.usedMinute ?? 0) - (value.vcrMinute ?? 0));
           num promoValue = (totalRoom * promoPercent / 100);
-          dataCheckin.roomPrice?.detail?[key].roomTotal = totalRoom - promoValue;
-          dataCheckin.roomPrice?.detail?[key].promoTotal =  promoValue;
-          dataCheckin.roomPrice?.detail?[key].promoPercent =  promoPercent.toInt();
+          dataCheckin.roomPrice?.detail?[key].roomTotal =
+              totalRoom - promoValue;
+          dataCheckin.roomPrice?.detail?[key].promoTotal = promoValue;
+          dataCheckin.roomPrice?.detail?[key].promoPercent =
+              promoPercent.toInt();
         }
       }
     });
   }
+
+  promoRoomRupiah = dataCheckin.promoRoom?.diskonRp ?? 0;
 
   if (dataCheckin.orderArgs?.fnb.fnbList != [] &&
       dataCheckin.orderArgs?.fnb.fnbList != null) {
@@ -112,10 +120,14 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       num service = 0;
       if (element.isService == 1) {
         service = ((element.price * element.qty) *
-            (dataCheckin.orderArgs?.fnb.servicePercent ?? 0) / 100);
+            (dataCheckin.orderArgs?.fnb.servicePercent ?? 0) /
+            100);
       }
       if (element.isTax == 1) {
-        taxFnb = taxFnb + (((element.price * element.qty) + service) * (dataCheckin.orderArgs?.fnb.taxPercent ?? 0) /100);
+        taxFnb = taxFnb +
+            (((element.price * element.qty) + service) *
+                (dataCheckin.orderArgs?.fnb.taxPercent ?? 0) /
+                100);
       }
 
       serviceFnb = serviceFnb + service;
@@ -124,6 +136,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
   roomPrice = roomPrice - vcrRoomPrice;
+  roomPrice = roomPrice - promoRoomRupiah;
+
   finalVoucher = finalVoucher + voucherRoomValue + vcrRoomPrice;
   if (vcrRoomPercent > 0) {
     vcrRoomPercentResult = (vcrRoomPercent / 100) * roomPrice;
@@ -154,6 +168,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   roomTotal = roomPrice + serviceRoom + taxRoom;
 
   //olah voucher fnb
+
   if (voucherFnbPercent > 0) {
     vcrFnbPercentResult = fnbTotal * (voucherFnbPercent / 100);
     fnbTotal = fnbTotal - vcrFnbPercentResult;
@@ -189,6 +204,18 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     fnbTotal = 0;
   }
 
+  if (dataCheckin.promoFood != null) {
+    if (dataCheckin.promoFood?.syaratInventory == 1 &&
+        (dataCheckin.promoFood?.inventory ?? '') != '') {
+      dataCheckin.orderArgs?.fnb.fnbList.forEach((element) {
+        promoFoodPercentResult = element.price * promoFoodPercent / 100;
+      });
+    } else {
+      promoFoodPercentResult = fnbTotal * promoFoodPercent / 100;
+    }
+  }
+
+  fnbTotal = fnbTotal - promoFoodPercentResult - promoFoodRupiah;
   fnbTotal = fnbTotal.round();
   fnbTotal = fnbPrice + serviceFnb + taxFnb;
   dataCheckin.roomPrice?.roomPrice = roomPrice;
