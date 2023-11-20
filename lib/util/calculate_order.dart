@@ -81,11 +81,24 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     DateTime endPromo =
         convertToEndTime(dataCheckin.promoRoom?.timeFinish ?? '23:59:59');
     int nextDay = dataCheckin.promoRoom?.dateFinish ?? 0;
+    endPromo = endPromo.add(const Duration(minutes: 1));
+    if (dataCheckin.promoRoom?.dateFinish == 1) {
+      print('rene');
+      endPromo = endPromo.add(Duration(days: 1));
+    }
+    bool addDate = false;
     dataCheckin.roomPrice?.detail?.asMap().forEach((key, value) {
       bool inTimePromo = false;
       DateTime startTime = convertToEndTime(value.startTime ?? '23:59:59');
       DateTime finishTime = convertToEndTime(value.finishTime ?? '23:59:59');
-      endPromo.add(const Duration(minutes: 1));
+      if(addDate){
+        startTime = startTime.add(const Duration(days: 1));
+        finishTime = finishTime.add(const Duration(days: 1));
+      }
+      if (startTime.isAfter(finishTime)) {
+        addDate = true;
+        finishTime = finishTime.add(const Duration(days: 1));
+      }
       if ((startTime.isAfter(startPromo) ||
               startTime.isAtSameMomentAs(startPromo)) &&
           finishTime.isBefore(endPromo)) {
@@ -95,7 +108,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       if (nextDay == 1 && finishTime.isBefore(endPromo)) {
         inTimePromo = true;
       }
-
+      print('DEBUGGING in time promo' + inTimePromo.toString());
       if ((value.priceTotal ?? 0) > 0 && inTimePromo) {
         num promoPercent = dataCheckin.promoRoom?.diskonPersen ?? 0;
         if ((value.priceTotal ?? 0) > 0) {
@@ -161,6 +174,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
   roomPrice = roomPrice.round();
+  print('DEBUGGING ROOM PRICE' + roomPrice.toString());
 
   serviceRoom = roomPrice * (dataCheckin.roomPrice?.servicePercent ?? 0) / 100;
   taxRoom = (roomPrice + serviceRoom) *

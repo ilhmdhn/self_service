@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -510,7 +512,11 @@ class BillingPage extends StatelessWidget {
                                             arguments: checkinArgsState)
                                         .then((value) {
                                       value as CheckinArgs;
+                                      print('DEBUGGING kesini ga sih');
                                       checkinArgsCubit.setData(value);
+                                      print(checkinArgsState
+                                              .promoRoom?.promoRoom ??
+                                          '');
                                     });
                                   },
                                   child: Row(

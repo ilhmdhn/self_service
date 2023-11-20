@@ -80,7 +80,13 @@ class CheckinArgs {
   PromoRoomData? promoRoom;
   PromoFoodData? promoFood;
 
-  CheckinArgs({this.orderArgs, this.roomPrice, this.payment, this.voucher, this.promoRoom, this.promoFood});
+  CheckinArgs(
+      {this.orderArgs,
+      this.roomPrice,
+      this.payment,
+      this.voucher,
+      this.promoRoom,
+      this.promoFood});
 }
 
 class PaymentMethodArgs {
@@ -102,6 +108,9 @@ class GenerateJsonParams {
   Map<String, dynamic> convert(CheckinArgs dataCheckin) {
     List<Map<String, dynamic>> listFnb = [];
     List<Map<String, dynamic>> listRoomPrice = [];
+    Map<String, dynamic>? voucher;
+    Map<String, dynamic>? promoRoom;
+    Map<String, dynamic>? promoFood;
 
     if ((dataCheckin.orderArgs?.fnb.fnbList ?? []).isNotEmpty) {
       for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
@@ -132,6 +141,73 @@ class GenerateJsonParams {
       });
     }
 
+    if (dataCheckin.voucher != null) {
+      voucher = <String, dynamic>{
+        'voucherCode': dataCheckin.voucher?.voucherCode,
+        'voucherName': dataCheckin.voucher?.voucherName,
+        'description': dataCheckin.voucher?.description,
+        'image': dataCheckin.voucher?.image,
+        'voucherHour': dataCheckin.voucher?.voucherHour,
+        'qty': dataCheckin.voucher?.qty,
+        'voucherRoomPrice': dataCheckin.voucher?.voucherRoomPrice,
+        'conditionFnbPrice': dataCheckin.voucher?.conditionFnbPrice,
+        'voucherRoomDiscount': dataCheckin.voucher?.voucherRoomDiscount,
+        'conditionRoomType': dataCheckin.voucher?.conditionRoomType,
+        'conditionHour': dataCheckin.voucher?.conditionHour,
+        'conditionRoomPrice': dataCheckin.voucher?.conditionRoomPrice,
+        'conditionItemQty': dataCheckin.voucher?.conditionItemQty,
+        'itemCode': dataCheckin.voucher?.itemCode,
+        'conditionItemPrice': dataCheckin.voucher?.conditionItemPrice,
+        'voucherFnbPrice': dataCheckin.voucher?.voucherFnbPrice,
+        'voucherFnbDiscount': dataCheckin.voucher?.voucherFnbDiscount,
+        'conditionFnbDiscount': dataCheckin.voucher?.conditionFnbDiscount,
+        'voucherPrice': dataCheckin.voucher?.voucherPrice,
+        'conditionPrice': dataCheckin.voucher?.conditionPrice,
+        'voucherDiscount': dataCheckin.voucher?.voucherDiscount,
+        'finalValue': dataCheckin.voucher?.finalValue,
+        'conditionDiscount': dataCheckin.voucher?.conditionDiscount
+      };
+    }
+
+    if (dataCheckin.promoRoom != null) {
+      promoRoom = <String, dynamic>{
+        'promoRoom': dataCheckin.promoRoom?.promoRoom,
+        'hari': dataCheckin.promoRoom?.hari,
+        'room': dataCheckin.promoRoom?.room,
+        'dateStart': dataCheckin.promoRoom?.dateStart,
+        'timeStart': dataCheckin.promoRoom?.timeStart,
+        'dateFinish': dataCheckin.promoRoom?.dateFinish,
+        'timeFinish': dataCheckin.promoRoom?.timeFinish,
+        'diskonPersen': dataCheckin.promoRoom?.diskonPersen,
+        'diskonRp': dataCheckin.promoRoom?.diskonRp,
+      };
+    }
+
+    if (dataCheckin.promoFood != null) {
+      promoFood = <String, dynamic>{
+        'promoFood': dataCheckin.promoFood?.promoFood,
+        'syaratKamar': dataCheckin.promoFood?.syaratKamar,
+        'kamar': dataCheckin.promoFood?.kamar,
+        'syaratJeniskamar': dataCheckin.promoFood?.syaratJeniskamar,
+        'jenisKamar': dataCheckin.promoFood?.jenisKamar,
+        'syaratDurasi': dataCheckin.promoFood?.syaratDurasi,
+        'durasi': dataCheckin.promoFood?.durasi,
+        'syaratHari': dataCheckin.promoFood?.syaratHari,
+        'hari': dataCheckin.promoFood?.hari,
+        'syaratJam': dataCheckin.promoFood?.syaratJam,
+        'dateStart': dataCheckin.promoFood?.dateStart,
+        'timeStart': dataCheckin.promoFood?.timeStart,
+        'dateFinish': dataCheckin.promoFood?.dateFinish,
+        'timeFinish': dataCheckin.promoFood?.timeFinish,
+        'syaratInventory': dataCheckin.promoFood?.syaratInventory,
+        'inventory': dataCheckin.promoFood?.inventory,
+        'syaratQuantity': dataCheckin.promoFood?.syaratQuantity,
+        'quantity': dataCheckin.promoFood?.quantity,
+        'diskonPersen': dataCheckin.promoFood?.diskonPersen,
+        'diskonRp': dataCheckin.promoFood?.diskonRp,
+      };
+    }
+
     final Map<String, dynamic> bodyParams = {
       'member_code': dataCheckin.orderArgs?.memberCode,
       'member_name': dataCheckin.orderArgs?.memberName,
@@ -148,6 +224,9 @@ class GenerateJsonParams {
       'fnb_service': dataCheckin.orderArgs?.fnb.fnbService,
       'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTax,
       'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
+      'voucher': voucher,
+      'promo_room': promoRoom,
+      'promo_food': promoFood,
       'fnb_detail': listFnb,
       'payment_method': dataCheckin.payment?.paymentMethod,
       'payment_channel': dataCheckin.payment?.paymentChannel
