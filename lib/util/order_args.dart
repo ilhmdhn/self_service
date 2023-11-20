@@ -1,3 +1,5 @@
+import 'package:self_service/data/model/promo_food_model.dart';
+import 'package:self_service/data/model/promo_room_model.dart';
 import 'package:self_service/data/model/room_price_model.dart';
 import 'package:self_service/data/model/voucher_model.dart';
 
@@ -75,8 +77,10 @@ class CheckinArgs {
   RoomPriceData? roomPrice;
   PaymentMethodArgs? payment;
   VoucherData? voucher;
-  
-  CheckinArgs({this.orderArgs, this.roomPrice, this.payment, this.voucher});
+  PromoRoomData? promoRoom;
+  PromoFoodData? promoFood;
+
+  CheckinArgs({this.orderArgs, this.roomPrice, this.payment, this.voucher, this.promoRoom, this.promoFood});
 }
 
 class PaymentMethodArgs {

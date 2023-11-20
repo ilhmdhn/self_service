@@ -46,8 +46,14 @@ class VoucherCubit extends Cubit<VoucherDataResult> {
 class PromoRoomCubit extends Cubit<PromoRoomResult> {
   PromoRoomCubit() : super(PromoRoomResult());
 
-  void getData() async {
+  void getData(String roomType) async {
     final response = await ApiService().promoRoom();
+    List<PromoRoomData> listRoom = response.promo ?? [];
+    // List<Item> filteredItems = items.where((item) => item.quantity > minQuantity).toList();
+    List<PromoRoomData> isItemInCode = listRoom
+        .where((item) => item.room == roomType || item.room == '[NONE]')
+        .toList();
+    response.promo = isItemInCode;
     emit(response);
   }
 }

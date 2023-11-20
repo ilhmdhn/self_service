@@ -60,8 +60,16 @@ class RoomPriceDetail {
   num? price;
   double? pricePerMinute;
   int? usedMinute;
+  int? vcrMinute;
   num? roomTotal;
   num? priceTotal;
+
+  int? reduceDuration;
+  int? overpax;
+  num? overpaxPrice;
+  int? promoPercent;
+  num? promoTotal;
+  int? isExtend;
 
   RoomPriceDetail({
     this.room,
@@ -71,21 +79,34 @@ class RoomPriceDetail {
     this.price,
     this.pricePerMinute,
     this.usedMinute,
+    this.vcrMinute,
     this.roomTotal,
     this.priceTotal,
+    this.reduceDuration,
+    this.overpax,
+    this.overpaxPrice,
+    this.promoPercent,
+    this.promoTotal,
+    this.isExtend,
   });
 
   factory RoomPriceDetail.fromJson(Map<String, dynamic> json) {
     return RoomPriceDetail(
-      room: json['room'],
-      day: json['day'],
-      startTime: json['start_time'],
-      finishTime: json['finish_time'],
-      price: json['price'],
-      pricePerMinute: json['price_per_minute'].toDouble(),
-      usedMinute: json['used_minute'],
-      roomTotal: json['room_total'],
-      priceTotal: json['price_total'],
-    );
+        room: json['room'],
+        day: json['day'],
+        startTime: json['start_time'],
+        finishTime: json['finish_time'],
+        price: json['price'],
+        pricePerMinute: json['price_per_minute'].toDouble(),
+        usedMinute: json['used_minute'],
+        vcrMinute: json['vcr_minute'],
+        roomTotal: json['room_total'],
+        priceTotal: json['price_total'],
+        reduceDuration: json['reduce_duration'],
+        overpax: json['overpax'],
+        overpaxPrice: json['overpax_price'],
+        promoPercent: json['promo_percent'],
+        promoTotal: json['promo_total'],
+        isExtend: json['is_extend']);
   }
 }

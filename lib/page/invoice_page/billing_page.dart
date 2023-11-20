@@ -666,11 +666,6 @@ class BillingPage extends StatelessWidget {
                                                                                         reason = 'Tipe Room Tidak Sesuai';
                                                                                       }
 
-                                                                                      if (voucherState && (roomCategory > voucherCategoryCondition)) {
-                                                                                        voucherState = false;
-                                                                                        reason = 'Tipe Room Tidak Sesuai';
-                                                                                      }
-
                                                                                       if (voucherState && (dataVoucher.conditionPrice ?? 0) > totalPrice) {
                                                                                         voucherState = false;
                                                                                         reason = 'Total tarif kurang';
