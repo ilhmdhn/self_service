@@ -52,6 +52,19 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       .map((item) => item.trim())
       .toList();
 
+  dataCheckin.roomPrice?.detail?.asMap().forEach((key, value) {
+    double pricePerMinute =
+        dataCheckin.roomPrice?.detail?[key].pricePerMinute ?? 0;
+    int usedMinute = dataCheckin.roomPrice?.detail?[key].usedMinute ?? 0;
+    dataCheckin.roomPrice?.realRoomPrice =
+        (dataCheckin.roomPrice?.realRoomPrice ?? 0) + (value.roomTotal ?? 0);
+    dataCheckin.roomPrice?.detail?[key].promoTotal = 0;
+    dataCheckin.roomPrice?.detail?[key].promoPercent = 0;
+    dataCheckin.roomPrice?.detail?[key].vcrMinute = 0;
+    dataCheckin.roomPrice?.detail?[key].priceTotal =
+        pricePerMinute * usedMinute;
+  });
+
   dataCheckin.roomPrice?.detail?.asMap().forEach((index, element) {
     if (isVoucherHour && vcrMinute > 0 && (element.roomTotal ?? 0) > 0) {
       int usedMinute = element.usedMinute ?? 0;
@@ -65,14 +78,11 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       voucherRoomValue =
           voucherRoomValue + (cutMinute * (element.pricePerMinute ?? 0));
       vcrMinute = vcrMinute - cutMinute;
-      dataCheckin.roomPrice?.detail?[index].vcrMinute = cutMinute;
-      dataCheckin.roomPrice?.detail?[index].roomTotal =
-          roomPrice - voucherRoomValue;
-    }
 
-    roomPrice = roomPrice + (element.roomTotal ?? 0);
-    realRoom =
-        realRoom + ((element.pricePerMinute ?? 0) * (element.usedMinute ?? 0));
+      dataCheckin.roomPrice?.detail?[index].vcrMinute = cutMinute;
+      dataCheckin.roomPrice?.detail?[index].priceTotal =
+          roomTotal - voucherRoomValue;
+    }
   });
 
   if (dataCheckin.promoRoom != null && promoRoomPercent > 0) {
@@ -83,21 +93,22 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     int nextDay = dataCheckin.promoRoom?.dateFinish ?? 0;
     endPromo = endPromo.add(const Duration(minutes: 1));
     if (dataCheckin.promoRoom?.dateFinish == 1) {
-      print('rene');
-      endPromo = endPromo.add(Duration(days: 1));
+      endPromo = endPromo.add(const Duration(days: 1));
     }
     bool addDate = false;
+    int addedDate = 0;
     dataCheckin.roomPrice?.detail?.asMap().forEach((key, value) {
       bool inTimePromo = false;
       DateTime startTime = convertToEndTime(value.startTime ?? '23:59:59');
       DateTime finishTime = convertToEndTime(value.finishTime ?? '23:59:59');
-      if(addDate){
+      if (addDate) {
         startTime = startTime.add(const Duration(days: 1));
         finishTime = finishTime.add(const Duration(days: 1));
       }
       if (startTime.isAfter(finishTime)) {
         addDate = true;
-        finishTime = finishTime.add(const Duration(days: 1));
+        addedDate++;
+        finishTime = finishTime.add(Duration(days: addedDate));
       }
       if ((startTime.isAfter(startPromo) ||
               startTime.isAtSameMomentAs(startPromo)) &&
@@ -108,14 +119,12 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       if (nextDay == 1 && finishTime.isBefore(endPromo)) {
         inTimePromo = true;
       }
-      print('DEBUGGING in time promo' + inTimePromo.toString());
       if ((value.priceTotal ?? 0) > 0 && inTimePromo) {
         num promoPercent = dataCheckin.promoRoom?.diskonPersen ?? 0;
         if ((value.priceTotal ?? 0) > 0) {
-          num totalRoom = (value.pricePerMinute ?? 0) *
-              ((value.usedMinute ?? 0) - (value.vcrMinute ?? 0));
+          num totalRoom = value.priceTotal ?? 0;
           num promoValue = (totalRoom * promoPercent / 100);
-          dataCheckin.roomPrice?.detail?[key].roomTotal =
+          dataCheckin.roomPrice?.detail?[key].priceTotal =
               totalRoom - promoValue;
           dataCheckin.roomPrice?.detail?[key].promoTotal = promoValue;
           dataCheckin.roomPrice?.detail?[key].promoPercent =
@@ -124,6 +133,11 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       }
     });
   }
+
+  dataCheckin.roomPrice?.detail?.forEach((element) {
+        roomPrice = roomPrice + (element.priceTotal ?? 0);
+    realRoom = realRoom + ((element.pricePerMinute ?? 0) * (element.usedMinute ?? 0));F
+  });
 
   promoRoomRupiah = dataCheckin.promoRoom?.diskonRp ?? 0;
 
@@ -174,7 +188,6 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
   roomPrice = roomPrice.round();
-  print('DEBUGGING ROOM PRICE' + roomPrice.toString());
 
   serviceRoom = roomPrice * (dataCheckin.roomPrice?.servicePercent ?? 0) / 100;
   taxRoom = (roomPrice + serviceRoom) *
@@ -236,7 +249,6 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   dataCheckin.roomPrice?.serviceRoom = serviceRoom;
   dataCheckin.roomPrice?.taxRoom = taxRoom;
   dataCheckin.roomPrice?.priceTotal = roomTotal;
-  dataCheckin.roomPrice?.realRoom = realRoom;
 
   dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice;
   dataCheckin.orderArgs?.fnb.fnbService = serviceFnb;
@@ -246,6 +258,5 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   if (dataCheckin.voucher != null) {
     dataCheckin.voucher?.finalValue = finalVoucher;
   }
-
   return dataCheckin;
 }

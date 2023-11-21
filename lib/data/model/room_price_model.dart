@@ -20,22 +20,24 @@ class RoomPriceResult {
 }
 
 class RoomPriceData {
+  num? realRoomPrice;
   num? roomPrice;
   num? serviceRoom;
   num? taxRoom;
   num? priceTotal;
   num? servicePercent;
   num? taxPercent;
-  num? realRoom;
+  num? roomPromo;
   List<RoomPriceDetail>? detail;
 
   RoomPriceData({
+    this.realRoomPrice,
     this.roomPrice,
     this.serviceRoom,
     this.taxRoom,
     this.priceTotal,
     this.servicePercent,
-    this.realRoom,
+    this.roomPromo,
     this.taxPercent,
     this.detail = const [],
   });
@@ -61,14 +63,13 @@ class RoomPriceDetail {
   double? pricePerMinute;
   int? usedMinute;
   int? vcrMinute;
-  num? roomTotal;
-  num? priceTotal;
-
   int? reduceDuration;
   int? overpax;
   num? overpaxPrice;
   int? promoPercent;
+  num? roomTotal;
   num? promoTotal;
+  num? priceTotal;
   int? isExtend;
 
   RoomPriceDetail({
@@ -80,13 +81,13 @@ class RoomPriceDetail {
     this.pricePerMinute,
     this.usedMinute,
     this.vcrMinute,
-    this.roomTotal,
-    this.priceTotal,
     this.reduceDuration,
     this.overpax,
     this.overpaxPrice,
     this.promoPercent,
+    this.roomTotal,
     this.promoTotal,
+    this.priceTotal,
     this.isExtend,
   });
 
@@ -100,13 +101,13 @@ class RoomPriceDetail {
         pricePerMinute: json['price_per_minute'].toDouble(),
         usedMinute: json['used_minute'],
         vcrMinute: json['vcr_minute'],
-        roomTotal: json['room_total'],
-        priceTotal: json['price_total'],
         reduceDuration: json['reduce_duration'],
         overpax: json['overpax'],
         overpaxPrice: json['overpax_price'],
         promoPercent: json['promo_percent'],
+        roomTotal: json['room_total'],
         promoTotal: json['promo_total'],
+        priceTotal: json['price_total'],
         isExtend: json['is_extend']);
   }
 }

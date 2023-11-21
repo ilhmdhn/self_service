@@ -65,14 +65,10 @@ class BillingPage extends StatelessWidget {
                 );
               }
 
-              checkinArgsTemp.orderArgs?.fnb.taxPercent =
-                  taxServiceState.detail?.taxFnb ?? 0;
-              checkinArgsTemp.orderArgs?.fnb.servicePercent =
-                  taxServiceState.detail?.serviceFnb ?? 0;
-              checkinArgsTemp.roomPrice?.servicePercent =
-                  taxServiceState.detail?.serviceRoom ?? 0;
-              checkinArgsTemp.roomPrice?.taxPercent =
-                  taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.taxPercent = taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.servicePercent = taxServiceState.detail?.serviceFnb ?? 0;
+              checkinArgsTemp.roomPrice?.servicePercent =taxServiceState.detail?.serviceRoom ?? 0;
+              checkinArgsTemp.roomPrice?.taxPercent =taxServiceState.detail?.taxFnb ?? 0;
 
               checkinArgsCubit.setData(CheckinArgs(
                   orderArgs: checkinArgsTemp.orderArgs,
@@ -272,8 +268,7 @@ class BillingPage extends StatelessWidget {
                                             flex: 2,
                                             child: Text(
                                                 Currency.toRupiah(
-                                                    checkinArgsState.roomPrice
-                                                            ?.realRoom ??
+                                                    checkinArgsState.roomPrice?.realRoomPrice ??
                                                         0),
                                                 style:
                                                     FontBilling.textBilling())),

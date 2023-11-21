@@ -543,7 +543,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                       InkWell(
                                         onTap: () {
                                           setStateDialog(() {
-                                            if (checkinDurationState! < 6) {
+                                            if (checkinDurationState! < 100) {
                                               checkinDurationCubit
                                                   .setData(++checkinDuration);
                                             }

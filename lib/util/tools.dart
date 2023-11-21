@@ -20,19 +20,13 @@ void showToastWarning(String text) {
 }
 
 DateTime convertToEndTime(String startTime) {
-  // Parsing waktu awal
+
   List<String> startTimeParts = startTime.split(':');
   int startHour = int.parse(startTimeParts[0]);
   int startMinute = int.parse(startTimeParts[1]);
   int startSecond = int.parse(startTimeParts[2]);
 
-  // Membuat objek DateTime dari waktu awal
-  DateTime startDateTime =
-      DateTime(2023, 1, 1, startHour, startMinute, startSecond);
-
-  // Menambahkan durasi hingga pukul 23:59:59
-  DateTime endDateTime = DateTime(2023, 1, 1, 23, 59, 59).add(
-      Duration(hours: startHour, minutes: startMinute, seconds: startSecond));
+  DateTime startDateTime = DateTime(2023, 1, 1, startHour, startMinute, startSecond);
 
   return startDateTime;
 }
