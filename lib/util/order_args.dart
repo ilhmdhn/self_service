@@ -53,6 +53,8 @@ class FnBDetail {
   num qty;
   num? location = 0;
   num price;
+  num pricePromo;
+  num priceTotal;
   num? isService;
   num? isTax;
   String category = '';
@@ -66,6 +68,8 @@ class FnBDetail {
       this.note,
       this.qty = 0,
       this.price = 0,
+      this.pricePromo = 0,
+      this.priceTotal = 0,
       this.isService,
       this.isTax,
       this.category = '',

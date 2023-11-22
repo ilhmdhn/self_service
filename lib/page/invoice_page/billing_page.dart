@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +16,6 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/data/model/voucher_model.dart';
-import 'package:self_service/util/tools.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -65,10 +62,14 @@ class BillingPage extends StatelessWidget {
                 );
               }
 
-              checkinArgsTemp.orderArgs?.fnb.taxPercent = taxServiceState.detail?.taxFnb ?? 0;
-              checkinArgsTemp.orderArgs?.fnb.servicePercent = taxServiceState.detail?.serviceFnb ?? 0;
-              checkinArgsTemp.roomPrice?.servicePercent =taxServiceState.detail?.serviceRoom ?? 0;
-              checkinArgsTemp.roomPrice?.taxPercent =taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.taxPercent =
+                  taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.servicePercent =
+                  taxServiceState.detail?.serviceFnb ?? 0;
+              checkinArgsTemp.roomPrice?.servicePercent =
+                  taxServiceState.detail?.serviceRoom ?? 0;
+              checkinArgsTemp.roomPrice?.taxPercent =
+                  taxServiceState.detail?.taxFnb ?? 0;
 
               checkinArgsCubit.setData(CheckinArgs(
                   orderArgs: checkinArgsTemp.orderArgs,
@@ -268,7 +269,8 @@ class BillingPage extends StatelessWidget {
                                             flex: 2,
                                             child: Text(
                                                 Currency.toRupiah(
-                                                    checkinArgsState.roomPrice?.realRoomPrice ??
+                                                    checkinArgsState.roomPrice
+                                                            ?.realRoomPrice ??
                                                         0),
                                                 style:
                                                     FontBilling.textBilling())),
@@ -507,11 +509,15 @@ class BillingPage extends StatelessWidget {
                                             arguments: checkinArgsState)
                                         .then((value) {
                                       value as CheckinArgs;
-                                      print('DEBUGGING kesini ga sih');
-                                      checkinArgsCubit.setData(value);
-                                      print(checkinArgsState
-                                              .promoRoom?.promoRoom ??
-                                          '');
+                                      final caPromo = CheckinArgs(
+                                        orderArgs: value.orderArgs,
+                                        roomPrice: value.roomPrice,
+                                        payment: value.payment,
+                                        voucher: value.voucher,
+                                        promoRoom: value.promoRoom,
+                                        promoFood: value.promoFood
+                                      );
+                                      checkinArgsCubit.setData(caPromo);
                                     });
                                   },
                                   child: Row(
