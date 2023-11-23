@@ -27,6 +27,7 @@ class ScanClubPageState extends State<ScanClubPage> {
   bool isLoading = false;
   final FocusNode _focusNode = FocusNode();
   OrderArgs orderArgs = OrderArgs();
+  String memberCodeTemp = '';
 
   @override
   void initState() {
@@ -199,11 +200,9 @@ class ScanClubPageState extends State<ScanClubPage> {
                                                     ), // Tidak ada garis tepi
                                                   ),
                                                 ),
-                                                controller:
-                                                    tvMemberCodeController,
+                                                controller: tvMemberCodeController,
                                                 inputFormatters: [
-                                                  FilteringTextInputFormatter
-                                                      .digitsOnly
+                                                  FilteringTextInputFormatter.digitsOnly
                                                 ],
                                                 keyboardType:
                                                     TextInputType.number,
@@ -313,35 +312,37 @@ class ScanClubPageState extends State<ScanClubPage> {
               left: 0,
               child: RawKeyboardListener(
                 focusNode: _focusNode,
-                onKey: (RawKeyEvent event) async {
+                onKey: (RawKeyEvent event) async {  
                   if (event.runtimeType == RawKeyUpEvent && mounted) {
                     final keyData = event.data;
                     if (keyData is RawKeyEventDataAndroid) {
+                      // setState(() {
+                      //   isLoading = true;
+                      // });
+                      final keyCode = keyData.keyCode.toString();
+                      memberCodeTemp += keyData.keyLabel;
+                      if(keyCode == '66'){
+                        final memberCode = memberCodeTemp.trim();
+                        memberCodeTemp = '';
                       setState(() {
                         isLoading = true;
                       });
-                      memberData = await ApiService()
-                          .getMember(tvMemberCodeController.text);
+                      memberData = await ApiService().getMember(memberCode);
                       setState(() {
                         isLoading = false;
                       });
                       if (memberData.state == true) {
-                        orderArgs.memberName =
-                            (memberData.data?.memberName ?? '').toUpperCase();
-                        orderArgs.memberCode = memberData.data?.memberCode ?? '';
-                        orderArgs.memberPhone =
-                            memberData.data?.memberPhone ?? '';
-                        orderArgs.memberEmail =
-                            memberData.data?.memberEmail ?? '';
+                          orderArgs.memberName = (memberData.data?.memberName ?? '').toUpperCase();
+                          orderArgs.memberCode = memberData.data?.memberCode ?? '';
+                          orderArgs.memberPhone = memberData.data?.memberPhone ?? '';
+                          orderArgs.memberEmail = memberData.data?.memberEmail ?? '';
                         if (context.mounted) {
-                          Navigator.pushNamed(
-                                  context, SlipCheckinPage.nameRoute,
-                                  arguments: orderArgs)
+                            Navigator.pushNamed( context, SlipCheckinPage.nameRoute, arguments: orderArgs)
                               .then((value) => orderArgs = value as OrderArgs);
                         }
                       } else {
-                        showToastWarning(
-                            '${keyData.keyLabel} ${memberData.message}');
+                        showToastWarning('${keyData.keyLabel} ${memberData.message}');
+                      }
                       }
 
                       setState(() {
