@@ -136,7 +136,7 @@ class _PromoPageState extends State<PromoPage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('Masa berlaku promo'),
+                                              const Text('Masa berlaku promo'),
                                               Text(promoTime)
                                             ],
                                           )

@@ -20,25 +20,25 @@ class RoomPriceResult {
 }
 
 class RoomPriceData {
-  num? realRoomPrice;
-  num? roomPrice;
-  num? serviceRoom;
-  num? taxRoom;
-  num? priceTotal;
-  num? servicePercent;
-  num? taxPercent;
-  num? roomPromo;
+  num roomPrice;
+  num roomPromo;
+  num roomVoucher;
+  num serviceRoom;
+  num taxRoom;
+  num totalAll;
+  num servicePercent;
+  num taxPercent;
   List<RoomPriceDetail>? detail;
 
   RoomPriceData({
-    this.realRoomPrice,
-    this.roomPrice,
-    this.serviceRoom,
-    this.taxRoom,
-    this.priceTotal,
-    this.servicePercent,
-    this.roomPromo,
-    this.taxPercent,
+    this.roomPrice = 0,
+    this.roomPromo = 0,
+    this.roomVoucher = 0,
+    this.serviceRoom = 0,
+    this.taxRoom = 0,
+    this.totalAll = 0,
+    this.servicePercent = 0,
+    this.taxPercent = 0,
     this.detail = const [],
   });
 
@@ -47,7 +47,7 @@ class RoomPriceData {
       roomPrice: json['room'].toDouble(),
       serviceRoom: json['service_room'].toDouble(),
       taxRoom: json['tax_room'].toDouble(),
-      priceTotal: json['price_total'].toDouble(),
+      totalAll: json['price_total'].toDouble(),
       detail: List<RoomPriceDetail>.from(
           (json['detail'] as List).map((x) => RoomPriceDetail.fromJson(x))),
     );

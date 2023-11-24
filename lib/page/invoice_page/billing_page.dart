@@ -31,12 +31,26 @@ class BillingPage extends StatelessWidget {
     final CheckinArgsCubit checkinArgsCubit = CheckinArgsCubit();
 
     taxServiceCubit.getData();
+
     num roomPrice = 0;
+    num roomPromo = 0;
+    num roomVoucher = 0;
+    num roomService = 0;
+    num roomTax = 0;
+    num roomTotal = 0;
+
+
     num fnbPrice = 0;
-    num servicePrice = 0;
-    num taxPrice = 0;
-    num checkinPrice = 0;
-    num priceTotall = 0;
+    num fnbPromo = 0;
+    num fnbVoucher = 0;
+    num fnbService = 0;
+    num fnbTax = 0;
+    num fnbTotal = 0;
+
+    num checkinService = 0;
+    num checkinTax = 0;
+
+    num checkinTotal = 0;
     num paymentPrice = 0;
 
     return WillPopScope(
@@ -62,14 +76,10 @@ class BillingPage extends StatelessWidget {
                 );
               }
 
-              checkinArgsTemp.orderArgs?.fnb.taxPercent =
-                  taxServiceState.detail?.taxFnb ?? 0;
-              checkinArgsTemp.orderArgs?.fnb.servicePercent =
-                  taxServiceState.detail?.serviceFnb ?? 0;
-              checkinArgsTemp.roomPrice?.servicePercent =
-                  taxServiceState.detail?.serviceRoom ?? 0;
-              checkinArgsTemp.roomPrice?.taxPercent =
-                  taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.taxPercent = taxServiceState.detail?.taxFnb ?? 0;
+              checkinArgsTemp.orderArgs?.fnb.servicePercent = taxServiceState.detail?.serviceFnb ?? 0;
+              checkinArgsTemp.roomPrice?.servicePercent = taxServiceState.detail?.serviceRoom ?? 0;
+              checkinArgsTemp.roomPrice?.taxPercent = taxServiceState.detail?.taxFnb ?? 0;
 
               checkinArgsCubit.setData(CheckinArgs(
                   orderArgs: checkinArgsTemp.orderArgs,
@@ -80,17 +90,24 @@ class BillingPage extends StatelessWidget {
               return BlocBuilder<CheckinArgsCubit, CheckinArgs>(
                   bloc: checkinArgsCubit,
                   builder: (context, checkinArgsState) {
+
                     roomPrice = checkinArgsState.roomPrice?.roomPrice ?? 0;
-                    fnbPrice = checkinArgsState.orderArgs?.fnb.fnbTotal ?? 0;
-                    servicePrice =
-                        (checkinArgsState.roomPrice?.serviceRoom ?? 0) +
-                            (checkinArgsState.orderArgs?.fnb.fnbService ?? 0);
-                    taxPrice = (checkinArgsState.roomPrice?.taxRoom ?? 0) +
-                        (checkinArgsState.orderArgs?.fnb.fnbTax ?? 0);
-                    checkinPrice =
-                        roomPrice + fnbPrice + servicePrice + taxPrice;
-                    paymentPrice = (checkinArgsState.payment?.fee ?? 0);
-                    priceTotall = checkinPrice + paymentPrice;
+                    roomPromo = checkinArgsState.roomPrice?.roomPromo??0;
+                    roomVoucher = checkinArgsState.roomPrice?.roomVoucher??0;
+                    roomService = checkinArgsState.roomPrice?.serviceRoom??0;
+                    roomTax = checkinArgsState.roomPrice?.taxRoom??0;
+                    roomTotal = checkinArgsState.roomPrice?.totalAll??0;
+
+                    fnbPromo = checkinArgsState.orderArgs?.fnb.fnbPromoResult??0;
+                    fnbVoucher = checkinArgsState.orderArgs?.fnb.fnbVoucherResult??0;
+                    fnbService = checkinArgsState.orderArgs?.fnb.fnbServiceResult??0;
+                    fnbTax = checkinArgsState.orderArgs?.fnb.fnbTaxResult??0;
+                    fnbTotal = checkinArgsState.orderArgs?.fnb.totalAll??0;
+
+                    checkinService = roomService + fnbService;
+                    checkinTax = roomTax + fnbTax;
+                    checkinTotal = roomTotal + fnbTotal;
+
                     return Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -121,9 +138,7 @@ class BillingPage extends StatelessWidget {
                                                     'Batalkan Transaksi?')),
                                             actions: [
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: [
                                                   ElevatedButton(
                                                       onPressed: () {
@@ -178,22 +193,33 @@ class BillingPage extends StatelessWidget {
                                         Expanded(
                                             flex: 4,
                                             child: Text('Ruangan',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            style: FontBilling.textBilling())),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Text(':', style: FontBilling.textBilling()),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(checkinArgsState.orderArgs?.roomCode ??'',
+                                          style: FontBilling.textBilling())),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 4,
+                                            child: Text('Member', style: FontBilling.textBilling())),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Text(':', style: FontBilling.textBilling()),
                                         ),
                                         Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                checkinArgsState
-                                                        .orderArgs?.roomCode ??
-                                                    '',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text(checkinArgsState.orderArgs?.memberName ??'',
+                                            style: FontBilling.textBilling())),
                                       ],
                                     ),
                                     //space height
@@ -204,26 +230,17 @@ class BillingPage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                             flex: 4,
-                                            child: Text('Member',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text('Durasi', style: FontBilling.textBilling())),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Text(':', style: FontBilling.textBilling()),
                                         ),
                                         Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                checkinArgsState.orderArgs
-                                                        ?.memberName ??
-                                                    '',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text('${checkinArgsState.orderArgs?.checkinDuration} JAM', 
+                                                          style:FontBilling.textBilling())),
                                       ],
                                     ),
-                                    //space height
                                     const SizedBox(
                                       height: 3,
                                     ),
@@ -231,206 +248,162 @@ class BillingPage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                             flex: 4,
-                                            child: Text('Durasi',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text('Harga Room', style: FontBilling.textBilling())),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                          padding: const EdgeInsets.symmetric( horizontal: 4),
+                                          child: Text(':', style: FontBilling.textBilling()),
                                         ),
                                         Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                '${checkinArgsState.orderArgs?.checkinDuration} JAM',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text(Currency.toRupiah(roomPrice), style: FontBilling.textBilling())),
                                       ],
                                     ),
-                                    //space height
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
+                                    roomPromo > 0?
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             flex: 4,
-                                            child: Text('Harga Room',
-                                                style:
-                                                    FontBilling.textBilling())),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
-                                        ),
-                                        Expanded(
+                                            child: Text('Promo Room', style: FontBilling.textBilling())),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric( horizontal: 4),
+                                            child: Text(':', style: FontBilling.textBilling()),
+                                          ),
+                                          Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                Currency.toRupiah(
-                                                    checkinArgsState.roomPrice
-                                                            ?.realRoomPrice ??
-                                                        0),
-                                                style:
-                                                    FontBilling.textBilling())),
-                                      ],
-                                    ),
+                                            child: Text(Currency.toRupiah(roomPromo), style: FontBilling.textBilling())),
+                                          const SizedBox(height: 3,),
+                                        ],
+                                      ): const SizedBox(height: 3,),
+                                    roomVoucher > 0?
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 4,
+                                            child: Text('Voucher Room', style: FontBilling.textBilling())),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric( horizontal: 4),
+                                            child: Text(':', style: FontBilling.textBilling()),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(Currency.toRupiah(roomVoucher), style: FontBilling.textBilling())),
+                                          const SizedBox(height: 3,),
+                                        ],
+                                      ): const SizedBox(height: 3,),
+                                  
                                   ],
                                 ),
                               ),
-                              (checkinArgsState.orderArgs?.fnb.fnbList ?? [])
-                                      .isNotEmpty
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'Food and Beverages:',
-                                          style: FontBilling.textBilling(),
-                                        ),
-                                        Container(
-                                          constraints: const BoxConstraints(
-                                              maxHeight: 285),
-                                          child: RawScrollbar(
+                              //-----------
+                              (checkinArgsState.orderArgs?.fnb.fnbList ?? []).isNotEmpty? 
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 7,),
+                                  Text('Food and Beverages:', style: FontBilling.textBilling(),),
+                                  Container(
+                                    constraints: const BoxConstraints(
+                                      maxHeight: 285),
+                                      child: RawScrollbar(
                                             // isAlwaysShown: true,
                                             thumbVisibility: true,
                                             thickness: 2.5,
                                             trackVisibility: true,
                                             trackColor: Colors.grey.shade300,
-                                            thumbColor:
-                                                CustomColorStyle.bluePrimary(),
+                                            thumbColor: CustomColorStyle.bluePrimary(),
                                             controller: scrollController,
                                             child: ListView.builder(
-                                                // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
+                                              // scrollDirection: Axis.vertical, // Atur ke Axis.horizontal jika ingin scrollbar horizontal
                                                 controller: scrollController,
                                                 shrinkWrap: true,
-                                                physics:
-                                                    const ClampingScrollPhysics(),
-                                                itemCount: checkinArgsState
-                                                        .orderArgs
-                                                        ?.fnb
-                                                        .fnbList
-                                                        .length ??
-                                                    0,
-                                                itemBuilder:
-                                                    (context, index) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical:
-                                                                      1.8),
+                                                physics: const ClampingScrollPhysics(),
+                                                itemCount: checkinArgsState.orderArgs?.fnb.fnbList.length ??0,
+                                                itemBuilder:(context, index) {
+                                                  num qty = checkinArgsState.orderArgs?.fnb.fnbList[index].qty??0;
+                                                  String name = checkinArgsState.orderArgs?.fnb.fnbList[index].itemName??'';
+                                                  num price = checkinArgsState.orderArgs?.fnb.fnbList[index].price??0;
+                                                  return Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical:1.8),
                                                           child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Expanded(
                                                                   flex: 4,
-                                                                  child: Text(
-                                                                      checkinArgsState.orderArgs?.fnb.fnbList[index].qty ==
-                                                                              1
-                                                                          ? '${checkinArgsState.orderArgs?.fnb.fnbList[index].itemName}'
-                                                                          : '${checkinArgsState.orderArgs?.fnb.fnbList[index].qty}x ${checkinArgsState.orderArgs?.fnb.fnbList[index].itemName}',
-                                                                      style: FontBilling
-                                                                          .textBilling())),
+                                                                  child: Text(checkinArgsState.orderArgs?.fnb.fnbList[index].qty == 1
+                                                                  ? name : '$qty x $name', style: FontBilling .textBilling())),
                                                               Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        4),
-                                                                child: Text(':',
-                                                                    style: FontBilling
-                                                                        .textBilling()),
+                                                                padding: const EdgeInsets.symmetric(horizontal:4),
+                                                                child: Text(':',style: FontBilling.textBilling()),
                                                               ),
                                                               Expanded(
                                                                   flex: 2,
-                                                                  child: Text(
-                                                                      Currency.toRupiah((checkinArgsState.orderArgs?.fnb.fnbList[index].price ??
-                                                                              0) *
-                                                                          (checkinArgsState.orderArgs?.fnb.fnbList[index].qty ??
-                                                                              0)),
-                                                                      style: FontBilling
-                                                                          .textBilling())),
+                                                                  child: Text(Currency.toRupiah(price*qty), style: FontBilling.textBilling())),
                                                             ],
                                                           ),
-                                                        )),
+                                                        );}),
                                           ),
                                         ),
                                       ],
                                     )
-
-                                  //fnb empty
                                   : const SizedBox(),
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Column(
                                   children: [
-                                    (checkinArgsState.voucher?.finalValue ??
-                                                0) >
-                                            0
-                                        ? Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 3,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                      flex: 4,
-                                                      child: Text('Voucher',
-                                                          style: FontBilling
-                                                              .textBilling())),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 4),
-                                                    child: Text(':',
-                                                        style: FontBilling
-                                                            .textBilling()),
-                                                  ),
-                                                  Expanded(
-                                                      flex: 2,
-                                                      child: Text(
-                                                          Currency.toRupiah(
-                                                              checkinArgsState
-                                                                      .voucher
-                                                                      ?.finalValue ??
-                                                                  0),
-                                                          style: FontBilling
-                                                              .textBilling())),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        : const SizedBox(),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
+                                    fnbPromo > 0?
+                                    Column(
                                       children: [
-                                        Expanded(
-                                            flex: 4,
-                                            child: Text('Service',
-                                                style:
-                                                    FontBilling.textBilling())),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                        const SizedBox(height: 3,),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 4,
+                                              child: Text('Promo FnB',style: FontBilling.textBilling())),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                                                child: Text(':', style: FontBilling.textBilling()),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(Currency.toRupiah(fnbPromo),style: FontBilling.textBilling())),
+                                          ],
                                         ),
-                                        Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                                Currency.toRupiah(servicePrice),
-                                                style:
-                                                    FontBilling.textBilling())),
+                                      ],
+                                    ) : const SizedBox(),
+                                    fnbVoucher > 0? 
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const SizedBox(height: 3,),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 4,
+                                              child: Text('Voucher FnB',style: FontBilling.textBilling())),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                                                child: Text(':', style: FontBilling.textBilling()),
+                                              ),
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(Currency.toRupiah(fnbVoucher),style: FontBilling.textBilling())),
+                                          ],
+                                        ),
+                                      ],
+                                    ) : const SizedBox(),
+                                const SizedBox(height: 3,),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 4,
+                                      child: Text('Service', style:FontBilling.textBilling())),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        child: Text(':',style: FontBilling.textBilling()),),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(Currency.toRupiah(checkinService),style:FontBilling.textBilling())),
                                       ],
                                     ),
                                     const SizedBox(
@@ -440,21 +413,14 @@ class BillingPage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                             flex: 4,
-                                            child: Text('Tax',
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text('Tax', style:FontBilling.textBilling())),
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Text(':', style: FontBilling.textBilling()),
                                         ),
                                         Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                Currency.toRupiah(taxPrice),
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text(Currency.toRupiah(checkinTax), style:FontBilling.textBilling())),
                                       ],
                                     ),
                                     const SizedBox(
@@ -464,21 +430,13 @@ class BillingPage extends StatelessWidget {
                                       children: [
                                         Expanded(
                                             flex: 4,
-                                            child: Text('Total',
-                                                style:
-                                                    FontBilling.textBilling())),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(':',
-                                              style: FontBilling.textBilling()),
+                                            child: Text('Total', style: FontBilling.textBilling())),
+                                        Padding( padding: const EdgeInsets.symmetric(horizontal: 4),
+                                          child: Text(':',style: FontBilling.textBilling()),
                                         ),
                                         Expanded(
                                             flex: 2,
-                                            child: Text(
-                                                Currency.toRupiah(checkinPrice),
-                                                style:
-                                                    FontBilling.textBilling())),
+                                            child: Text(Currency.toRupiah(checkinTotal), style: FontBilling.textBilling())),
                                       ],
                                     ),
                                   ],
@@ -504,11 +462,7 @@ class BillingPage extends StatelessWidget {
                                 width: double.infinity,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(
-                                            context, PromoPage.nameRoute,
-                                            arguments: checkinArgsState)
-                                        .then((value) {
-                                      value as CheckinArgs;
+                                    Navigator.pushNamed(context, PromoPage.nameRoute, arguments: checkinArgsState).then((value) {value as CheckinArgs;
                                       final caPromo = CheckinArgs(
                                         orderArgs: value.orderArgs,
                                         roomPrice: value.roomPrice,
@@ -521,36 +475,24 @@ class BillingPage extends StatelessWidget {
                                     });
                                   },
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Icon(Icons.monetization_on_outlined,
-                                          color: CustomColorStyle.darkBlue(),
-                                          size: 19),
+                                      Icon(Icons.monetization_on_outlined, color: CustomColorStyle.darkBlue(),size: 19),
                                       Expanded(
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             const SizedBox(
                                               width: 3,
                                             ),
                                             Expanded(
-                                                child: Text(
-                                              'Promo',
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.black,
-                                                  fontSize: 13),
+                                              child: Text('Promo', style: GoogleFonts.poppins( color: Colors.black, fontSize: 13),
                                             )),
-                                            const Expanded(
-                                                child: AutoSizeText(''))
+                                            const Expanded(child: AutoSizeText(''))
                                           ],
                                         ),
                                       ),
-                                      const Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        size: 14,
-                                      )
+                                      const Icon(Icons.arrow_forward_ios_outlined, size: 14,)
                                     ],
                                   ),
                                 ),
@@ -558,46 +500,31 @@ class BillingPage extends StatelessWidget {
                               const SizedBox(
                                 height: 10,
                               ),
-                              checkinArgsState.orderArgs?.memberCode !=
-                                      checkinArgsState.orderArgs?.memberName
+                              checkinArgsState.orderArgs?.memberCode != checkinArgsState.orderArgs?.memberName
                                   ? Column(
                                       children: [
                                         SizedBox(
                                           width: double.infinity,
                                           child: InkWell(
                                             onTap: () async {
-                                              VoucherCubit voucherCubit =
-                                                  VoucherCubit();
-                                              voucherCubit.setData(
-                                                  checkinArgsState.orderArgs
-                                                          ?.memberCode ??
-                                                      '');
+                                              VoucherCubit voucherCubit = VoucherCubit();
+                                              voucherCubit.setData(checkinArgsState.orderArgs?.memberCode ??'');
                                               final rtnCa = await showDialog(
                                                   context: context,
-                                                  builder:
-                                                      (BuildContext context) {
+                                                  builder: (BuildContext context) {
                                                     return AlertDialog(
-                                                        contentPadding:
-                                                            EdgeInsets.zero,
-                                                        content: BlocBuilder<
-                                                                VoucherCubit,
-                                                                VoucherDataResult>(
+                                                        contentPadding: EdgeInsets.zero,
+                                                        content: BlocBuilder<VoucherCubit,VoucherDataResult>(
                                                             bloc: voucherCubit,
-                                                            builder: (context,
-                                                                voucherResult) {
+                                                            builder: (context, voucherResult) {
                                                               return SizedBox(
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    0.99,
+                                                                width: MediaQuery.of(context).size.width *0.99,
                                                                 child: Container(
                                                                     padding: const EdgeInsets.all(8),
                                                                     decoration: BoxDecoration(color: CustomColorStyle.lightBlue(), borderRadius: BorderRadius.circular(20)),
-                                                                    child: voucherResult.isLoading == true
-                                                                        ? const Center(
-                                                                            child:
-                                                                                CircularProgressIndicator(),
+                                                                    child: voucherResult.isLoading == true? 
+                                                                    const Center(
+                                                                        child: CircularProgressIndicator(),
                                                                           )
                                                                         : voucherResult.state == false
                                                                             ? Center(
@@ -607,23 +534,17 @@ class BillingPage extends StatelessWidget {
                                                                                 ),
                                                                               )
                                                                             : voucherResult.voucherData == null || (voucherResult.voucherData ?? List.empty()).isEmpty
-                                                                                ? Center(
-                                                                                    child: Text(
-                                                                                      'Tidak memiliki voucher',
-                                                                                      style: GoogleFonts.poppins(fontSize: 14),
-                                                                                    ),
-                                                                                  )
+                                                                                ? Center( child: Text('Tidak memiliki voucher', style: GoogleFonts.poppins(fontSize: 14),),)
                                                                                 : ListView.builder(
                                                                                     shrinkWrap: true,
                                                                                     itemCount: voucherResult.voucherData?.length,
                                                                                     itemBuilder: (context, index) {
                                                                                       VoucherData? dataVoucher = voucherResult.voucherData![index];
-
                                                                                       bool voucherState = true;
                                                                                       String reason = '';
-                                                                                      num totalPrice = (checkinArgsState.orderArgs?.fnb.totalAll ?? 0) + (checkinArgsState.roomPrice?.priceTotal ?? 0);
+                                                                                      num totalPrice = (checkinArgsState.orderArgs?.fnb.totalAll ?? 0) + (checkinArgsState.roomPrice?.totalAll ?? 0);
                                                                                       int checkinHour = checkinArgsState.orderArgs?.checkinDuration ?? 0;
-                                                                                      num roomPrice = checkinArgsState.roomPrice?.priceTotal ?? 0;
+                                                                                      num roomPrice = checkinArgsState.roomPrice?.roomPrice ?? 0;
 
                                                                                       num fnbPrice = checkinArgsState.orderArgs?.fnb.totalAll ?? 0;
 
@@ -838,19 +759,12 @@ class BillingPage extends StatelessWidget {
                                               }
                                             },
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                Icon(Icons.discount,
-                                                    color: CustomColorStyle
-                                                        .darkBlue(),
-                                                    size: 19),
+                                                Icon(Icons.discount, color: CustomColorStyle.darkBlue(), size: 19),
                                                 Expanded(
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       const SizedBox(
                                                         width: 3,
@@ -858,23 +772,12 @@ class BillingPage extends StatelessWidget {
                                                       Expanded(
                                                           child: Text(
                                                         'Voucher',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 13),
+                                                        style: GoogleFonts.poppins( color: Colors.black,fontSize: 13),
                                                       )),
                                                       Expanded(
-                                                          child: AutoSizeText(
-                                                        (checkinArgsState
-                                                                .voucher
-                                                                ?.voucherName ??
-                                                            ''),
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 11),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
+                                                          child: AutoSizeText((checkinArgsState.voucher?.voucherName ??''),
+                                                        style: GoogleFonts.poppins(fontSize: 11),
+                                                        overflow: TextOverflow.ellipsis,
                                                         maxLines: 1,
                                                         textAlign:
                                                             TextAlign.end,
@@ -883,8 +786,7 @@ class BillingPage extends StatelessWidget {
                                                   ),
                                                 ),
                                                 const Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_outlined,
+                                                  Icons.arrow_forward_ios_outlined,
                                                   size: 14,
                                                 )
                                               ],
@@ -901,60 +803,44 @@ class BillingPage extends StatelessWidget {
                                 width: double.infinity,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(context,
-                                            PaymentMethodListPage.nameRoute,
-                                            arguments: checkinPrice)
-                                        .then((value) {
+                                    Navigator.pushNamed(context, PaymentMethodListPage.nameRoute, arguments: checkinTotal).then((value) {
                                       if (value != null) {
                                         value as PaymentMethodArgs;
-                                        checkinArgsState.payment =
-                                            PaymentMethodArgs(
+                                        checkinArgsState.payment = PaymentMethodArgs(
                                           paymentMethod: value.paymentMethod,
                                           paymentChannel: value.paymentChannel,
                                           name: value.name,
                                           fee: value.fee,
                                           icon: value.icon,
                                         );
-                                        checkinArgsCubit.setData(CheckinArgs(
-                                            orderArgs:
-                                                checkinArgsState.orderArgs,
-                                            roomPrice:
-                                                checkinArgsState.roomPrice,
+
+                                        checkinArgsCubit.setData(
+                                          CheckinArgs(
+                                            orderArgs: checkinArgsState.orderArgs,
+                                            roomPrice: checkinArgsState.roomPrice,
                                             payment: checkinArgsState.payment,
                                             voucher: checkinArgsState.voucher));
                                       }
                                     });
                                   },
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Icon(Icons.payment,
-                                          color: CustomColorStyle.darkBlue(),
-                                          size: 19),
+                                      Icon(Icons.payment, color: CustomColorStyle.darkBlue(), size: 19),
                                       Expanded(
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             const SizedBox(
                                               width: 3,
                                             ),
                                             Expanded(
-                                                child: Text(
-                                              'Metode Pembayaran',
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.black,
-                                                  fontSize: 13),
+                                                child: Text('Metode Pembayaran', style: GoogleFonts.poppins(color: Colors.black, fontSize: 13),
                                             )),
                                             Expanded(
                                                 child: AutoSizeText(
-                                              checkinArgsState.payment?.name !=
-                                                      null
-                                                  ? (checkinArgsState
-                                                          .payment?.name ??
-                                                      '')
-                                                  : '',
+                                                checkinArgsState.payment?.name != null
+                                                ? (checkinArgsState.payment?.name ??''): '',
                                               textAlign: TextAlign.end,
                                               maxLines: 2,
                                               style: GoogleFonts.poppins(
@@ -987,11 +873,8 @@ class BillingPage extends StatelessWidget {
                                           width: 6,
                                         ),
                                         Text(
-                                          Currency.toRupiah(
-                                              checkinArgsState.payment?.fee),
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 11,
-                                              color: Colors.black87),
+                                          Currency.toRupiah(checkinArgsState.payment?.fee),
+                                          style: GoogleFonts.poppins(fontSize: 11, color: Colors.black87),
                                         ),
                                       ],
                                     )
@@ -1000,45 +883,25 @@ class BillingPage extends StatelessWidget {
                                 height: 10,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Total',
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    Currency.toRupiah(priceTotall),
-                                    style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.w700),
-                                  )
+                                  Text('Total', style: GoogleFonts.poppins(fontWeight: FontWeight.w500),),
+                                  Text(Currency.toRupiah(checkinTotal), style: GoogleFonts.poppins(fontWeight: FontWeight.w700),)
                                 ],
                               ),
-                              const SizedBox(
-                                height: 12,
-                              ),
+                              const SizedBox(height: 12,),
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                            context, PaymentPage.nameRoute,
-                                            arguments: checkinArgsState)
-                                        .then((value) => checkinArgsState =
-                                            value as CheckinArgs);
+                                    Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: checkinArgsState) .then((value) => checkinArgsState = value as CheckinArgs);
                                   },
-                                  style:
-                                      CustomButtonStyle.buttonStyleDarkBlue(),
+                                  style: CustomButtonStyle.buttonStyleDarkBlue(),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 31, vertical: 5),
-                                    child: Text(
-                                      'BAYAR',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600),
-                                    ),
+                                      horizontal: 31, 
+                                      vertical: 5),
+                                    child: Text('BAYAR', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),),
                                   ),
                                 ),
                               ),

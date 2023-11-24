@@ -565,7 +565,7 @@ class SlipCheckinPage extends StatelessWidget {
                                     flex: 4,
                                     child: Text(
                                       Currency.toRupiah(
-                                          roomPriceState.data?.priceTotal ?? 0),
+                                          roomPriceState.data?.totalAll ?? 0),
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600),

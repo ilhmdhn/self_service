@@ -27,18 +27,22 @@ class OrderArgs {
 
 class FnBOrder {
   num fnbTotal;
-  num fnbService;
-  num fnbTax;
+  num fnbServiceResult;
+  num fnbTaxResult;
+  num fnbPromoResult;
+  num fnbVoucherResult;
   num totalAll;
-  num servicePercent;
   num taxPercent;
+  num servicePercent;
   List<FnBDetail> fnbList = [];
 
   FnBOrder({
     this.fnbList = const [],
     this.fnbTotal = 0,
-    this.fnbService = 0,
-    this.fnbTax = 0,
+    this.fnbServiceResult = 0,
+    this.fnbTaxResult = 0,
+    this.fnbPromoResult = 0,
+    this.fnbVoucherResult = 0,
     this.servicePercent = 0,
     this.taxPercent = 0,
     this.totalAll = 0,
@@ -222,11 +226,11 @@ class GenerateJsonParams {
       'room_price': dataCheckin.roomPrice?.roomPrice,
       'room_service': dataCheckin.roomPrice?.serviceRoom,
       'room_tax': dataCheckin.roomPrice?.taxRoom,
-      'room_total': dataCheckin.roomPrice?.priceTotal,
+      'room_total': dataCheckin.roomPrice?.totalAll,
       'room_detail': listRoomPrice,
       'fnb_price': dataCheckin.orderArgs?.fnb.fnbTotal,
-      'fnb_service': dataCheckin.orderArgs?.fnb.fnbService,
-      'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTax,
+      'fnb_service': dataCheckin.orderArgs?.fnb.fnbServiceResult,
+      'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTaxResult,
       'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
       'voucher': voucher,
       'promo_room': promoRoom,

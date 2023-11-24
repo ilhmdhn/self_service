@@ -33,12 +33,11 @@ class _PaymentPageState extends State<PaymentPage> {
 
     String paymentMethod = checkinData.payment?.paymentMethod ?? '';
     String paymentChannel = checkinData.payment?.paymentChannel ?? '';
-    num totalCheckin = (checkinData.roomPrice?.priceTotal ?? 0) +
-        (checkinData.orderArgs?.fnb.totalAll ?? 0);
+    num totalCheckin = (checkinData.roomPrice?.totalAll??0) + (checkinData.orderArgs?.fnb.totalAll??0);
+
     String memberName = checkinData.orderArgs?.memberName ?? '';
-    String memberPhone = checkinData.orderArgs?.memberPhone ?? '6282245168658';
-    String memberEmail =
-        checkinData.orderArgs?.memberEmail ?? 'ilham.dohaan@happypuppy.id';
+    String memberPhone = checkinData.orderArgs?.memberPhone ?? '';
+    String memberEmail = checkinData.orderArgs?.memberEmail ?? '';
 
     if (memberPhone.startsWith('+')) {
       memberPhone = memberPhone.substring(1);

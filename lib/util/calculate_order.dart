@@ -3,9 +3,9 @@ import 'package:self_service/util/order_args.dart';
 import 'package:self_service/util/tools.dart';
 
 CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
-  num roomPrice = 0;
   num serviceRoom = 0;
   num taxRoom = 0;
+  num roomPrice = 0;
   num roomTotal = 0;
 
   num fnbPrice = 0;
@@ -25,19 +25,22 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   num vcrRoomPrice = (dataCheckin.voucher?.voucherRoomPrice ?? 0);
   num vcrRoomPercent = (dataCheckin.voucher?.voucherRoomDiscount ?? 0);
   num vcrRoomPercentResult = 0;
+  num voucherRoomResult = 0;
 
 // promo room
   num promoRoomPercent = dataCheckin.promoRoom?.diskonPersen ?? 0;
   num promoRoomRupiah = dataCheckin.promoRoom?.diskonRp ?? 0;
+  num promoRoomResult = 0;
 
 // voucher fnb
   num voucherFnbPercent = (dataCheckin.voucher?.voucherFnbDiscount ?? 0);
-  num vcrFnbPercentResult = 0;
   num vcrFnbPrice = (dataCheckin.voucher?.voucherFnbPrice??0);
+  num voucherFnbResult = 0;
 
 // promo fnb
   num promoFoodPercent = (dataCheckin.promoFood?.diskonPersen ?? 0);
   num promoFoodRupiah = (dataCheckin.promoFood?.diskonRp ?? 0);
+  num promoFnbResult = 0;
 
   if ((dataCheckin.voucher?.voucherHour ?? 0) > 0) {
     isVoucherHour = true;
@@ -58,7 +61,9 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     dataCheckin.roomPrice?.detail?[key].promoTotal = 0;
     dataCheckin.roomPrice?.detail?[key].promoPercent = 0;
     dataCheckin.roomPrice?.detail?[key].vcrMinute = 0;
+    dataCheckin.roomPrice?.detail?[key].priceTotal = 0;
     dataCheckin.roomPrice?.detail?[key].priceTotal = pricePerMinute * usedMinute;
+    dataCheckin.roomPrice?.roomPrice += (pricePerMinute*usedMinute);
   });
 
 
@@ -77,6 +82,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       num vcrHourValue = (cutMinute * (element.pricePerMinute ?? 0));
       dataCheckin.roomPrice?.detail?[index].vcrMinute = cutMinute;
       dataCheckin.roomPrice?.detail?[index].priceTotal = (dataCheckin.roomPrice?.detail?[index].priceTotal ?? 0) - vcrHourValue;
+      
+      voucherRoomResult += vcrHourValue;
     }
   });
 
@@ -124,6 +131,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
           dataCheckin.roomPrice?.detail?[key].priceTotal = totalRoom - promoValue;
           dataCheckin.roomPrice?.detail?[key].promoTotal = promoValue;
           dataCheckin.roomPrice?.detail?[key].promoPercent = promoPercent.toInt();
+          
+          promoRoomResult += promoValue;
         }
       }
     });
@@ -138,6 +147,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     vcrRoomPercentResult = (vcrRoomPercent / 100) * roomPrice;
     roomPrice -= vcrRoomPercentResult;
     finalVoucher += vcrRoomPercentResult;
+
+    voucherRoomResult += vcrRoomPercentResult;
   }
 
 //-------------- CALCULATE VOUCHER RP -------------------------
@@ -148,10 +159,10 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     } else {
       thisVcrUse = voucherPrice;
     }
-
     voucherPrice -= thisVcrUse;
     roomPrice -=thisVcrUse;
-    finalVoucher += thisVcrUse;
+
+    voucherRoomResult +=thisVcrUse;
   }
 
 //-------------- CALCULATE ROOM VOUCHER RP -------------------------
@@ -165,6 +176,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       }
       roomPrice -= thisVcrUse;
       finalVoucher += thisVcrUse;
+
+      voucherRoomResult += thisVcrUse;
     }
 
 //-------------- CALCULATE ROOM PROMO RP -------------------------
@@ -177,20 +190,28 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
         thisPromoUse = vcrRoomPercent;
       }
       roomPrice -= thisPromoUse;
+
+      promoRoomResult += thisPromoUse;
     }
 
 
 
-  if (roomPrice < 0) {
-    roomPrice = 0;
-  }
+  // if (roomPrice < 0) {
+  //   roomPrice = 0;
+  // }
 
 
   roomPrice = roomPrice.round();
-
   serviceRoom = roomPrice * ((dataCheckin.roomPrice?.servicePercent ?? 0) / 100);
   taxRoom = (roomPrice + serviceRoom) * ((dataCheckin.roomPrice?.taxPercent ?? 0) / 100);
   roomTotal = roomPrice + serviceRoom + taxRoom;
+
+  dataCheckin.roomPrice?.roomPrice = (dataCheckin.roomPrice?.roomPrice??0).round();
+  dataCheckin.roomPrice?.roomPromo = promoRoomResult.round();
+  dataCheckin.roomPrice?.roomVoucher = voucherRoomResult.round();
+  dataCheckin.roomPrice?.serviceRoom = serviceRoom.round();
+  dataCheckin.roomPrice?.taxRoom = taxRoom.round();
+  dataCheckin.roomPrice?.totalAll = roomTotal.round();
 
 //-------------- CALCULATE FNB PRICE -------------------------
   if (dataCheckin.orderArgs?.fnb.fnbList != [] && dataCheckin.orderArgs?.fnb.fnbList != null) {
@@ -214,6 +235,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
             dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo += itemPromoValue;
             num thisPromoAccumulate = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo??0;
             dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPromoAccumulate;
+
+            voucherFnbResult += thisPromoAccumulate;
           }
           qtyVoucher--;
         } while (qtyVoucher > 0);
@@ -224,10 +247,11 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   if (voucherFnbPercent > 0 && thisTotalPrice>0) {
 
     num thisPromoPercentResult = thisTotalPrice * (voucherFnbPercent / 100);
-    vcrFnbPercentResult += thisPromoPercentResult;
     
     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo += thisPromoPercentResult;
     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPromoPercentResult;
+
+    voucherFnbResult += thisPromoPercentResult;
   }
 
 
@@ -241,16 +265,17 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
           thisPromoPercentResult = fnbData.price * promoFoodPercent / 100;
           if(thisTotalPrice<thisPromoPercentResult){
             thisPromoPercentResult = thisTotalPrice;
-          }
+           }
         }
     } else {
       thisPromoPercentResult = thisTotalPrice * promoFoodPercent / 100;
     }
     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo += thisPromoPercentResult;
     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPromoPercentResult;
-  }
-    finalVoucher = finalVoucher + vcrFnbPercentResult;
 
+    promoFnbResult += thisPromoPercentResult;
+
+}
 
 //-------------- CALCULATE VOUCHER PRICE -------------------------
 
@@ -264,6 +289,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     }
       dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPriceValue;
       voucherPrice -= thisPriceValue;
+
+      voucherFnbResult += thisPriceValue;
   }
 
 //-------------- CALCULATE VOUCHER FNB PRICE -------------------------
@@ -281,6 +308,8 @@ if(vcrFnbPrice>0){
     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisFnBPriceValue;
     vcrFnbPrice -= thisFnBPriceValue;
   }
+
+  voucherFnbResult += thisFnBPriceValue;
 }
 
 //-------------- CALCULATE PROMO FNB RP -------------------------
@@ -297,6 +326,8 @@ if(promoFoodRupiah>0){
       dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisFnbPromoValue;
       promoFoodRupiah -= thisFnbPromoValue;
     }
+
+    promoFnbResult += thisFnbPromoValue;
 }
 
 //-------------- CALCULATE FNB TAX AND SERVICE -------------------------
@@ -324,22 +355,19 @@ if(promoFoodRupiah>0){
   }
 
 
-  if (fnbTotal < 0) {
-    fnbTotal = 0;
-  }
+  // if (fnbTotal < 0) {
+  //   fnbTotal = 0;
+  // }
 
   fnbTotal = fnbTotal.round();
   fnbTotal = fnbPrice + serviceFnb + taxFnb;
 
-  dataCheckin.roomPrice?.roomPrice = roomPrice;
-  dataCheckin.roomPrice?.serviceRoom = serviceRoom;
-  dataCheckin.roomPrice?.taxRoom = taxRoom;
-  dataCheckin.roomPrice?.priceTotal = roomTotal;
-
-  dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice;
-  dataCheckin.orderArgs?.fnb.fnbService = serviceFnb;
-  dataCheckin.orderArgs?.fnb.fnbTax = taxFnb;
-  dataCheckin.orderArgs?.fnb.totalAll = fnbTotal;
+  dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice.round();
+  dataCheckin.orderArgs?.fnb.fnbPromoResult = promoFnbResult.round();
+  dataCheckin.orderArgs?.fnb.fnbVoucherResult = voucherFnbResult.round();
+  dataCheckin.orderArgs?.fnb.fnbServiceResult = serviceFnb.round();
+  dataCheckin.orderArgs?.fnb.fnbTaxResult = taxFnb.round();
+  dataCheckin.orderArgs?.fnb.totalAll = fnbTotal.round();
 
   if (dataCheckin.voucher != null) {
     dataCheckin.voucher?.finalValue = finalVoucher;

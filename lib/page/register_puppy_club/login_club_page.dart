@@ -292,7 +292,7 @@ class ScanClubPageState extends State<ScanClubPage> {
             isLoading == true
                 ? const Center(
                     child: CircularProgressIndicator(
-                    color: Colors.green,
+                    color: Colors.blueAccent,
                     strokeWidth: 8,
                   ))
                 : const Positioned(
@@ -321,7 +321,7 @@ class ScanClubPageState extends State<ScanClubPage> {
                       // });
                       final keyCode = keyData.keyCode.toString();
                       memberCodeTemp += keyData.keyLabel;
-                      if(keyCode == '66'){
+                      if(keyCode == '66' && memberCodeTemp.trim() != ''){
                         final memberCode = memberCodeTemp.trim();
                         memberCodeTemp = '';
                       setState(() {
