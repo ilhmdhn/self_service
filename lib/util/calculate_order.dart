@@ -55,6 +55,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       .toList();
 
 //-------------- CALCULATE ROOM PRICE -------------------------
+  dataCheckin.roomPrice?.roomPrice = 0;
   dataCheckin.roomPrice?.detail?.asMap().forEach((key, value) {
     double pricePerMinute = dataCheckin.roomPrice?.detail?[key].pricePerMinute ?? 0;
     int usedMinute = dataCheckin.roomPrice?.detail?[key].usedMinute ?? 0;

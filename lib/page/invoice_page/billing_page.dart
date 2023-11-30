@@ -754,6 +754,8 @@ class BillingPage extends StatelessWidget {
                                                   roomPrice: rtnCa.roomPrice,
                                                   payment: rtnCa.payment,
                                                   voucher: rtnCa.voucher,
+                                                  promoRoom: rtnCa.promoRoom,
+                                                  promoFood: rtnCa.promoFood
                                                 );
                                                 checkinArgsCubit.setData(ca);
                                               }
