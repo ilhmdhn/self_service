@@ -42,8 +42,7 @@ class PaymentMethod {
         name: json['Name'],
         icon: json['icon'],
         description: json['Description'],
-        channel: List<PaymentChannel>.from(
-            (json['Channels'] as List).map((x) => PaymentChannel.fromJson(x))),
+        channel: List<PaymentChannel>.from((json['Channels'] as List).map((x) => PaymentChannel.fromJson(x))),
       );
 }
 

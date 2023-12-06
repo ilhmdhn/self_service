@@ -26,6 +26,7 @@ class RoomPriceData {
   num serviceRoom;
   num taxRoom;
   num totalAll;
+  
   num servicePercent;
   num taxPercent;
   List<RoomPriceDetail>? detail;

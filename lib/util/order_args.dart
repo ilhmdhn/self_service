@@ -27,11 +27,12 @@ class OrderArgs {
 
 class FnBOrder {
   num fnbTotal;
-  num fnbServiceResult;
-  num fnbTaxResult;
   num fnbPromoResult;
   num fnbVoucherResult;
+  num fnbServiceResult;
+  num fnbTaxResult;
   num totalAll;
+
   num taxPercent;
   num servicePercent;
   List<FnBDetail> fnbList = [];
@@ -114,11 +115,13 @@ class PaymentMethodArgs {
 
 class GenerateJsonParams {
   Map<String, dynamic> convert(CheckinArgs dataCheckin) {
+
     List<Map<String, dynamic>> listFnb = [];
     List<Map<String, dynamic>> listRoomPrice = [];
     Map<String, dynamic>? voucher;
     Map<String, dynamic>? promoRoom;
     Map<String, dynamic>? promoFood;
+    Map<String, dynamic>? payment;
 
     if ((dataCheckin.orderArgs?.fnb.fnbList ?? []).isNotEmpty) {
       for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
@@ -216,29 +219,46 @@ class GenerateJsonParams {
       };
     }
 
+    if(dataCheckin.payment != null){
+      payment = <String, dynamic>{
+      'payment_method': dataCheckin.payment?.paymentMethod,
+      'payment_channel': dataCheckin.payment?.paymentChannel,
+      'name': dataCheckin.payment?.name,
+      'fee': dataCheckin.payment?.fee,
+      };
+    }
+
     final Map<String, dynamic> bodyParams = {
       'member_code': dataCheckin.orderArgs?.memberCode,
       'member_name': dataCheckin.orderArgs?.memberName,
       'pax': dataCheckin.orderArgs?.pax,
+
       'room_category': dataCheckin.orderArgs?.roomCategory,
       'room_code': dataCheckin.orderArgs?.roomCode,
       'checkin_duration': dataCheckin.orderArgs?.checkinDuration,
+
       'room_price': dataCheckin.roomPrice?.roomPrice,
+      'room_promo': dataCheckin.roomPrice?.roomPromo,
+      'room_voucher': dataCheckin.roomPrice?.roomVoucher,
       'room_service': dataCheckin.roomPrice?.serviceRoom,
       'room_tax': dataCheckin.roomPrice?.taxRoom,
       'room_total': dataCheckin.roomPrice?.totalAll,
-      'room_detail': listRoomPrice,
+
       'fnb_price': dataCheckin.orderArgs?.fnb.fnbTotal,
+      'fnb_promo': dataCheckin.orderArgs?.fnb.fnbPromoResult,
+      'fnb_voucher': dataCheckin.orderArgs?.fnb.fnbVoucherResult,
       'fnb_service': dataCheckin.orderArgs?.fnb.fnbServiceResult,
       'fnb_tax': dataCheckin.orderArgs?.fnb.fnbTaxResult,
       'fnb_total': dataCheckin.orderArgs?.fnb.totalAll,
-      'voucher': voucher,
-      'promo_room': promoRoom,
-      'promo_food': promoFood,
+
+      'room_detail': listRoomPrice,
+      'promo_room_detail': promoRoom,
+      'promo_food_detail': promoFood,
+      'voucher_detail': voucher,
       'fnb_detail': listFnb,
-      'payment_method': dataCheckin.payment?.paymentMethod,
-      'payment_channel': dataCheckin.payment?.paymentChannel
+      'payment': payment
     };
+
     return bodyParams;
   }
 }

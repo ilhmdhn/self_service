@@ -16,6 +16,7 @@ import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/page/invoice_page/invoice_bloc.dart';
 import 'package:self_service/data/model/voucher_model.dart';
+import 'package:self_service/util/tools.dart';
 
 class BillingPage extends StatelessWidget {
   const BillingPage({super.key});
@@ -83,9 +84,7 @@ class BillingPage extends StatelessWidget {
 
               checkinArgsCubit.setData(CheckinArgs(
                   orderArgs: checkinArgsTemp.orderArgs,
-                  roomPrice: checkinArgsTemp.roomPrice,
-                  payment: checkinArgsTemp.payment,
-                  voucher: checkinArgsTemp.voucher));
+                  roomPrice: checkinArgsTemp.roomPrice));
 
               return BlocBuilder<CheckinArgsCubit, CheckinArgs>(
                   bloc: checkinArgsCubit,
@@ -466,7 +465,7 @@ class BillingPage extends StatelessWidget {
                                       final caPromo = CheckinArgs(
                                         orderArgs: value.orderArgs,
                                         roomPrice: value.roomPrice,
-                                        payment: value.payment,
+                                        payment: null,
                                         voucher: value.voucher,
                                         promoRoom: value.promoRoom,
                                         promoFood: value.promoFood
@@ -752,7 +751,7 @@ class BillingPage extends StatelessWidget {
                                                 CheckinArgs? ca = CheckinArgs(
                                                   orderArgs: rtnCa.orderArgs,
                                                   roomPrice: rtnCa.roomPrice,
-                                                  payment: rtnCa.payment,
+                                                  payment: null,
                                                   voucher: rtnCa.voucher,
                                                   promoRoom: rtnCa.promoRoom,
                                                   promoFood: rtnCa.promoFood
@@ -820,8 +819,11 @@ class BillingPage extends StatelessWidget {
                                           CheckinArgs(
                                             orderArgs: checkinArgsState.orderArgs,
                                             roomPrice: checkinArgsState.roomPrice,
-                                            payment: checkinArgsState.payment,
-                                            voucher: checkinArgsState.voucher));
+                                            voucher: checkinArgsState.voucher,
+                                            promoRoom: checkinArgsState.promoRoom,
+                                            promoFood: checkinArgsState.promoFood,
+                                            payment: checkinArgsState.payment
+                                            ));
                                       }
                                     });
                                   },
@@ -896,7 +898,11 @@ class BillingPage extends StatelessWidget {
                                 alignment: Alignment.bottomRight,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: checkinArgsState) .then((value) => checkinArgsState = value as CheckinArgs);
+                                    if(checkinArgsState.payment!=null){
+                                      Navigator.pushNamed(context, PaymentPage.nameRoute, arguments: checkinArgsState) .then((value) => checkinArgsState = value as CheckinArgs);
+                                    }else{
+                                      showToastWarning('Metode pembayaran belum dipilih');
+                                    }
                                   },
                                   style: CustomButtonStyle.buttonStyleDarkBlue(),
                                   child: Padding(

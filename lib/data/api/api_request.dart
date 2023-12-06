@@ -61,8 +61,7 @@ class ApiService {
     }
   }
 
-  Future<FnBResultModel> getInventory(
-      int page, String category, String search) async {
+  Future<FnBResultModel> getInventory(int page, String category, String search) async {
     try {
       final serverUrl = await baseUrl();
       Uri url = Uri.parse(
@@ -102,8 +101,7 @@ class ApiService {
   Future<VoucherDataResult> getVoucherMembership(memberCode) async {
     try {
       final serverUrl = await baseUrl();
-      Uri url =
-          Uri.parse('${serverUrl}voucher-membership?kode_member=$memberCode');
+      Uri url = Uri.parse('${serverUrl}voucher-membership?kode_member=$memberCode');
       final apiResponse = await http.get(url);
       return VoucherDataResult.fromJson(json.decode(apiResponse.body));
     } catch (err) {
@@ -118,28 +116,24 @@ class ApiService {
   Future<MemberResult> getMember(memberCode) async {
     try {
       String? key = dotenv.env['key'] ?? '';
-      Uri url = Uri.parse(
-          'https://ihp-membership.azurewebsites.net/member-info?member_code=$memberCode');
+      Uri url = Uri.parse('https://ihp-membership.azurewebsites.net/member-info?member_code=$memberCode');
       final apiResponse = await http.get(url, headers: {'Authorization': key});
       final convertedResult = json.decode(apiResponse.body);
       return MemberResult.fromJson(convertedResult);
     } catch (err) {
-      return MemberResult(
-          isLoading: false, state: false, message: err.toString());
+      return MemberResult(isLoading: false, state: false, message: err.toString());
     }
   }
 
   Future<RoomPriceResult> getRoomPrice(String category, int duration) async {
     try {
       final serverUrl = await baseUrl();
-      Uri url = Uri.parse(
-          '${serverUrl}room-price?room_category=$category&checkin_duration=$duration');
+      Uri url = Uri.parse('${serverUrl}room-price?room_category=$category&checkin_duration=$duration');
       final apiResponse = await http.get(url);
       final convertedResult = json.decode(apiResponse.body);
       return RoomPriceResult.fromJson(convertedResult);
     } catch (err) {
-      return RoomPriceResult(
-          isLoading: false, state: false, message: err.toString());
+      return RoomPriceResult(isLoading: false, state: false, message: err.toString());
     }
   }
 
@@ -151,8 +145,7 @@ class ApiService {
       final convertedResult = json.decode(apiResponse.body);
       return ServiceTaxResult.fromJson(convertedResult);
     } catch (err) {
-      return ServiceTaxResult(
-          isLoading: false, state: false, message: err.toString());
+      return ServiceTaxResult(isLoading: false, state: false, message: err.toString());
     }
   }
 
@@ -164,19 +157,11 @@ class ApiService {
       final convertedResult = json.decode(apiResponse.body);
       return ListPaymentResult.fromJson(convertedResult);
     } catch (err) {
-      return ListPaymentResult(
-          isLoading: false, state: false, message: err.toString());
+      return ListPaymentResult(isLoading: false, state: false, message: err.toString());
     }
   }
 
-  Future<QrisPaymentResult> getQrisPayment(
-      String paymentMethod,
-      String paymentChannel,
-      num amount,
-      String customer,
-      String phone,
-      String email,
-      CheckinArgs checkinData) async {
+  Future<QrisPaymentResult> getQrisPayment(String paymentMethod, String paymentChannel, num amount, String customer, String phone, String email, CheckinArgs checkinData) async {
     try {
       final dataCheckin = GenerateJsonParams().convert(checkinData);
       final dataJson = jsonEncode(dataCheckin);
@@ -203,14 +188,7 @@ class ApiService {
     }
   }
 
-  Future<PaymentVaResult> getVaPayment(
-      String paymentMethod,
-      String paymentChannel,
-      num amount,
-      String customer,
-      String phone,
-      String email,
-      CheckinArgs checkinData) async {
+  Future<PaymentVaResult> getVaPayment(String paymentMethod, String paymentChannel, num amount, String customer, String phone, String email, CheckinArgs checkinData) async {
     try {
       final dataCheckin = GenerateJsonParams().convert(checkinData);
       final dataJson = jsonEncode(dataCheckin);
@@ -232,6 +210,68 @@ class ApiService {
       return PaymentVaResult.fromJson(convertedResult);
     } catch (err) {
       return PaymentVaResult(state: false, message: err.toString());
+    }
+  }
+
+
+  Future<VoucherDataResult> voucher(String memberCode) async {
+    try {
+      String? key = dotenv.env['key'] ?? '';
+      Uri url = Uri.parse(
+          'https://ihp-membership.azurewebsites.net/voucher-all?member_code=$memberCode');
+      final apiResponse = await http.get(url, headers: {'Authorization': key});
+      final convertedResult = json.decode(apiResponse.body);
+      return VoucherDataResult.fromJson(convertedResult);
+    } catch (err) {
+      return VoucherDataResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<PromoRoomResult> promoRoom() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo-room');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoRoomResult.fromJson(convertedResult);
+    } catch (err) {
+      return PromoRoomResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<PromoFoodResult> promoFood() async {
+    try {
+      final serverUrl = await baseUrl();
+      Uri url = Uri.parse('${serverUrl}promo-food');
+      final apiResponse = await http.get(url);
+      final convertedResult = json.decode(apiResponse.body);
+      return PromoFoodResult.fromJson(convertedResult);
+    } catch (err) {
+      return PromoFoodResult(
+          isLoading: false, state: false, message: err.toString());
+    }
+  }
+
+  Future<BaseResponse> checkin(CheckinArgs checkinArgs, String idTransaction) async {
+    try {
+      final dataCheckin = GenerateJsonParams().convert(checkinArgs);
+
+      Map<String, dynamic> bodyParams = {
+        'transaction_id': idTransaction,
+        'payment_method': checkinArgs.payment?.paymentMethod,
+        'payment_channel': checkinArgs.payment?.paymentChannel,
+        'data_checkin': json.encode(dataCheckin),
+      };
+
+      final serverUrl = await baseUrl();
+      final url = Uri.parse('${serverUrl}checkin');
+      final apiResponse = await http.post(url, body: bodyParams);
+      final convertedResult = json.decode(apiResponse.body);
+      return BaseResponse.fromJson(convertedResult);
+    } catch (err) {
+      return BaseResponse(state: false, message: err.toString());
     }
   }
 
@@ -376,65 +416,4 @@ class ApiService {
     }
   }
 
-  Future<VoucherDataResult> voucher(String memberCode) async {
-    try {
-      String? key = dotenv.env['key'] ?? '';
-      Uri url = Uri.parse(
-          'https://ihp-membership.azurewebsites.net/voucher-all?member_code=$memberCode');
-      final apiResponse = await http.get(url, headers: {'Authorization': key});
-      final convertedResult = json.decode(apiResponse.body);
-      return VoucherDataResult.fromJson(convertedResult);
-    } catch (err) {
-      return VoucherDataResult(
-          isLoading: false, state: false, message: err.toString());
-    }
-  }
-
-  Future<BaseResponse> checkin(
-      CheckinArgs checkinArgs, String idTransaction) async {
-    try {
-      final dataCheckin = GenerateJsonParams().convert(checkinArgs);
-
-      Map<String, dynamic> bodyParams = {
-        'transaction_id': idTransaction,
-        'payment_method': checkinArgs.payment?.paymentMethod,
-        'payment_channel': checkinArgs.payment?.paymentChannel,
-        'data_checkin': json.encode(dataCheckin),
-      };
-
-      final serverUrl = await baseUrl();
-      final url = Uri.parse('${serverUrl}checkin');
-      final apiResponse = await http.post(url, body: bodyParams);
-      final convertedResult = json.decode(apiResponse.body);
-      return BaseResponse.fromJson(convertedResult);
-    } catch (err) {
-      return BaseResponse(state: false, message: err.toString());
-    }
-  }
-
-  Future<PromoRoomResult> promoRoom() async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}promo-room');
-      final apiResponse = await http.get(url);
-      final convertedResult = json.decode(apiResponse.body);
-      return PromoRoomResult.fromJson(convertedResult);
-    } catch (err) {
-      return PromoRoomResult(
-          isLoading: false, state: false, message: err.toString());
-    }
-  }
-
-  Future<PromoFoodResult> promoFood() async {
-    try {
-      final serverUrl = await baseUrl();
-      Uri url = Uri.parse('${serverUrl}promo-food');
-      final apiResponse = await http.get(url);
-      final convertedResult = json.decode(apiResponse.body);
-      return PromoFoodResult.fromJson(convertedResult);
-    } catch (err) {
-      return PromoFoodResult(
-          isLoading: false, state: false, message: err.toString());
-    }
-  }
 }

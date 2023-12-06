@@ -44,11 +44,9 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     if (paymentMethod == 'va') {
-      paymentVaCubit.getData(paymentMethod, paymentChannel, totalCheckin,
-          memberName, memberPhone, memberEmail, checkinData);
+      paymentVaCubit.getData(paymentMethod, paymentChannel, totalCheckin, memberName, memberPhone, memberEmail, checkinData);
     } else if (paymentMethod == 'qris') {
-      paymentQrisCubit.getData(paymentMethod, paymentChannel, totalCheckin,
-          memberName, memberPhone, memberEmail, checkinData);
+      paymentQrisCubit.getData(paymentMethod, paymentChannel, totalCheckin, memberName, memberPhone, memberEmail, checkinData);
     }
 
     return Scaffold(
@@ -60,8 +58,7 @@ class _PaymentPageState extends State<PaymentPage> {
         },
         child: Container(
           padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(100))),
+          decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(100))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
