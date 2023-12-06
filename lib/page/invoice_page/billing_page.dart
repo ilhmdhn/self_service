@@ -106,6 +106,7 @@ class BillingPage extends StatelessWidget {
                     checkinService = roomService + fnbService;
                     checkinTax = roomTax + fnbTax;
                     checkinTotal = roomTotal + fnbTotal;
+                    paymentPrice = checkinArgsState.payment?.fee??0;
 
                     return Column(
                       mainAxisSize: MainAxisSize.max,
@@ -487,7 +488,8 @@ class BillingPage extends StatelessWidget {
                                             Expanded(
                                               child: Text('Promo', style: GoogleFonts.poppins( color: Colors.black, fontSize: 13),
                                             )),
-                                            const Expanded(child: AutoSizeText(''))
+                                            checkinArgsState.promoRoom != null || checkinArgsState.promoFood != null ?  
+                                             Expanded(child: AutoSizeText('${checkinArgsState.promoRoom?.promoRoom??''} ${checkinArgsState.promoFood?.promoFood ??''}', textAlign: TextAlign.end, maxLines: 1,)): const SizedBox()
                                           ],
                                         ),
                                       ),
@@ -890,7 +892,7 @@ class BillingPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Total', style: GoogleFonts.poppins(fontWeight: FontWeight.w500),),
-                                  Text(Currency.toRupiah(checkinTotal), style: GoogleFonts.poppins(fontWeight: FontWeight.w700),)
+                                  Text(Currency.toRupiah(checkinTotal + paymentPrice), style: GoogleFonts.poppins(fontWeight: FontWeight.w700),)
                                 ],
                               ),
                               const SizedBox(height: 12,),

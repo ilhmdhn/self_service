@@ -139,7 +139,7 @@ class ScanClubPageState extends State<ScanClubPage> {
                         ),
                       ),
                       Text(
-                        'UNTUK CHECK-IN\nSEBEGAI MEMBER',
+                        'UNTUK CHECK-IN\nSEBAGAI MEMBER',
                         style: GoogleFonts.poppins(
                             fontWeight: FontWeight.w600, fontSize: 16),
                         textAlign: TextAlign.center,
