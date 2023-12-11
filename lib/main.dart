@@ -46,7 +46,7 @@ class SelfService extends StatelessWidget {
           borderSide: const BorderSide(
             color:
                 Colors.grey, // Ganti warna border normal sesuai kebutuhan Anda
-            width: 1.0, // Ganti lebar border normal sesuai kebutuhan Anda
+            width: 1.0, // Ganti lebar border normal sesuai kebutuhan And
           ),
           borderRadius: BorderRadius.circular(20.0),
         ),
