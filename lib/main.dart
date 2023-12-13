@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_page.dart';
+import 'package:self_service/page/finish_page/instruction_page.dart';
 import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/fnb_page/fnb_offering_page.dart';
 import 'package:self_service/page/invoice_page/billing_page.dart';
@@ -61,8 +62,8 @@ class SelfService extends StatelessWidget {
         },
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashPage.nameRoute,
-      // initialRoute: PaymentPage.nameRoute,
+      // initialRoute: SplashPage.nameRoute,
+      initialRoute: InstructionPage.nameRoute,
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),
@@ -80,6 +81,7 @@ class SelfService extends StatelessWidget {
         PromoPage.nameRoute: (context)=> const PromoPage(),
         PaymentPage.nameRoute: (context) => const PaymentPage(),
         SettingPage.nameRoute: (context) => const SettingPage(),
+        InstructionPage.nameRoute: (context) => const InstructionPage()
       },
     );
   }
