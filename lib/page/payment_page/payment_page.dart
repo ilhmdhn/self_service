@@ -6,6 +6,7 @@ import 'package:self_service/bloc/universal_bloc.dart';
 import 'package:self_service/data/api/api_request.dart';
 import 'package:self_service/data/model/payment_qris.dart';
 import 'package:self_service/data/model/payment_va.dart';
+import 'package:self_service/page/finish_page/instruction_page.dart';
 import 'package:self_service/page/payment_page/payment_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
@@ -374,6 +375,12 @@ class _PaymentPageState extends State<PaymentPage> {
                                                             .buttonStyleDarkBlue(),
                                                         onPressed: () async {
                                                           final checkinResponse = await ApiService().checkin(checkinData, dataVa.transactionId.toString());
+                                                          if(checkinResponse.state == true){
+                                                            if(mounted){
+                                                              showToastWarning('berhasil checkin');
+                                                              // Navigator.pushNamedAndRemoveUntil(context, InstructionPage.nameRoute, (route) => false);
+                                                            }
+                                                          }
                                                         },
                                                         child: Text(
                                                           'Selesai',

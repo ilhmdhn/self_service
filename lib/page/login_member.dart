@@ -7,6 +7,7 @@ import 'package:self_service/bloc/member_bloc.dart';
 import 'package:self_service/data/model/checkin_model.dart';
 import 'package:self_service/data/model/member_model.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
+import 'package:self_service/page/style/button_style.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -39,6 +40,7 @@ class LoginPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton(
+                                style: CustomButtonStyle.buttonBlueLight(),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },

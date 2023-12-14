@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/material.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonStyle {
   static flutter.ButtonStyle styleLightBlueButton() {
@@ -53,5 +54,21 @@ class CustomButtonStyle {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
         side: BorderSide(color: Colors.grey.shade700, width: 2.0));
+  }
+
+    static flutter.ButtonStyle buttonConfirm() {
+    return flutter.ElevatedButton.styleFrom(
+        backgroundColor: CustomColorStyle.darkBlue(),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
+        side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0));
+  }
+
+  static flutter.ButtonStyle buttonCancel() {
+    return flutter.ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
+        // side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0)
+        );
   }
 }

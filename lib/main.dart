@@ -62,8 +62,8 @@ class SelfService extends StatelessWidget {
         },
       ),
       debugShowCheckedModeBanner: false,
-      // initialRoute: SplashPage.nameRoute,
-      initialRoute: InstructionPage.nameRoute,
+      initialRoute: SplashPage.nameRoute,
+      // initialRoute: InstructionPage.nameRoute,
       routes: {
         SplashPage.nameRoute: (context) => const SplashPage(),
         ReservationPage.nameRoute: (context) => const ReservationPage(),

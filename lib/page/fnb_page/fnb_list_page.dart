@@ -12,6 +12,7 @@ import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:self_service/page/fnb_page/fnb_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 
@@ -513,26 +514,27 @@ class _FnbListPageState extends State<FnbListPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Center(
-                                    child: Text('Batalkan Transaksi?')),
+                                title: Center(
+                                    child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog())),
                                 actions: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       ElevatedButton(
+                                        style: CustomButtonStyle.buttonCancel(),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('Tidak')),
+                                          child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                       ElevatedButton(
+                                          style: CustomButtonStyle.buttonConfirm(),
                                           onPressed: () {
                                             Navigator.pushNamedAndRemoveUntil(
                                                 context,
                                                 SplashPage.nameRoute,
                                                 (route) => false);
                                           },
-                                          child: const Text('Iya'))
+                                          child: Text('Iya', style: CustomTextStyle.confirm(),))
                                     ],
                                   ),
                                 ],

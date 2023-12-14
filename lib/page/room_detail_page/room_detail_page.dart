@@ -430,6 +430,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                         'PILIH RUANGAN',
                                         style: GoogleFonts.poppins(
                                             fontSize: 18,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.w600),
                                       ),
                                     )
@@ -484,9 +485,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context, setStateDialog) {
             return AlertDialog(
-              title: Center(
-                  child: Text('Checkin Info',
-                      style: GoogleFonts.poppins(fontSize: 16))),
+              backgroundColor: Colors.white,
+              title: Center(child: Text('Checkin Info', style: GoogleFonts.poppins(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w500))),
               content: BlocBuilder<InputIntCubit, int?>(
                 bloc: checkinDurationCubit,
                 builder: (context, checkinDurationState) {
@@ -508,7 +508,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                     'Jam Checkin',
                                     style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 14),
+                                        fontSize: 16),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -570,7 +570,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                     'Jumlah Tamu',
                                     style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.w400,
-                                        fontSize: 14),
+                                        fontSize: 16),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -636,7 +636,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                   child: Center(
                                     child: Text(
                                       "Lanjut",
-                                      style: GoogleFonts.poppins(fontSize: 18),
+                                      style: GoogleFonts.poppins(fontSize: 21, color: Colors.white, fontWeight: FontWeight.w500),
                                     ),
                                   ))
                             ],
