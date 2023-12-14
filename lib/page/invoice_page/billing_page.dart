@@ -133,9 +133,8 @@ class BillingPage extends StatelessWidget {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: const Center(
-                                                child: Text(
-                                                    'Batalkan Transaksi?')),
+                                            title: Center(
+                                                child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                             actions: [
                                               Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -145,19 +144,14 @@ class BillingPage extends StatelessWidget {
                                                         Navigator.of(context)
                                                             .pop();
                                                       },
-                                                      child:
-                                                          const Text('Tidak')),
+                                                      style: CustomButtonStyle.cancel(),
+                                                      child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                                   ElevatedButton(
                                                       onPressed: () {
-                                                        Navigator
-                                                            .pushNamedAndRemoveUntil(
-                                                                context,
-                                                                SplashPage
-                                                                    .nameRoute,
-                                                                (route) =>
-                                                                    false);
+                                                        Navigator.pushNamedAndRemoveUntil(context, SplashPage.nameRoute, (route) =>false);
                                                       },
-                                                      child: const Text('Iya'))
+                                                      style: CustomButtonStyle.confirm(),
+                                                      child: Text('Iya', style: CustomTextStyle.confirm(),))
                                                 ],
                                               ),
                                             ],
@@ -911,7 +905,7 @@ class BillingPage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 31, 
                                       vertical: 5),
-                                    child: Text('BAYAR', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600),),
+                                    child: Text('BAYAR', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),),
                                   ),
                                 ),
                               ),

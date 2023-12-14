@@ -123,6 +123,24 @@ class GenerateJsonParams {
     Map<String, dynamic>? promoFood;
     Map<String, dynamic>? payment;
 
+/*
+
+  String? idGlobal = '';
+  String? idLocal = '';
+  String? itemName = '';
+  String? note = '';
+  num? location = 0;
+  num qty;
+  num price;
+  num pricePromo;
+  num priceTotal;
+  num? isService;
+  num? isTax;
+  String category = '';
+  String image = '';
+
+ */
+
     if ((dataCheckin.orderArgs?.fnb.fnbList ?? []).isNotEmpty) {
       for (var element in dataCheckin.orderArgs!.fnb.fnbList) {
         listFnb.add({
@@ -131,8 +149,10 @@ class GenerateJsonParams {
           'item_name': element.itemName,
           'note': element.note,
           'location': element.location,
-          'qty': element.qty,
           'price': element.price,
+          'price_promo': element.pricePromo,
+          'qty': element.qty,
+          'price_total': element.priceTotal
         });
       }
     }

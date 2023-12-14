@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/material.dart';
 import 'package:self_service/page/style/color_style.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomButtonStyle {
   static flutter.ButtonStyle styleLightBlueButton() {
@@ -50,25 +49,29 @@ class CustomButtonStyle {
 
   static flutter.ButtonStyle buttonStyleDarkBlueDisable() {
     return flutter.ElevatedButton.styleFrom(
-        backgroundColor: Colors.grey.shade600,
+        backgroundColor: Colors.grey.shade400,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(225.0)),
-        side: BorderSide(color: Colors.grey.shade700, width: 2.0));
+        side: BorderSide(color: Colors.grey.shade500, width: 2.0));
   }
 
-    static flutter.ButtonStyle buttonConfirm() {
+  static flutter.ButtonStyle confirm() {
     return flutter.ElevatedButton.styleFrom(
         backgroundColor: CustomColorStyle.darkBlue(),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
+        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
         side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0));
   }
 
-  static flutter.ButtonStyle buttonCancel() {
+  static flutter.ButtonStyle cancel() {
     return flutter.ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
-        // side: BorderSide(color: CustomColorStyle.blueLight(), width: 2.0)
-        );
+        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),);
+  }
+
+  static flutter.ButtonStyle white() {
+    return flutter.ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(125.0)),
+        side: BorderSide(color: CustomColorStyle.blueLight(), width: 1.3));
   }
 }

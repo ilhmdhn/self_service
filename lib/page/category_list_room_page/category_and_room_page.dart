@@ -6,7 +6,9 @@ import 'package:self_service/data/model/new_room_model.dart';
 import 'package:self_service/page/category_list_room_page/category_and_room_bloc.dart';
 import 'package:self_service/page/room_detail_page/room_detail_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
+import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -577,27 +579,26 @@ class CategoryAndRoomPage extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Center(
-                                        child: Text('Batalkan Transaksi?')),
+                                    title: Center(
+                                        child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                     actions: [
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('Tidak')),
+                                            style: CustomButtonStyle.cancel(),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Tidak', 
+                                              style: CustomTextStyle.cancel(),)),
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator
-                                                    .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        SplashPage.nameRoute,
-                                                        (route) => false);
-                                              },
-                                              child: const Text('Iya'))
+                                            style: CustomButtonStyle.confirm(),
+                                            onPressed: () {
+                                              Navigator.pushNamedAndRemoveUntil(context,SplashPage.nameRoute,(route) => false);
+                                            },
+                                            child: Text('Iya', style: CustomTextStyle.confirm(),))
                                         ],
                                       ),
                                     ],

@@ -383,7 +383,7 @@ class _PaymentMethodListPageState extends State<PaymentMethodListPage> {
                         },
                         child: Text(
                           'KONFIRMASI',
-                          style: GoogleFonts.poppins(fontSize: 16),
+                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
                         )),
                   ),
                 )

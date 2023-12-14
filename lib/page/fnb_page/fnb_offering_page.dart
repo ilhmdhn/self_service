@@ -4,6 +4,7 @@ import 'package:self_service/page/fnb_page/fnb_list_page.dart';
 import 'package:self_service/page/invoice_page/billing_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/order_args.dart';
 
 class FnBOrderOfferingPage extends StatelessWidget {
@@ -56,8 +57,8 @@ class FnBOrderOfferingPage extends StatelessWidget {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Center(
-                                    child: Text('Batalkan Transaksi?')),
+                                title: Center(
+                                    child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                 actions: [
                                   Row(
                                     mainAxisAlignment:
@@ -67,7 +68,8 @@ class FnBOrderOfferingPage extends StatelessWidget {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('Tidak')),
+                                          style: CustomButtonStyle.cancel(),
+                                          child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                       ElevatedButton(
                                           onPressed: () {
                                             Navigator.pushNamedAndRemoveUntil(
@@ -75,7 +77,8 @@ class FnBOrderOfferingPage extends StatelessWidget {
                                                 SplashPage.nameRoute,
                                                 (route) => false);
                                           },
-                                          child: const Text('Iya'))
+                                          style: CustomButtonStyle.confirm(),
+                                          child: Text('Iya', style: CustomTextStyle.confirm()))
                                     ],
                                   ),
                                 ],

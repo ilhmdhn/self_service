@@ -8,6 +8,7 @@ import 'package:self_service/page/register_puppy_club/register_club_page.dart';
 import 'package:self_service/page/room_detail_page/room_detail_bloc.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/currency.dart';
 import '../../util/order_args.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -125,27 +126,24 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Center(
-                                        child: Text('Batalkan Transaksi?')),
+                                    title: Center(
+                                      child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                     actions: [
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('Tidak')),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: CustomButtonStyle.cancel(),
+                                            child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator
-                                                    .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        SplashPage.nameRoute,
-                                                        (route) => false);
-                                              },
-                                              child: const Text('Iya'))
+                                            onPressed: () {
+                                              Navigator.pushNamedAndRemoveUntil(context, SplashPage.nameRoute, (route) => false);
+                                            },
+                                            style: CustomButtonStyle.confirm(),
+                                            child: Text('Iya', style: CustomTextStyle.confirm(),))
                                         ],
                                       ),
                                     ],

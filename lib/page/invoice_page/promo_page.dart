@@ -375,7 +375,7 @@ class _PromoPageState extends State<PromoPage> {
                   child: Text(
                     'KONFIRMASI',
                     style: GoogleFonts.poppins(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                        fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
                   ),
                 ),
               )

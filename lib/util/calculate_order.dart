@@ -286,7 +286,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
     if (thisTotalPrice <= voucherPrice) {
       thisPriceValue = thisTotalPrice;
     } else {
-      thisPriceValue = thisTotalPrice;
+      thisPriceValue = voucherPrice;
     }
       dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPriceValue;
       voucherPrice -= thisPriceValue;

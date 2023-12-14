@@ -348,7 +348,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          225.0)),
+                                                                          125.0)),
                                                         ),
                                                         onPressed: () {
                                                           Navigator.pop(context,
@@ -358,16 +358,13 @@ class _PaymentPageState extends State<PaymentPage> {
                                                           'Ubah Pembayaran',
                                                           style: GoogleFonts
                                                               .poppins(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 13,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                  color: Colors.white,
+                                                                  fontSize: 16,
+                                                                  fontWeight: FontWeight.w500),
                                                         )),
                                                   ),
                                                   const SizedBox(
-                                                    width: 20,
+                                                    width: 15,
                                                   ),
                                                   Expanded(
                                                     child: ElevatedButton(
@@ -387,9 +384,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                                           style: GoogleFonts
                                                               .poppins(
                                                                   fontSize: 16,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                                  fontWeight: FontWeight.w500,
+                                                                  color: Colors.white
+                                                                  ),
                                                         )),
                                                   )
                                                 ],
@@ -651,26 +648,21 @@ class _PaymentPageState extends State<PaymentPage> {
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          225.0)),
+                                                                          125.0)),
                                                     ),
                                                     onPressed: () {
                                                       Navigator.pop(
                                                           context, checkinData);
                                                     },
                                                     child: Text(
-                                                      'Ubah Pembayaran',
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
+                                                      'Ubah Metode',
+                                                      style: GoogleFonts.poppins(color:Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w500),
                                                     )),
                                               ),
                                               const SizedBox(
-                                                width: 20,
+                                                width: 15,
                                               ),
                                               Expanded(
                                                 child: ElevatedButton(
@@ -698,9 +690,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                                       style:
                                                           GoogleFonts.poppins(
                                                               fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
+                                                              fontWeight: FontWeight.w500,
+                                                              color: Colors.white
+                                                                ),
                                                     )),
                                               )
                                             ],

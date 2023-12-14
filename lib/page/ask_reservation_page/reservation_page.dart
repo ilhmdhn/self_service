@@ -59,7 +59,7 @@ class _ReservationPageState extends State<ReservationPage> with RouteAware {
                       Navigator.pushNamed(
                           context, CategoryAndRoomPage.nameRoute);
                     },
-                    style: CustomButtonStyle.styleLightBlueButton(),
+                    style: CustomButtonStyle.white(),
                     child: Text(
                       'NO',
                       style: GoogleFonts.poppins(
@@ -83,7 +83,7 @@ class _ReservationPageState extends State<ReservationPage> with RouteAware {
                     onLongPress: () {
                       Navigator.pushNamed(context, SettingPage.nameRoute);
                     },
-                    style: CustomButtonStyle.styleDarkBlueButton(),
+                    style: CustomButtonStyle.confirm(),
                     child: Text(
                       'YES',
                       style: GoogleFonts.poppins(

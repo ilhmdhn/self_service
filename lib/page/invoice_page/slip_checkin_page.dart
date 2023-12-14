@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +11,7 @@ import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/currency.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/util/tools.dart';
@@ -71,8 +74,8 @@ class SlipCheckinPage extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Center(
-                                          child: Text('Batalkan Transaksi?')),
+                                      title: Center(
+                                          child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                       actions: [
                                         Row(
                                           mainAxisAlignment:
@@ -80,10 +83,10 @@ class SlipCheckinPage extends StatelessWidget {
                                           children: [
                                             ElevatedButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(orderArgs);
+                                                  Navigator.of(context).pop(orderArgs);
                                                 },
-                                                child: const Text('Tidak')),
+                                                style: CustomButtonStyle.cancel(),
+                                                child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                             ElevatedButton(
                                                 onPressed: () {
                                                   Navigator
@@ -92,7 +95,8 @@ class SlipCheckinPage extends StatelessWidget {
                                                           SplashPage.nameRoute,
                                                           (route) => false);
                                                 },
-                                                child: const Text('Iya'))
+                                                style: CustomButtonStyle.confirm(),
+                                                child: Text('Iya', style: CustomTextStyle.confirm(),))
                                           ],
                                         ),
                                       ],
@@ -590,8 +594,8 @@ class SlipCheckinPage extends StatelessWidget {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            title: const Center(
-                                                child: Text('PERNYATAAN')),
+                                            title: Center(
+                                                child: Text('PERNYATAAN', style: CustomTextStyle.titleAlertDialog(),)),
                                             content: HtmlWidget('''
                                     <p align="justify">Saya dan rekan tidak akan membawa masuk dan atau mengkonsumsi makanan/ minuman yang bukan berasal
                                         dari outlet
@@ -608,8 +612,8 @@ class SlipCheckinPage extends StatelessWidget {
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
-                                                    child:
-                                                        const Text('Selesai')),
+                                                    style: CustomButtonStyle.confirm(),
+                                                    child: Text('Selesai', style: CustomTextStyle.confirm(),)),
                                               ),
                                             ],
                                           );
@@ -627,24 +631,28 @@ class SlipCheckinPage extends StatelessWidget {
                                       'SYARAT DAN KETENTUAN',
                                       style: GoogleFonts.poppins(
                                           color: CustomColorStyle.darkRed(),
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 13),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 30,
+                                  height: 10,
                                 ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Transform.scale(
-                                      scale: 1.1,
+                                      scale: 0.7,
                                       child: Switch(
                                           value: agreementState ?? false,
-                                          inactiveThumbImage: const AssetImage(
-                                              'assets/icon/togle_switch_off.png'),
-                                          activeThumbImage: const AssetImage(
-                                              'assets/icon/togle_switch_on.png'),
+                                          inactiveThumbImage: const AssetImage('assets/icon/togle_switch_off.png'),
+                                          activeThumbImage: const AssetImage('assets/icon/togle_switch_on.png'),
+                                          activeColor: Colors.white,
+                                          inactiveTrackColor: Colors.grey.shade300,
+                                          activeTrackColor: CustomColorStyle.darkBlue(),
+                                          trackOutlineWidth: MaterialStateProperty.all(1),
                                           onChanged: (state) {
                                             agreementCubit.setData(state);
                                           }),
@@ -656,7 +664,7 @@ class SlipCheckinPage extends StatelessWidget {
                                       child: Text(
                                         'Saya telah membaca dan menyetujui persyaratan dan kebijakan dari pihak manejemen Happy Puppy',
                                         style:
-                                            GoogleFonts.poppins(fontSize: 10),
+                                            GoogleFonts.poppins(fontSize: 12),
                                         textAlign: TextAlign.justify,
                                       ),
                                     ),
@@ -692,14 +700,14 @@ class SlipCheckinPage extends StatelessWidget {
                                         ? CustomButtonStyle
                                             .buttonStyleDarkBlue()
                                         : CustomButtonStyle
-                                            .buttonStyleDarkBlueDisable(),
+                                            .white(),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 4),
                                       child: Text(
                                         "LANJUT",
                                         style: GoogleFonts.poppins(
-                                            color: Colors.white,
+                                            color: agreementState == true? Colors.white: CustomColorStyle.darkBlue(),
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600),
                                       ),

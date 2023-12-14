@@ -521,13 +521,13 @@ class _FnbListPageState extends State<FnbListPage> {
                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       ElevatedButton(
-                                        style: CustomButtonStyle.buttonCancel(),
+                                        style: CustomButtonStyle.cancel(),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                       ElevatedButton(
-                                          style: CustomButtonStyle.buttonConfirm(),
+                                          style: CustomButtonStyle.confirm(),
                                           onPressed: () {
                                             Navigator.pushNamedAndRemoveUntil(
                                                 context,
@@ -940,7 +940,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                                   ? 'TAMBAH PESANAN'
                                                   : 'UBAH PESANAN',
                                               style: GoogleFonts.poppins(
-                                                  fontSize: 20),
+                                                  fontSize: 20, color: Colors.white),
                                             ),
                                           ),
                                         ),
@@ -1220,7 +1220,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                             'PESAN',
                                             style: GoogleFonts.poppins(
                                                 fontSize: 18,
-                                                fontWeight: FontWeight.w600),
+                                                fontWeight: FontWeight.w600, color: Colors.white),
                                           ),
                                         ),
                                       ),
@@ -1492,7 +1492,7 @@ class _FnbListPageState extends State<FnbListPage> {
                                             child: Text(
                                               'UBAH PESANAN',
                                               style: GoogleFonts.poppins(
-                                                  fontSize: 20),
+                                                  fontSize: 20, color: Colors.white),
                                             ),
                                           ),
                                         ),

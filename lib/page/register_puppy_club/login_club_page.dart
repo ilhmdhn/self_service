@@ -8,6 +8,7 @@ import 'package:self_service/page/invoice_page/slip_checkin_page.dart';
 import 'package:self_service/page/splash_page/splash_screen.dart';
 import 'package:self_service/page/style/button_style.dart';
 import 'package:self_service/page/style/color_style.dart';
+import 'package:self_service/page/style/text_style.dart';
 import 'package:self_service/util/order_args.dart';
 import 'package:self_service/util/tools.dart';
 
@@ -81,27 +82,25 @@ class ScanClubPageState extends State<ScanClubPage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Center(
-                                        child: Text('Batalkan Transaksi?')),
+                                    title: Center(
+                                        child: Text('Batalkan Transaksi?', style: CustomTextStyle.titleAlertDialog(),)),
                                     actions: [
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('Tidak')),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                          },
+                                          style: CustomButtonStyle.cancel(),
+                                          child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                           ElevatedButton(
-                                              onPressed: () {
-                                                Navigator
-                                                    .pushNamedAndRemoveUntil(
-                                                        context,
-                                                        SplashPage.nameRoute,
-                                                        (route) => false);
+                                            onPressed: () {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context, SplashPage.nameRoute, (route) => false);
                                               },
-                                              child: const Text('Iya'))
+                                              style: CustomButtonStyle.confirm(),
+                                              child: Text('Iya', style: CustomTextStyle.confirm(),))
                                         ],
                                       ),
                                     ],
