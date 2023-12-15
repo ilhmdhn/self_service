@@ -48,6 +48,8 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
   VoucherData? dataVoucher = dataCheckin.voucher;
+  int qtyVoucher = dataVoucher?.qty ?? 0;
+
 
   List<String> itemCondition = (dataVoucher?.itemCode ?? '')
       .split('|')
@@ -87,6 +89,7 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
       voucherRoomResult += vcrHourValue;
     }
   });
+
 
 
 //-------------- CALCULATE ROOM PROMO PERCENT -------------------------
@@ -167,17 +170,15 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
   }
 
 //-------------- CALCULATE ROOM VOUCHER RP -------------------------
-    
     if(vcrRoomPrice>0){
       num thisVcrUse = 0;
       if(roomPrice<=vcrRoomPrice){
-        thisVcrUse= roomPrice;
+        thisVcrUse = roomPrice;
       }else{
-        thisVcrUse = vcrRoomPercent;
+        thisVcrUse = vcrRoomPrice;
       }
       roomPrice -= thisVcrUse;
       finalVoucher += thisVcrUse;
-
       voucherRoomResult += thisVcrUse;
     }
 
@@ -229,18 +230,33 @@ CheckinArgs calculateOrder(CheckinArgs dataCheckin) {
 
 //-------------- CALCULATE FNB VOUCHER ITEM -------------------------
       if ((dataVoucher != null) && itemCondition.isNotEmpty) {
-        int qtyVoucher = dataVoucher.qty ?? 0;
-        do {
+        num itemOrderQty = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].qty??0;
+        for(int i = qtyVoucher; i>0 && itemOrderQty>0 ; i--){
           if (itemCondition.contains(fnbList[fnbListIndex].idGlobal)) {
+            itemOrderQty--;
+            qtyVoucher--;
             num itemPromoValue = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].price??0;
             dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo += itemPromoValue;
-            num thisPromoAccumulate = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo??0;
-            dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPromoAccumulate;
 
-            voucherFnbResult += thisPromoAccumulate;
-          }
-          qtyVoucher--;
-        } while (qtyVoucher > 0);
+            // num thisPromoAccumulate = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo??0;
+            
+            dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= itemPromoValue;
+
+            voucherFnbResult += itemPromoValue;
+        }
+        }
+        // do {
+        //   if (itemCondition.contains(fnbList[fnbListIndex].idGlobal)) {
+        //     num itemPromoValue = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].price??0;
+        //     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo += itemPromoValue;
+        //     num thisPromoAccumulate = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].pricePromo??0;
+        //     dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal -= thisPromoAccumulate;
+
+        //     voucherFnbResult += thisPromoAccumulate;
+        //     print('DEBUGGING AKUMULASI VOUCHER '+voucherFnbResult.toString());
+        //   }
+        //   qtyVoucher--;
+        // } while (qtyVoucher > 0);
       }
 
 //-------------- CALCULATE FNB VOUCHER PERCENT -------------------------
@@ -345,9 +361,9 @@ if(promoFoodRupiah>0){
 
       serviceFnb += service;
       taxFnb += tax;
-      thisTotalPrice = dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal??0;
+      thisTotalPrice = (dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].price??0) * (dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].qty??0);
       fnbPrice += thisTotalPrice;
-    
+      fnbTotal += (dataCheckin.orderArgs?.fnb.fnbList[fnbListIndex].priceTotal??0);
     //END LOOP FNB
     }
 
@@ -360,8 +376,8 @@ if(promoFoodRupiah>0){
   //   fnbTotal = 0;
   // }
 
+  fnbTotal += serviceFnb + taxFnb;
   fnbTotal = fnbTotal.round();
-  fnbTotal = fnbPrice + serviceFnb + taxFnb;
 
   dataCheckin.orderArgs?.fnb.fnbTotal = fnbPrice.round();
   dataCheckin.orderArgs?.fnb.fnbPromoResult = promoFnbResult.round();

@@ -374,9 +374,10 @@ class _PaymentPageState extends State<PaymentPage> {
                                                           final checkinResponse = await ApiService().checkin(checkinData, dataVa.transactionId.toString());
                                                           if(checkinResponse.state == true){
                                                             if(mounted){
-                                                              showToastWarning('berhasil checkin');
-                                                              // Navigator.pushNamedAndRemoveUntil(context, InstructionPage.nameRoute, (route) => false);
+                                                              Navigator.pushNamedAndRemoveUntil(context, InstructionPage.nameRoute, (route) => false);
                                                             }
+                                                          }else{
+                                                            showToastWarning(checkinResponse.message.toString());
                                                           }
                                                         },
                                                         child: Text(
@@ -675,14 +676,15 @@ class _PaymentPageState extends State<PaymentPage> {
                                                               (dataQris?.referenceId ??
                                                                       0)
                                                                   .toString());
-                                                      if (response.state !=
-                                                          true) {
-                                                        showToastWarning(
-                                                            response.message ??
-                                                                '');
+                                                      if (response.state !=true) {
+                                                        showToastWarning(response.message ??'');
                                                       } else {
-                                                        showToastWarning(
-                                                            'Berhasil');
+                                                          if(response.state == true){
+                                                            if(mounted){
+                                                              print('DEBUGGING MOUNTED');
+                                                              Navigator.pushNamedAndRemoveUntil(context, InstructionPage.nameRoute, (route) => false);
+                                                            }
+                                                          }
                                                       }
                                                     },
                                                     child: Text(

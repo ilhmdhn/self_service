@@ -778,46 +778,28 @@ class _FnbListPageState extends State<FnbListPage> {
                                                             title: Center(
                                                               child: Text(
                                                                 'Hapus pesanan?',
-                                                                style: GoogleFonts.poppins(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
+                                                                style: CustomTextStyle.titleAlertDialog(),
                                                               ),
                                                             ),
                                                             content: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceAround,
+                                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                               children: [
                                                                 ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                        backgroundColor:
-                                                                            Colors
-                                                                                .red),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context,
-                                                                          false);
+                                                                    style: CustomButtonStyle.cancel(),
+                                                                    onPressed: () {
+                                                                      Navigator.pop(context,false);
                                                                     },
-                                                                    child: Text(
-                                                                      'Tidak',
-                                                                      style: GoogleFonts
-                                                                          .poppins(),
+                                                                    child: Text('Tidak',
+                                                                      style: CustomTextStyle.cancel(),
                                                                     )),
                                                                 ElevatedButton(
                                                                     onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context,
-                                                                          true);
+                                                                        () {Navigator.pop(context,true);
                                                                     },
+                                                                    style: CustomButtonStyle.confirm(),
                                                                     child: Text(
                                                                       'Ya',
-                                                                      style: GoogleFonts
-                                                                          .poppins(),
+                                                                      style: CustomTextStyle.confirm(),
                                                                     ))
                                                               ],
                                                             ),
@@ -1352,43 +1334,25 @@ class _FnbListPageState extends State<FnbListPage> {
                                                             title: Center(
                                                               child: Text(
                                                                 'Hapus pesanan?',
-                                                                style: GoogleFonts.poppins(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
+                                                                style: CustomTextStyle.titleAlertDialog(),
                                                               ),
                                                             ),
                                                             content: Row(
                                                               mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceAround,
+                                                                  MainAxisAlignment.spaceAround,
                                                               children: [
                                                                 ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                        backgroundColor:
-                                                                            Colors
-                                                                                .red),
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context,
-                                                                          false);
+                                                                    style: CustomButtonStyle.cancel(),
+                                                                    onPressed:() {
+                                                                      Navigator.pop(context,false);
                                                                     },
-                                                                    child: const Text(
-                                                                        'Tidak')),
+                                                                    child: Text('Tidak', style: CustomTextStyle.cancel(),)),
                                                                 ElevatedButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      Navigator.pop(
-                                                                          context,
-                                                                          true);
+                                                                    onPressed:() {
+                                                                      Navigator.pop(context,true);
                                                                     },
-                                                                    child: Text(
-                                                                      'Ya',
-                                                                      style: GoogleFonts
-                                                                          .poppins(),
+                                                                    style: CustomButtonStyle.confirm(),
+                                                                    child: Text('Ya', style: CustomTextStyle.confirm(),
                                                                     ))
                                                               ],
                                                             ),
